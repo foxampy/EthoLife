@@ -33,8 +33,39 @@ import {
   useRelationshipsStore, 
   Contact, 
   InteractionType,
-  ContactSelector,
 } from '@/stores/modules/relationshipsStore';
+
+// Local ContactSelector component
+const ContactSelector: React.FC<{
+  contacts: Contact[];
+  selectedId?: string;
+  onSelect: (contact: Contact) => void;
+}> = ({ contacts, selectedId, onSelect }) => {
+  return (
+    <div className="space-y-2">
+      {contacts.map((contact) => (
+        <button
+          key={contact.id}
+          onClick={() => onSelect(contact)}
+          className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors ${
+            selectedId === contact.id
+              ? 'border-pink-500 bg-pink-50'
+              : 'border-gray-200 hover:bg-gray-50'
+          }`}
+        >
+          <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center">
+            <User className="w-5 h-5 text-pink-600" />
+          </div>
+          <div className="flex-1 text-left">
+            <p className="font-medium">{contact.name}</p>
+            <p className="text-sm text-gray-500">{contact.relationship_type}</p>
+          </div>
+          {selectedId === contact.id && <CheckCircle2 className="w-5 h-5 text-pink-500" />}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 const RELATIONSHIPS_COLOR = moduleColors.relationships.primary;
 const RELATIONSHIPS_BG = moduleColors.relationships.bg;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus,
@@ -36,7 +36,7 @@ import { useHabitsStore, Habit } from '@/stores/modules/habitsStore';
 import { moduleColors } from '@/stores/healthStore';
 
 export default function HabitsModule() {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -117,7 +117,7 @@ export default function HabitsModule() {
               variant="ghost"
               size="icon"
               className="text-white hover:bg-white/20"
-              onClick={() => navigate('/health')}
+              onClick={() => setLocation('/health')}
             >
               <ChevronLeft className="w-6 h-6" />
             </Button>
@@ -126,7 +126,7 @@ export default function HabitsModule() {
               variant="ghost"
               size="icon"
               className="text-white hover:bg-white/20"
-              onClick={() => navigate('/health/habits/stats')}
+              onClick={() => setLocation('/health/habits/stats')}
             >
               <TrendingUp className="w-5 h-5" />
             </Button>
@@ -263,10 +263,10 @@ export default function HabitsModule() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => navigate(`/health/habits/${habit.id}`)}>
+                              <DropdownMenuItem onClick={() => setLocation(`/health/habits/${habit.id}`)}>
                                 Детали
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => navigate(`/health/habits/${habit.id}/edit`)}>
+                              <DropdownMenuItem onClick={() => setLocation(`/health/habits/${habit.id}/edit`)}>
                                 Редактировать
                               </DropdownMenuItem>
                               <DropdownMenuItem 
@@ -333,7 +333,7 @@ export default function HabitsModule() {
       <Button
         className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg"
         style={{ backgroundColor: moduleColors.habits.primary }}
-        onClick={() => navigate('/health/habits/new')}
+        onClick={() => setLocation('/health/habits/new')}
       >
         <Plus className="w-6 h-6" />
       </Button>

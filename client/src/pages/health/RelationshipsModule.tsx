@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Users,
@@ -40,7 +40,7 @@ const RELATIONSHIPS_BG = moduleColors.relationships.bg;
 const RELATIONSHIPS_SECONDARY = moduleColors.relationships.secondary;
 
 export default function RelationshipsModule() {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('overview');
@@ -141,7 +141,7 @@ export default function RelationshipsModule() {
               variant="ghost"
               size="icon"
               className="text-white hover:bg-white/20"
-              onClick={() => navigate('/health')}
+              onClick={() => setLocation('/health')}
             >
               <ChevronLeft className="w-6 h-6" />
             </Button>
@@ -380,7 +380,7 @@ export default function RelationshipsModule() {
                     key={contact.id}
                     contact={contact}
                     onLogInteraction={() => handleLogInteraction(contact)}
-                    onViewDetails={() => navigate(`/health/relationships/contact/${contact.id}`)}
+                    onViewDetails={() => setLocation(`/health/relationships/contact/${contact.id}`)}
                   />
                 ))
               ) : (

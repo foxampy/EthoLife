@@ -4,7 +4,7 @@ import { Camera } from '@mediapipe/camera_utils';
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 import { 
   Camera as CameraIcon, Play, Square, Settings, AlertTriangle,
-  Volume2, VolumeX, Monitor, Chair, ArrowUp, ArrowDown,
+  Volume2, VolumeX, Monitor, ArrowUp, ArrowDown,
   CheckCircle2, XCircle, Info, Dumbbell, Clock, ChevronRight,
   Sparkles, Activity, AlertOctagon
 } from 'lucide-react';

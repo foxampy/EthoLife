@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Brain,
@@ -38,7 +38,7 @@ const PSYCHOLOGY_COLOR = moduleColors.psychology.primary;
 const PSYCHOLOGY_BG = moduleColors.psychology.bg;
 
 export default function PsychologyModule() {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [showMoodCheckIn, setShowMoodCheckIn] = useState(false);
@@ -107,7 +107,7 @@ export default function PsychologyModule() {
               variant="ghost"
               size="icon"
               className="text-white hover:bg-white/20"
-              onClick={() => navigate('/health')}
+              onClick={() => setLocation('/health')}
             >
               <ChevronLeft className="w-6 h-6" />
             </Button>
@@ -119,7 +119,7 @@ export default function PsychologyModule() {
               variant="ghost"
               size="icon"
               className="text-white hover:bg-white/20"
-              onClick={() => navigate('/health/psychology/stats')}
+              onClick={() => setLocation('/health/psychology/stats')}
             >
               <TrendingUp className="w-5 h-5" />
             </Button>
@@ -181,7 +181,7 @@ export default function PsychologyModule() {
                       size="sm"
                       variant="outline"
                       className="border-red-300 text-red-700 hover:bg-red-50"
-                      onClick={() => navigate('/health/psychology/support')}
+                      onClick={() => setLocation('/health/psychology/support')}
                     >
                       Получить помощь
                     </Button>
@@ -560,7 +560,7 @@ export default function PsychologyModule() {
       <Button
         className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg"
         style={{ backgroundColor: PSYCHOLOGY_COLOR }}
-        onClick={() => navigate('/health/psychology/journal')}
+        onClick={() => setLocation('/health/psychology/journal')}
       >
         <BookOpen className="w-6 h-6" />
       </Button>

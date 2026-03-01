@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { motion } from 'framer-motion';
 import { 
   Apple, 
@@ -23,7 +23,7 @@ import { useHealthStore, HealthModule } from '@/stores/healthStore';
 import { ModuleCard, ModuleCardCompact } from '@/components/health/ModuleCard';
 import { DailyScoreRing, ScoreBadge } from '@/components/health/DailyScoreRing';
 import { AIInsightCard, AIInsightList } from '@/components/health/AIInsightCard';
-import { useI18n } from '@/lib/i18n';
+import { useI18n } from '@/i18n';
 
 const moduleOrder: HealthModule[] = [
   'nutrition',
@@ -36,7 +36,7 @@ const moduleOrder: HealthModule[] = [
 ];
 
 export default function HealthDashboard() {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { t } = useI18n();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
@@ -70,7 +70,7 @@ export default function HealthDashboard() {
       relatedModules: ['sleep', 'movement'] as HealthModule[],
       action: { 
         label: 'Запланировать тренировку', 
-        onClick: () => navigate('/health/movement') 
+        onClick: () => setLocation('/health/movement') 
       },
     },
     {
@@ -157,7 +157,7 @@ export default function HealthDashboard() {
             <Button 
               variant="outline" 
               className="h-auto py-4 flex flex-col items-center gap-2"
-              onClick={() => navigate('/health/habits')}
+              onClick={() => setLocation('/health/habits')}
             >
               <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
                 <Target className="w-5 h-5 text-yellow-600" />
@@ -167,7 +167,7 @@ export default function HealthDashboard() {
             <Button 
               variant="outline" 
               className="h-auto py-4 flex flex-col items-center gap-2"
-              onClick={() => navigate('/health/psychology')}
+              onClick={() => setLocation('/health/psychology')}
             >
               <div className="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center">
                 <Brain className="w-5 h-5 text-cyan-600" />
@@ -193,7 +193,7 @@ export default function HealthDashboard() {
                 module={module}
                 score={moduleScores[module]}
                 streak={getStreak(module)}
-                onClick={() => navigate(`/health/${module}`)}
+                onClick={() => setLocation(`/health/${module}`)}
                 quickStats={getQuickStats(module, todaySnapshot?.key_metrics)}
               />
             ))}
@@ -247,7 +247,7 @@ export default function HealthDashboard() {
       {/* FAB for Quick Add */}
       <Button
         className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg"
-        onClick={() => navigate('/health/quick-add')}
+        onClick={() => setLocation('/health/quick-add')}
       >
         <Plus className="w-6 h-6" />
       </Button>

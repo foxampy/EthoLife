@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { motion } from 'framer-motion';
 import {
   Plus,
@@ -46,7 +46,7 @@ const mealTypes = [
 const quickWaterAmounts = [250, 500, 750];
 
 export default function NutritionModule() {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -133,7 +133,7 @@ export default function NutritionModule() {
               variant="ghost"
               size="icon"
               className="text-white hover:bg-white/20"
-              onClick={() => navigate('/health')}
+              onClick={() => setLocation('/health')}
             >
               <ChevronLeft className="w-6 h-6" />
             </Button>
@@ -142,7 +142,7 @@ export default function NutritionModule() {
               variant="ghost"
               size="icon"
               className="text-white hover:bg-white/20"
-              onClick={() => navigate('/health/nutrition/goals')}
+              onClick={() => setLocation('/health/nutrition/goals')}
             >
               <Target className="w-5 h-5" />
             </Button>

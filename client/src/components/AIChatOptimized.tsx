@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
+import { aiService } from '@/services/aiService';
+import { useHealthStore } from '@/stores/healthStore';
 
 interface Message {
   id: string;
@@ -63,44 +65,34 @@ export function AIChatOptimized({ className, compact = false }: AIChatOptimizedP
     setIsLoading(true);
 
     try {
-      // Simulate AI response - replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Get health context
+      const healthData = useHealthStore.getState().todaySnapshot;
       
-      const aiResponse: Message = {
+      // Call AI service
+      const response = await aiService.sendMessage({
+        message: input,
+        context: { healthData },
+        model: 'gemini' // или 'groq'
+      });
+
+      const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: generateResponse(input),
+        content: response.content,
         timestamp: new Date(),
+        suggestions: response.suggestions,
       };
 
-      setMessages((prev) => [...prev, aiResponse]);
+      setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
       toast({
         title: 'Ошибка',
-        description: 'Не удалось получить ответ от AI',
+        description: 'Не удалось получить ответ от AI. Проверьте API ключи.',
         variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const generateResponse = (query: string): string => {
-    const lowerQuery = query.toLowerCase();
-    
-    if (lowerQuery.includes('сон') || lowerQuery.includes('спать')) {
-      return 'Для улучшения сна рекомендую:\n\n1️⃣ Ложиться в одно и то же время\n2️⃣ Избегать кофеина после 16:00\n3️⃣ Создать темную и прохладную обстановку в спальне\n4️⃣ Использовать модуль "Сон" для трекинга\n\nХочешь подробный план?';
-    }
-    
-    if (lowerQuery.includes('питание') || lowerQuery.includes('еда') || lowerQuery.includes('диета')) {
-      return 'Вот основы здорового питания:\n\n🥗 Разнообразь рацион (овощи, фрукты, белки)\n💧 Пей 2-3 литра воды в день\n🍽️ Ешь регулярно, не пропускай завтрак\n📊 Используй трекер питания в EthoLife\n\nНужен персональный план?';
-    }
-    
-    if (lowerQuery.includes('тренировк') || lowerQuery.includes('спорт') || lowerQuery.includes('фитнес')) {
-      return 'Для начала тренировок:\n\n🏃 Начни с 30 минут ходьбы в день\n💪 Добавь силовые 2-3 раза в неделю\n🧘 Не забывай про растяжку\n📱 Используй модуль "Движение"\n\nКакой у тебя уровень подготовки?';
-    }
-    
-    return 'Интересный вопрос! Я могу помочь с:\n\n• Анализом твоих показателей здоровья\n• Рекомендациями по питанию и тренировкам\n• Планированием здорового образа жизни\n• Ответами на вопросы о модулях EthoLife\n\nЧто конкретно тебя интересует?';
   };
 
   const clearChat = () => {

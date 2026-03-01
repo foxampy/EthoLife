@@ -1,322 +1,270 @@
-# EthosLife - Полное руководство по деплою
+# Руководство по деплою EthoLife
 
-## 📋 Содержание
-1. [Требования](#требования)
-2. [Настройка Supabase](#настройка-supabase)
-3. [Настройка сервера](#настройка-сервера)
-4. [Настройка клиента](#настройка-клиента)
-5. [Настройка платежей](#настройка-платежей)
-6. [Запуск](#запуск)
-7. [Проверка](#проверка)
+## 1. Применение SQL миграций
 
----
+### Способ A: Через Supabase Dashboard (рекомендуется)
 
-## Требования
+1. Перейдите в [Supabase Dashboard](https://app.supabase.com)
+2. Выберите ваш проект
+3. Откройте **SQL Editor** (в левом меню)
+4. Создайте **New query**
+5. Скопируйте содержимое файлов из `supabase/migrations/` по порядку:
+   - `20250301000001_health_core.sql`
+   - `20250301000002_habits_module.sql`
+   - `20250301000003_nutrition_module.sql`
+   - `20250301000004_movement_module.sql`
+   - `20250301000005_sleep_module.sql`
+   - `20250301000006_psychology_module.sql`
+   - `20250301000007_medicine_module.sql`
+   - `20250301000008_relationships_module.sql`
+6. Нажмите **Run** для каждого файла
 
-### Аккаунты (бесплатные):
-- [GitHub](https://github.com) — для хранения кода
-- [Supabase](https://supabase.com) — база данных (бесплатный tier)
-- [Vercel](https://vercel.com) — фронтенд (бесплатный tier)
-- [Render](https://render.com) — бэкенд (бесплатный tier)
-- [NOWPayments](https://nowpayments.io) — крипто-платежи (бесплатный)
-
-### Локально установлено:
-- Node.js 20+
-- npm или pnpm
-- Git
-
----
-
-## Настройка Supabase
-
-### 1. Создание проекта
-1. Зайдите в [Supabase Dashboard](https://app.supabase.com)
-2. Нажмите "New Project"
-3. Название: `ethoslife`
-4. Регион: выберите ближайший (например, Frankfurt для Европы)
-5. Пароль базы данных: сохраните его!
-
-### 2. Выполнение миграций
-1. Перейдите в SQL Editor
-2. Создайте New query
-3. Вставьте содержимое `server/supabase/migrations/001_initial_schema.sql`
-4. Нажмите Run
-5. Повторите для `002_health_modules.sql`
-
-### 3. Получение API ключей
-1. Перейдите в Project Settings → API
-2. Скопируйте:
-   - `Project URL` → `SUPABASE_URL`
-   - `anon public` → не используется (мы используем Service Role)
-   - `service_role secret` → `SUPABASE_SERVICE_KEY`
-
-### 4. Настройка Auth
-1. Перейдите в Authentication → Providers
-2. Включите Email provider
-3. Настройте Google OAuth (опционально):
-   - Создайте проект в [Google Cloud Console](https://console.cloud.google.com)
-   - Включите Google+ API
-   - Создайте OAuth credentials
-   - Добавьте Client ID и Secret в Supabase
-
----
-
-## Настройка сервера
-
-### 1. Создание проекта на Render
-1. Зайдите в [Render Dashboard](https://dashboard.render.com)
-2. New → Web Service
-3. Connect your GitHub account → выберите репозиторий EthosLife
-4. Настройки:
-   ```
-   Name: ethoslife-api
-   Region: Frankfurt (EU Central)
-   Branch: main
-   Root Directory: server
-   Runtime: Node
-   Build Command: npm install
-   Start Command: npm start
-   ```
-
-### 2. Environment Variables
-Добавьте в Render Dashboard → Environment:
-
-```env
-# Supabase
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_KEY=your-service-role-key
-
-# JWT
-JWT_SECRET=your-super-secret-jwt-key-min-32-chars
-
-# NOWPayments (опционально, можно добавить позже)
-NOWPAYMENTS_API_KEY=your-nowpayments-key
-
-# API URLs
-API_URL=https://ethoslife-api.onrender.com
-APP_URL=https://ethoslife.vercel.app
-
-# Qwen (опционально)
-QWEN_API_URL=https://api-inference.modelscope.cn/v1
-QWEN_API_KEY=your-qwen-key
-```
-
-### 3. Deploy
-Нажмите "Create Web Service"
-
----
-
-## Настройка клиента
-
-### 1. Создание проекта на Vercel
-1. Зайдите в [Vercel Dashboard](https://vercel.com)
-2. Add New Project → Import Git Repository
-3. Выберите EthosLife
-4. Настройки:
-   ```
-   Framework Preset: Vite
-   Root Directory: client
-   Build Command: npm run build
-   Output Directory: dist
-   ```
-
-### 2. Environment Variables
-Добавьте в Project Settings → Environment Variables:
-
-```env
-VITE_API_URL=https://ethoslife-api.onrender.com
-```
-
-### 3. Deploy
-Нажмите "Deploy"
-
----
-
-## Настройка платежей
-
-### NOWPayments (для крипто)
-
-#### 1. Регистрация
-1. Зайдите на [NOWPayments](https://nowpayments.io)
-2. Создайте аккаунт
-3. Перейдите в Account Settings → API Keys
-4. Скопируйте API Key
-
-#### 2. Настройка IPN (Webhook)
-1. В NOWPayments перейдите в Store Settings
-2. IPN Callback URL: `https://ethoslife-api.onrender.com/api/payments/webhooks/nowpayments`
-3. Сохраните
-
-#### 3. Добавление ключа в Render
-1. Render Dashboard → ваш сервис → Environment
-2. Добавьте:
-   ```
-   NOWPAYMENTS_API_KEY=your-api-key
-   ```
-3. Deploy again
-
----
-
-## Запуск
-
-### Локальная разработка
+### Способ B: Через Supabase CLI
 
 ```bash
-# 1. Клонируйте репозиторий
-git clone https://github.com/yourusername/ethoslife.git
-cd ethoslife
+# Установить CLI (если еще не установлен)
+npm install -g supabase
 
-# 2. Установите зависимости сервера
-cd server
-npm install
+# Логин
+supabase login
 
-# 3. Создайте .env файл
-cp .env.example .env
-# Отредактируйте .env с вашими ключами
+# Линк проекта
+supabase link --project-ref ваш-project-id
 
-# 4. Запустите сервер
-npm run dev
-
-# 5. В новом терминале - клиент
-cd ../client
-npm install
-npm run dev
+# Применить миграции
+supabase db push
 ```
 
-### Продакшн
+### Способ C: Через psql (для продвинутых)
 
-После настройки всех сервисов:
-1. Push кода в main branch автоматически деплоит:
-   - Vercel (фронтенд)
-   - Render (бэкенд)
+```bash
+# Получить строку подключения в Supabase Dashboard → Settings → Database
+psql "postgresql://postgres:[password]@db.xxx.supabase.co:5432/postgres"
 
-2. Проверьте URLs:
-   - Клиент: `https://ethoslife.vercel.app`
-   - API: `https://ethoslife-api.onrender.com`
+# Или выполнить файл напрямую
+psql "ваша-строка-подключения" -f supabase/migrations/20250301000001_health_core.sql
+```
 
 ---
 
-## Проверка
+## 2. AI интеграция с Gemini / Groq
 
-### 1. Проверка API
-Откройте в браузере:
+### 2.1 Проверьте переменные окружения
+
+В файле `.env` должны быть:
+
+```env
+# Gemini API
+VITE_GEMINI_API_KEY=ваш-ключ-gemini
+
+# Groq API  
+VITE_GROQ_API_KEY=ваш-ключ-groq
+
+# Supabase
+VITE_SUPABASE_URL=https://xxx.supabase.co
+VITE_SUPABASE_ANON_KEY=ваш-anon-key
 ```
-https://ethoslife-api.onrender.com/api/health
-```
-Должно вернуть: `{ "status": "ok" }`
 
-### 2. Проверка регистрации
-1. Откройте `https://ethoslife.vercel.app/register`
-2. Создайте тестовый аккаунт
-3. Проверьте почту на верификацию (если включена)
+### 2.2 Создадим API сервис для AI
 
-### 3. Проверка базы данных
-В Supabase Dashboard → Table Editor должны появиться записи в таблице `profiles`
-
-### 4. Проверка AI-чата
-1. Войдите в систему
-2. Перейдите в AI Chat
-3. Отправьте сообщение
-4. Должен прийти ответ (fallback если API не настроен)
-
-### 5. Проверка платежей (тест)
-1. Перейдите в `/pricing`
-2. Выберите план
-3. На checkout выберите криптовалюту
-4. Должен создаться адрес для оплаты
-
----
-
-## Типичные проблемы
-
-### CORS ошибки
-В `server/index.ts` должен быть настроен CORS:
 ```typescript
-app.use(cors({
-  origin: ['https://ethoslife.vercel.app', 'http://localhost:5173'],
-  credentials: true
-}));
+// client/src/services/aiService.ts
+
+interface AIRequest {
+  message: string;
+  context?: {
+    healthData?: any;
+    module?: string;
+  };
+  model?: 'gemini' | 'groq';
+}
+
+interface AIResponse {
+  content: string;
+  suggestions?: string[];
+}
+
+export class AIService {
+  private geminiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  private groqKey = import.meta.env.VITE_GROQ_API_KEY;
+
+  async sendMessage(request: AIRequest): Promise<AIResponse> {
+    const { message, context, model = 'gemini' } = request;
+
+    if (model === 'gemini') {
+      return this.callGemini(message, context);
+    } else {
+      return this.callGroq(message, context);
+    }
+  }
+
+  private async callGemini(message: string, context?: any): Promise<AIResponse> {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${this.geminiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: this.buildPrompt(message, context)
+            }]
+          }],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 1000,
+          }
+        })
+      }
+    );
+
+    const data = await response.json();
+    return {
+      content: data.candidates[0].content.parts[0].text,
+      suggestions: this.extractSuggestions(data)
+    };
+  }
+
+  private async callGroq(message: string, context?: any): Promise<AIResponse> {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.groqKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-70b-versatile',
+        messages: [
+          {
+            role: 'system',
+            content: 'Ты AI-помощник приложения EthoLife, специализирующийся на здоровье и фитнесе.'
+          },
+          {
+            role: 'user',
+            content: this.buildPrompt(message, context)
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
+      })
+    });
+
+    const data = await response.json();
+    return {
+      content: data.choices[0].message.content,
+      suggestions: this.extractSuggestions(data)
+    };
+  }
+
+  private buildPrompt(message: string, context?: any): string {
+    let prompt = `Пользователь спрашивает: "${message}"\n\n`;
+    
+    if (context?.healthData) {
+      prompt += `Контекст данных пользователя:\n${JSON.stringify(context.healthData, null, 2)}\n\n`;
+    }
+    
+    prompt += `Дай полезный, конкретный и мотивирующий ответ. Если это про питание/тренировки/сон - дай конкретные рекомендации с цифрами и примерами. Добавь 3-4 быстрых follow-up вопроса в конце ответа.`;
+    
+    return prompt;
+  }
+
+  private extractSuggestions(data: any): string[] {
+    // Извлекаем follow-up вопросы из ответа
+    return [
+      "Расскажи подробнее",
+      "Составь план",
+      "Запиши в дневник",
+      "Назад к модулям"
+    ];
+  }
+}
+
+export const aiService = new AIService();
 ```
 
-### Проблемы с Supabase RLS
-Если данные не сохраняются:
-1. Supabase Dashboard → Authentication → Policies
-2. Проверьте, что RLS политики созданы
-3. Или временно отключите RLS для таблиц (не рекомендуется для продакшена)
+### 2.3 Обновим AI Chat компонент
 
-### NOWPayments webhook не работает
-1. Проверьте, что URL доступен извне (используйте https://webhook.site для теста)
-2. Проверьте логи Render Dashboard → Logs
-3. Убедитесь, что IPN включен в NOWPayments
+```typescript
+// В client/src/components/AIChatOptimized.tsx
 
----
+import { aiService } from '@/services/aiService';
+import { useHealthStore } from '@/stores/healthStore';
 
-## После деплоя
+// В handleSend заменяем mock на реальный вызов:
+const handleSend = async () => {
+  if (!input.trim() || isLoading) return;
 
-### Немедленно сделайте:
-1. Создайте админ-аккаунт через базу данных:
-   ```sql
-   UPDATE profiles SET role = 'admin' WHERE email = 'your-email@example.com';
-   ```
+  // ... добавляем сообщение пользователя ...
 
-2. Настройте планы подписок (уже в миграциях, но проверьте):
-   ```sql
-   SELECT * FROM subscription_plans;
-   ```
+  try {
+    const healthData = useHealthStore.getState().todaySnapshot;
+    
+    const response = await aiService.sendMessage({
+      message: input,
+      context: { healthData },
+      model: 'gemini' // или 'groq'
+    });
 
-3. Проверьте начисление токенов:
-   - Зарегистрируйтесь → должно начислиться 100 UNITY
+    const aiMessage: Message = {
+      id: Date.now().toString(),
+      role: 'assistant',
+      content: response.content,
+      timestamp: new Date(),
+      suggestions: response.suggestions
+    };
 
-4. Протестируйте полный flow:
-   - Регистрация → Подписка (тестовая) → AI-чат
-
----
-
-## Мониторинг
-
-### Бесплатные инструменты:
-- [UptimeRobot](https://uptimerobot.com) — мониторинг доступности (проверка каждые 5 минут)
-- Google Analytics — аналитика посещений
-- Supabase Dashboard — мониторинг базы данных
-
----
-
-## Оптимизация (после запуска)
-
-### Для снижения расходов:
-1. Render: настройте Auto-sleep для неактивных периодов
-2. Supabase: мониторьте использование (лимит 500MB)
-3. Vercel: оптимизируйте размер бандла
-
-### Для повышения производительности:
-1. Включите кэширование на Vercel
-2. Настройте CDN для статических файлов
-3. Оптимизируйте изображения
+    setMessages((prev) => [...prev, aiMessage]);
+  } catch (error) {
+    toast({
+      title: 'Ошибка',
+      description: 'AI временно недоступен. Попробуйте позже.',
+      variant: 'destructive',
+    });
+  }
+};
+```
 
 ---
 
-## Контакты поддержки
+## 3. Быстрая проверка после деплоя
 
-Если что-то не работает:
-1. Проверьте логи в Render Dashboard
-2. Проверьте Network tab в браузере
-3. Откройте Issue в GitHub репозитории
+```bash
+# 1. Проверить переменные окружения
+cat client/.env | grep -E "(VITE_GEMINI|VITE_GROQ|VITE_SUPABASE)"
 
----
+# 2. Проверить подключение к Supabase
+npm run dev
+# Открыть консоль браузера → должны загрузиться данные
 
-## Чеклист перед запуском
-
-- [ ] Supabase проект создан и миграции выполнены
-- [ ] Render сервис деплоен и работает
-- [ ] Vercel проект деплоен
-- [ ] Environment variables настроены везде
-- [ ] Регистрация работает
-- [ ] Логин работает
-- [ ] AI-чат отвечает
-- [ ] Тарифы отображаются
-- [ ] Платежи создают адреса (крипто)
-- [ ] Все страницы открываются без ошибок
+# 3. Проверить AI
+# В чате отправить тестовое сообщение
+```
 
 ---
 
-**После завершения всех пунктов — ваше приложение готово к работе! 🚀**
+## 4. Типичные ошибки и решения
+
+### Ошибка: "Failed to fetch" при вызове AI
+**Решение:** 
+- Проверьте API ключи
+- Проверьте CORS в настройках API
+- Убедитесь что используете `VITE_` префикс для переменных
+
+### Ошибка: "Table does not exist" 
+**Решение:**
+- Миграции не применены
+- Проверьте RLS policies
+- Убедитесь что названия таблиц совпадают
+
+### Ошибка: Build failed
+**Решение:**
+```bash
+cd client
+rm -rf node_modules dist
+npm install
+npm run build
+```
+
+---
+
+**Готово! После выполнения этих шагов ваше приложение будет полностью функционально.**

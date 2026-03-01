@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  CheckCircle2, ArrowRight, Star, Users, TrendingUp, Shield, 
-  Zap, Heart, Brain, Activity, Apple, Moon, Users as UsersIcon,
-  CreditCard, Lock, Gift, Sparkles
+  CheckCircle2, ArrowRight, Star, Zap, Heart, Shield, 
+  TrendingUp, Gift, Lock, Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useI18n } from '@/i18n';
 
 export default function Landing() {
+  const { t } = useI18n();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [selectedPlan, setSelectedPlan] = useState<'basic' | 'premium' | 'enterprise' | null>(null);
@@ -18,10 +18,10 @@ export default function Landing() {
   const plans = [
     {
       id: 'basic',
-      name: 'Basic',
+      name: t('landing.pricing.basic.name'),
       price: '$9.99',
       period: '/month',
-      description: 'For those starting their health journey',
+      description: t('landing.pricing.basic.description'),
       features: [
         'Single bioprofile',
         '3 health modules',
@@ -33,10 +33,10 @@ export default function Landing() {
     },
     {
       id: 'premium',
-      name: 'Premium',
+      name: t('landing.pricing.premium.name'),
       price: '$29.99',
       period: '/month',
-      description: 'Full access to all features',
+      description: t('landing.pricing.premium.description'),
       features: [
         'All 7 health modules',
         'AI diagnostics 2000+ indicators',
@@ -50,10 +50,10 @@ export default function Landing() {
     },
     {
       id: 'enterprise',
-      name: 'Enterprise',
+      name: t('landing.pricing.enterprise.name'),
       price: '$99',
       period: '/month',
-      description: 'For companies and teams',
+      description: t('landing.pricing.enterprise.description'),
       features: [
         'All Premium features',
         'Corporate dashboard',
@@ -89,56 +89,52 @@ export default function Landing() {
   ];
 
   const stats = [
-    { value: '2000+', label: 'Health Indicators', icon: Activity },
-    { value: '95%', label: 'AI Diagnostic Accuracy', icon: Brain },
-    { value: '500K+', label: 'Users', icon: Users },
-    { value: '7', label: 'Health Modules', icon: Heart },
+    { value: '2000+', label: 'Health Indicators', icon: Zap },
+    { value: '95%', label: 'AI Diagnostic Accuracy', icon: Sparkles },
+    { value: '500K+', label: 'Users', icon: Heart },
+    { value: '7', label: 'Health Modules', icon: Shield },
   ];
 
   const benefits = [
     {
       icon: Zap,
-      title: 'Instant Results',
-      description: 'Get a personalized wellness plan in 5 minutes',
+      title: t('landing.benefits.instant'),
+      description: t('landing.benefits.instantDesc'),
     },
     {
       icon: Shield,
-      title: 'Data Security',
-      description: 'End-to-end encryption and full data control',
+      title: t('landing.benefits.security'),
+      description: t('landing.benefits.securityDesc'),
     },
     {
       icon: TrendingUp,
-      title: 'Proven Effectiveness',
-      description: '95% of users see improvements in the first month',
+      title: t('landing.benefits.effective'),
+      description: t('landing.benefits.effectiveDesc'),
     },
     {
       icon: Gift,
-      title: 'Free Trial',
-      description: '14 days of full access without payment',
+      title: t('landing.benefits.trial'),
+      description: t('landing.benefits.trialDesc'),
     },
   ];
 
   const handleGetStarted = () => {
     if (selectedPlan) {
-      // Scroll to registration form
       document.getElementById('registration')?.scrollIntoView({ behavior: 'smooth' });
     } else {
-      // Scroll to plans
       document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   const handleRegister = () => {
-    // Registration logic here
     console.log('Registering:', { name, email, plan: selectedPlan });
-    alert('Registration successful! Check your email for confirmation.');
+    alert(t('auth.registrationSuccess'));
   };
 
   return (
     <div className="min-h-screen bg-background landing-page">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background effects */}
         <div className="absolute inset-0 glass-bubbles"></div>
         
         <div className="container mx-auto px-4 py-20 relative z-10">
@@ -154,16 +150,15 @@ export default function Landing() {
               transition={{ delay: 0.2, type: 'spring' }}
               className="engraved-card mb-8 p-8"
             >
-              <Badge className="mb-4 engraved-badge">Next Generation Health</Badge>
+              <Badge className="mb-4 engraved-badge">{t('landing.hero.badge')}</Badge>
               <h1 className="text-5xl md:text-7xl font-bold mb-6 engraved-text">
-                EthosLife
+                {t('app.name')}
               </h1>
               <p className="text-2xl md:text-3xl text-foreground/80 mb-4 engraved-text">
-                Healthy living is a habit
+                {t('landing.hero.tagline')}
               </p>
               <p className="text-lg md:text-xl text-foreground/70 mb-8 leading-relaxed">
-                A unified platform for managing all aspects of health. 
-                AI analysis of 2000+ indicators, personalized recommendations and continuous 24/7 monitoring.
+                {t('app.description')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
@@ -171,7 +166,7 @@ export default function Landing() {
                   className="engraved-button text-lg px-8 py-6"
                   onClick={handleGetStarted}
                 >
-                  Start Free
+                  {t('landing.hero.ctaPrimary')}
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
                 <Button
@@ -180,7 +175,7 @@ export default function Landing() {
                   className="engraved-button-outline text-lg px-8 py-6"
                   onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                  Learn More
+                  {t('landing.hero.ctaSecondary')}
                 </Button>
               </div>
             </motion.div>
@@ -220,11 +215,10 @@ export default function Landing() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4 engraved-text">
-              The Problem We Solve
+              {t('landing.problem.title')}
             </h2>
             <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
-              Health data is scattered across different apps and systems. 
-              No unified picture, no personalization, no comprehensive approach.
+              {t('landing.problem.subtitle')}
             </p>
           </motion.div>
 
@@ -235,24 +229,14 @@ export default function Landing() {
               viewport={{ once: true }}
               className="engraved-card p-8"
             >
-              <h3 className="text-2xl font-bold mb-4 engraved-text">Problem</h3>
+              <h3 className="text-2xl font-bold mb-4 engraved-text">{t('landing.problem.problemTitle')}</h3>
               <ul className="space-y-3 text-foreground/80">
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">✗</span>
-                  <span>Data in different apps</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">✗</span>
-                  <span>No personalization</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">✗</span>
-                  <span>Fragmented information</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">✗</span>
-                  <span>No comprehensive approach</span>
-                </li>
+                {t('landing.problem.problemList').map((item: string, idx: number) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="text-red-500 mt-1">✗</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </motion.div>
 
@@ -262,24 +246,14 @@ export default function Landing() {
               viewport={{ once: true }}
               className="engraved-card p-8"
             >
-              <h3 className="text-2xl font-bold mb-4 engraved-text">EthosLife Solution</h3>
+              <h3 className="text-2xl font-bold mb-4 engraved-text">{t('landing.problem.solutionTitle')}</h3>
               <ul className="space-y-3 text-foreground/80">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="text-green-500 mt-1 w-5 h-5 flex-shrink-0" />
-                  <span>Unified platform for all data</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="text-green-500 mt-1 w-5 h-5 flex-shrink-0" />
-                  <span>AI personalization based on 2000+ indicators</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="text-green-500 mt-1 w-5 h-5 flex-shrink-0" />
-                  <span>Comprehensive approach to health</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="text-green-500 mt-1 w-5 h-5 flex-shrink-0" />
-                  <span>Continuous 24/7 monitoring</span>
-                </li>
+                {t('landing.problem.solutionList').map((item: string, idx: number) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <CheckCircle2 className="text-green-500 mt-1 w-5 h-5 flex-shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </motion.div>
           </div>
@@ -296,7 +270,7 @@ export default function Landing() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4 engraved-text">
-              Why Choose EthosLife
+              {t('landing.benefits.title')}
             </h2>
           </motion.div>
 
@@ -329,7 +303,7 @@ export default function Landing() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4 engraved-text">
-              What Users Say
+              {t('landing.testimonials.title')}
             </h2>
           </motion.div>
 
@@ -369,10 +343,10 @@ export default function Landing() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4 engraved-text">
-              Choose Your Plan
+              {t('landing.pricing.title')}
             </h2>
             <p className="text-xl text-foreground/70">
-              14 days free. Cancel anytime.
+              {t('landing.pricing.subtitle')}
             </p>
           </motion.div>
 
@@ -388,7 +362,7 @@ export default function Landing() {
               >
                 {plan.popular && (
                   <Badge className="absolute -top-4 left-1/2 -translate-x-1/2 engraved-badge">
-                    Popular
+                    {t('landing.pricing.popular')}
                   </Badge>
                 )}
                 <div className="text-center mb-6">
@@ -415,7 +389,7 @@ export default function Landing() {
                     document.getElementById('registration')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                 >
-                  Select Plan
+                  {t('landing.pricing.selectPlan')}
                 </Button>
               </motion.div>
             ))}
@@ -434,10 +408,10 @@ export default function Landing() {
           >
             <div className="text-center mb-8">
               <h2 className="text-4xl font-bold mb-4 engraved-text">
-                Start Your Health Journey
+                {t('landing.registration.title')}
               </h2>
               <p className="text-lg text-foreground/70">
-                Create an account and get 14 days of free access
+                {t('landing.registration.subtitle')}
               </p>
             </div>
 
@@ -450,7 +424,7 @@ export default function Landing() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-bold engraved-text">
-                      Selected plan: {plans.find(p => p.id === selectedPlan)?.name}
+                      {t('landing.registration.selectedPlan')}: {plans.find(p => p.id === selectedPlan)?.name}
                     </div>
                     <div className="text-sm text-foreground/70">
                       {plans.find(p => p.id === selectedPlan)?.price}
@@ -462,7 +436,7 @@ export default function Landing() {
                     size="sm"
                     onClick={() => setSelectedPlan(null)}
                   >
-                    Change
+                    {t('landing.registration.change')}
                   </Button>
                 </div>
               </motion.div>
@@ -471,13 +445,13 @@ export default function Landing() {
             <form onSubmit={(e) => { e.preventDefault(); handleRegister(); }} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium mb-2 engraved-text">
-                  Your Name
+                  {t('landing.registration.nameLabel')}
                 </label>
                 <Input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="John Smith"
+                  placeholder={t('landing.registration.namePlaceholder')}
                   required
                   className="engraved-input"
                 />
@@ -485,13 +459,13 @@ export default function Landing() {
 
               <div>
                 <label className="block text-sm font-medium mb-2 engraved-text">
-                  Email
+                  {t('landing.registration.emailLabel')}
                 </label>
                 <Input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="john@example.com"
+                  placeholder={t('landing.registration.emailPlaceholder')}
                   required
                   className="engraved-input"
                 />
@@ -500,7 +474,7 @@ export default function Landing() {
               {!selectedPlan && (
                 <div>
                   <label className="block text-sm font-medium mb-2 engraved-text">
-                    Choose Plan
+                    {t('landing.registration.planLabel')}
                   </label>
                   <div className="grid gap-3">
                     {plans.map((plan) => (
@@ -520,7 +494,7 @@ export default function Landing() {
                             </div>
                           </div>
                           {plan.popular && (
-                            <Badge className="engraved-badge">Popular</Badge>
+                            <Badge className="engraved-badge">{t('landing.pricing.popular')}</Badge>
                           )}
                         </div>
                       </button>
@@ -537,10 +511,10 @@ export default function Landing() {
                   className="w-5 h-5"
                 />
                 <label htmlFor="terms" className="text-sm text-foreground/70">
-                  I agree to the{' '}
-                  <a href="#" className="text-primary hover:underline">terms of service</a>{' '}
-                  and{' '}
-                  <a href="#" className="text-primary hover:underline">privacy policy</a>
+                  {t('landing.registration.agreeTerms')}{' '}
+                  <a href="#" className="text-primary hover:underline">{t('landing.registration.termsLink')}</a>{' '}
+                  {t('landing.registration.and')}{' '}
+                  <a href="#" className="text-primary hover:underline">{t('landing.registration.privacyLink')}</a>
                 </label>
               </div>
 
@@ -551,13 +525,13 @@ export default function Landing() {
                 disabled={!name || !email || !selectedPlan}
               >
                 <Lock className="mr-2 w-5 h-5" />
-                Create Account & Start
+                {t('landing.registration.submitButton')}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
 
               <p className="text-center text-sm text-foreground/60">
                 <Gift className="inline w-4 h-4 mr-1" />
-                14 days free. Cancel anytime. No hidden fees.
+                {t('landing.registration.trialNote')}
               </p>
             </form>
           </motion.div>
@@ -575,17 +549,17 @@ export default function Landing() {
           >
             <Sparkles className="w-16 h-16 text-primary mb-6 mx-auto" />
             <h2 className="text-4xl md:text-5xl font-bold mb-6 engraved-text">
-              Ready to Change Your Life?
+              {t('landing.cta.title')}
             </h2>
             <p className="text-xl text-foreground/70 mb-8">
-              Join 500,000+ users already on their way to better health
+              {t('landing.cta.subtitle')}
             </p>
             <Button
               size="lg"
               className="engraved-button text-lg px-8 py-6"
               onClick={() => document.getElementById('registration')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              Start Free
+              {t('landing.cta.button')}
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </motion.div>

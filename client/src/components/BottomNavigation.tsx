@@ -41,42 +41,42 @@ export function BottomNavigation() {
 
   const menuSections = [
     {
-      title: 'Main',
+      title: t('nav.main'),
       items: [
-        { path: '/', label: 'Home' },
-        { path: '/landing', label: 'Landing' },
-        { path: '/presentation', label: 'Presentation' },
+        { path: '/', label: t('nav.home') },
+        { path: '/landing', label: t('nav.landing') },
+        { path: '/presentation', label: t('nav.presentation') },
       ],
     },
     {
-      title: 'Health',
+      title: t('nav.health'),
       items: [
-        { path: '/health-center', label: 'Health Center' },
-        { path: '/health/movement', label: 'Movement' },
-        { path: '/health/nutrition', label: 'Nutrition' },
-        { path: '/health/sleep', label: 'Sleep' },
-        { path: '/health/psychology', label: 'Psychology' },
-        { path: '/health/medicine', label: 'Medicine' },
-        { path: '/health/relationships', label: 'Relationships' },
-        { path: '/health/habits', label: 'Habits' },
+        { path: '/health-center', label: t('health.title') },
+        { path: '/health/movement', label: t('health.modules.movement') },
+        { path: '/health/nutrition', label: t('health.modules.nutrition') },
+        { path: '/health/sleep', label: t('health.modules.sleep') },
+        { path: '/health/psychology', label: t('health.modules.psychology') },
+        { path: '/health/medicine', label: t('health.modules.medicine') },
+        { path: '/health/relationships', label: t('health.modules.relationships') },
+        { path: '/health/habits', label: t('health.modules.habits') },
       ],
     },
     {
-      title: 'Platform',
+      title: t('nav.platform'),
       items: [
-        { path: '/wallet', label: 'Wallet' },
-        { path: '/specialists', label: 'Specialists' },
-        { path: '/map', label: 'Map' },
-        { path: '/news', label: 'News' },
+        { path: '/wallet', label: t('nav.wallet') },
+        { path: '/specialists', label: t('nav.specialists') },
+        { path: '/map', label: t('nav.map') },
+        { path: '/news', label: t('nav.news') },
       ],
     },
     {
-      title: 'Info',
+      title: t('nav.info'),
       items: [
-        { path: '/roadmap', label: 'Roadmap' },
-        { path: '/tokenomics', label: 'Tokenomics' },
-        { path: '/whitepaper', label: 'Whitepaper' },
-        { path: '/pricing', label: 'Pricing' },
+        { path: '/roadmap', label: t('nav.roadmap') },
+        { path: '/tokenomics', label: t('nav.tokenomics') },
+        { path: '/whitepaper', label: t('nav.whitepaper') },
+        { path: '/pricing', label: t('nav.pricing') },
       ],
     },
   ];
@@ -138,7 +138,7 @@ export function BottomNavigation() {
             >
               {/* Header */}
               <div className="flex items-center justify-between p-3 border-b">
-                <span className="font-bold">Menu</span>
+                <span className="font-bold">{t('nav.menu')}</span>
                 <div className="flex items-center gap-1">
                   <LanguageSwitcher />
                   <button
@@ -186,18 +186,18 @@ export function BottomNavigation() {
                     className="flex items-center gap-2 w-full px-2 py-2 text-red-600 text-sm hover:bg-red-50 rounded"
                   >
                     <LogOut className="w-4 h-4" />
-                    Logout
+                    {t('nav.logout')}
                   </button>
                 ) : (
                   <div className="flex gap-2">
                     <Link href="/login" className="flex-1">
                       <Button variant="outline" className="w-full" size="sm" onClick={() => setIsMenuOpen(false)}>
-                        Login
+                        {t('nav.login')}
                       </Button>
                     </Link>
                     <Link href="/register" className="flex-1">
                       <Button className="w-full bg-emerald-600 hover:bg-emerald-700" size="sm" onClick={() => setIsMenuOpen(false)}>
-                        Register
+                        {t('nav.register')}
                       </Button>
                     </Link>
                   </div>

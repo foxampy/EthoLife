@@ -34,6 +34,16 @@ import MedicineHealth from "./pages/health/MedicineHealth";
 import RelationshipsHealth from "./pages/health/RelationshipsHealth";
 import HabitsHealth from "./pages/health/HabitsHealth";
 import HealthModules from "./pages/HealthModules";
+
+// New Health Hub Modules
+import HealthDashboard from "./pages/health/HealthDashboard";
+import NutritionModule from "./pages/health/NutritionModule";
+import MovementModule from "./pages/health/MovementModule";
+import SleepModule from "./pages/health/SleepModule";
+import PsychologyModule from "./pages/health/PsychologyModule";
+import MedicineModule from "./pages/health/MedicineModule";
+import RelationshipsModule from "./pages/health/RelationshipsModule";
+import HabitsModule from "./pages/health/HabitsModule";
 import Relationships from "./pages/Relationships";
 import Spirituality from "./pages/Spirituality";
 import Systematization from "./pages/Systematization";
@@ -62,6 +72,7 @@ import GoogleCallback from "./pages/GoogleCallback";
 import News from "./pages/News";
 import NewStyleLanding from "./pages/newstyle";
 import LandingV2 from "./pages/LandingV2";
+import LandingPage from "./pages/LandingPage";
 import Pricing from "./pages/Pricing";
 import Checkout from "./pages/Checkout";
 import SpecialistOffer from "./pages/SpecialistOffer";
@@ -72,11 +83,18 @@ import Wallet from "./pages/Wallet";
 import CryptoPayment from "./pages/CryptoPayment";
 import CreatePost from "./pages/CreatePost";
 import CreateStory from "./pages/CreateStory";
+import FullPageList from "./pages/FullPageList";
+import Library from "./pages/Library";
+import Posture from "./pages/Posture";
+import Integrations from "./pages/Integrations";
+import Researchers from "./pages/Researchers";
+import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
 
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
+      <Route path={"/"} component={LandingPage} />
+      <Route path={"/home"} component={Home} />
       <Route path={"/telegram-auth"} component={TelegramAuth} />
       <Route path={"/landing"} component={Landing} />
       <Route path={"/presentation"} component={Presentation} />
@@ -93,6 +111,14 @@ function Router() {
       <Route path={"/health/medicine"} component={MedicineHealth} />
       <Route path={"/health/relationships"} component={RelationshipsHealth} />
       <Route path={"/health/habits"} component={HabitsHealth} />
+      <Route path={"/health"} component={HealthDashboard} />
+      <Route path={"/health/nutrition/v2"} component={NutritionModule} />
+      <Route path={"/health/movement/v2"} component={MovementModule} />
+      <Route path={"/health/sleep/v2"} component={SleepModule} />
+      <Route path={"/health/psychology/v2"} component={PsychologyModule} />
+      <Route path={"/health/medicine/v2"} component={MedicineModule} />
+      <Route path={"/health/relationships/v2"} component={RelationshipsModule} />
+      <Route path={"/health/habits/v2"} component={HabitsModule} />
       <Route path={"/health/:moduleId"} component={HealthModules} />
       <Route path={"/documents"} component={Documents} />
       <Route path={"/shop"} component={Shop} />
@@ -129,6 +155,7 @@ function Router() {
       <Route path={"/environment"} component={() => <div className="p-8">Environment (coming soon)</div>} />
       <Route path={"/newstyle"} component={NewStyleLanding} />
       <Route path={"/v2"} component={LandingV2} />
+      <Route path={"/landing-new"} component={LandingPage} />
       <Route path={"/pricing"} component={Pricing} />
       <Route path={"/checkout"} component={Checkout} />
       <Route path={"/specialist-offer"} component={SpecialistOffer} />
@@ -139,6 +166,11 @@ function Router() {
       <Route path={"/payment/crypto/:planId"} component={CryptoPayment} />
       <Route path={"/create-post"} component={CreatePost} />
       <Route path={"/create-story"} component={CreateStory} />
+      <Route path={"/full"} component={FullPageList} />
+      <Route path={"/library"} component={Library} />
+      <Route path={"/posture"} component={Posture} />
+      <Route path={"/integrations"} component={Integrations} />
+      <Route path={"/researchers"} component={Researchers} />
       <Route path={"/login"} component={Login} />
       <Route path={"/register"} component={Register} />
       <Route path={"/auth/callback"} component={GoogleCallback} />
@@ -159,6 +191,7 @@ function App() {
               <Header />
               <Router />
               <BottomNavigation />
+              <PWAInstallPrompt />
             </TooltipProvider>
           </UserProvider>
         </AuthProvider>

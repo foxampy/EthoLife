@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://ethoslife.onrender.com/sitemap.xml
+
+# Crawl delay for bots
+Crawl-delay: 1
+
+# Disallow admin and private routes
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/settings/
+Disallow: /profile/edit/

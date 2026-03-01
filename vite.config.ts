@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
+import { VitePWA } from "vite-plugin-pwa";
 
 // =============================================================================
 // Manus Debug Collector - Vite Plugin
@@ -150,8 +151,223 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
+// PWA Configuration
+const pwaPlugin = VitePWA({
+  registerType: "autoUpdate",
+  includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg", "robots.txt"],
+  manifest: {
+    name: "EthoLife - Health Ecosystem",
+    short_name: "EthoLife",
+    description: "Your personal health companion with AI insights, nutrition tracking, and medical document management",
+    theme_color: "#10B981",
+    background_color: "#ffffff",
+    display: "standalone",
+    scope: "/",
+    start_url: "/",
+    orientation: "portrait",
+    lang: "en",
+    dir: "ltr",
+    categories: ["health", "fitness", "medical", "lifestyle"],
+    icons: [
+      {
+        src: "/icon-72x72.png",
+        sizes: "72x72",
+        type: "image/png",
+        purpose: "maskable any"
+      },
+      {
+        src: "/icon-96x96.png",
+        sizes: "96x96",
+        type: "image/png",
+        purpose: "maskable any"
+      },
+      {
+        src: "/icon-128x128.png",
+        sizes: "128x128",
+        type: "image/png",
+        purpose: "maskable any"
+      },
+      {
+        src: "/icon-144x144.png",
+        sizes: "144x144",
+        type: "image/png",
+        purpose: "maskable any"
+      },
+      {
+        src: "/icon-152x152.png",
+        sizes: "152x152",
+        type: "image/png",
+        purpose: "maskable any"
+      },
+      {
+        src: "/icon-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "maskable any"
+      },
+      {
+        src: "/icon-384x384.png",
+        sizes: "384x384",
+        type: "image/png",
+        purpose: "maskable any"
+      },
+      {
+        src: "/icon-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable any"
+      }
+    ],
+    screenshots: [
+      {
+        src: "/screenshot-dashboard.png",
+        sizes: "1280x720",
+        type: "image/png",
+        form_factor: "wide",
+        label: "Dashboard"
+      },
+      {
+        src: "/screenshot-mobile.png",
+        sizes: "750x1334",
+        type: "image/png",
+        form_factor: "narrow",
+        label: "Mobile View"
+      }
+    ],
+    shortcuts: [
+      {
+        name: "Dashboard",
+        short_name: "Dashboard",
+        description: "View your health dashboard",
+        url: "/dashboard",
+        icons: [{ src: "/icon-192x192.png", sizes: "192x192" }]
+      },
+      {
+        name: "AI Chat",
+        short_name: "AI Chat",
+        description: "Chat with AI health assistant",
+        url: "/ai-chat",
+        icons: [{ src: "/icon-192x192.png", sizes: "192x192" }]
+      },
+      {
+        name: "Add Food",
+        short_name: "Add Food",
+        description: "Log your meal with photo",
+        url: "/health/nutrition?action=add",
+        icons: [{ src: "/icon-192x192.png", sizes: "192x192" }]
+      },
+      {
+        name: "Documents",
+        short_name: "Documents",
+        description: "View medical documents",
+        url: "/documents",
+        icons: [{ src: "/icon-192x192.png", sizes: "192x192" }]
+      }
+    ],
+    related_applications: [
+      {
+        platform: "play",
+        url: "https://play.google.com/store/apps/details?id=com.ethoslife.app",
+        id: "com.ethoslife.app"
+      },
+      {
+        platform: "itunes",
+        url: "https://apps.apple.com/app/ethoslife/id123456789"
+      }
+    ],
+    prefer_related_applications: false,
+    features: ["cross-platform", "offline", "camera", "geolocation"]
+  },
+  workbox: {
+    globPatterns: ["**/*.{js,css,html,ico,png,svg,woff,woff2,mp3,webm}"],
+    runtimeCaching: [
+      {
+        urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "google-fonts-cache",
+          expiration: {
+            maxEntries: 10,
+            maxAgeSeconds: 60 * 60 * 24 * 365
+          },
+          cacheableResponse: {
+            statuses: [0, 200]
+          }
+        }
+      },
+      {
+        urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "gstatic-fonts-cache",
+          expiration: {
+            maxEntries: 10,
+            maxAgeSeconds: 60 * 60 * 24 * 365
+          },
+          cacheableResponse: {
+            statuses: [0, 200]
+          }
+        }
+      },
+      {
+        urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif)$/,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "images-cache",
+          expiration: {
+            maxEntries: 100,
+            maxAgeSeconds: 60 * 60 * 24 * 30
+          }
+        }
+      },
+      {
+        urlPattern: /\/api\//,
+        handler: "NetworkFirst",
+        options: {
+          cacheName: "api-cache",
+          expiration: {
+            maxEntries: 200,
+            maxAgeSeconds: 60 * 60 * 24
+          },
+          networkTimeoutSeconds: 10,
+          cacheableResponse: {
+            statuses: [0, 200, 204]
+          }
+        }
+      },
+      {
+        urlPattern: /\/supabase\//,
+        handler: "NetworkFirst",
+        options: {
+          cacheName: "supabase-cache",
+          expiration: {
+            maxEntries: 100,
+            maxAgeSeconds: 60 * 60
+          },
+          networkTimeoutSeconds: 5
+        }
+      }
+    ],
+    skipWaiting: true,
+    clientsClaim: true,
+    cleanupOutdatedCaches: true,
+    sourcemap: true
+  },
+  devOptions: {
+    enabled: true,
+    type: "module",
+    navigateFallback: "index.html"
+  }
+});
+
 // jsxLocPlugin removed for Vite 7 compatibility (requires vite 4-5)
-const plugins = [react(), tailwindcss(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
+const plugins = [
+  react(),
+  tailwindcss(),
+  vitePluginManusRuntime(),
+  vitePluginManusDebugCollector(),
+  pwaPlugin
+];
 
 export default defineConfig({
   base: process.env.VITE_BASE_PATH || "/",
@@ -168,10 +384,21 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu", "lucide-react"],
+          charts: ["recharts"],
+          animation: ["framer-motion"]
+        }
+      }
+    }
   },
   server: {
     port: 3000,
-    strictPort: false, // Will find next available port if 3000 is busy
+    strictPort: false,
     host: true,
     allowedHosts: [
       ".manuspre.computer",

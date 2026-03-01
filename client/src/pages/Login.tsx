@@ -30,13 +30,12 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [configError, setConfigError] = useState<string | null>(null);
 
-  // Check OAuth configuration on mount
   useEffect(() => {
     const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || (window as any).GOOGLE_CLIENT_ID;
     if (!googleClientId || googleClientId === 'your-google-client-id') {
-      setConfigError('Google OAuth is not configured. Please use email/password or Telegram login.');
+      setConfigError(t('errors.serverError'));
     }
-  }, []);
+  }, [t]);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,7 +59,7 @@ export default function Login() {
         setError(errorData.error || t('auth.invalidCredentials'));
       }
     } catch (err) {
-      setError('Server connection error');
+      setError(t('auth.connectionError'));
     } finally {
       setLoading(false);
     }
@@ -68,12 +67,10 @@ export default function Login() {
 
   const handleGoogleLogin = () => {
     const redirectUri = `${window.location.origin}/auth/callback`;
-    
-    // Try to get client ID from env or window config
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || (window as any).GOOGLE_CLIENT_ID || '';
     
     if (!clientId || clientId === 'your-google-client-id') {
-      setError('Google OAuth is not configured. Please use email/password or Telegram login.');
+      setError(t('errors.serverError'));
       console.error('VITE_GOOGLE_CLIENT_ID not configured');
       return;
     }
@@ -94,11 +91,9 @@ export default function Login() {
   };
 
   const handleTelegramLogin = () => {
-    // Show instructions for Telegram auth
-    const botUsername = 'etholife_bot'; // Change to your bot username
+    const botUsername = 'etholife_bot';
     const authUrl = `${window.location.origin}/auth/callback`;
     
-    // Open Telegram with deep link for authentication
     const telegramUrl = `https://t.me/${botUsername}?start=auth_${btoa(JSON.stringify({
       redirect: authUrl,
       timestamp: Date.now()
@@ -106,7 +101,7 @@ export default function Login() {
     
     window.open(telegramUrl, '_blank');
     
-    setError('Telegram bot opened. Click "Start" in the bot to authenticate, then return to this page.');
+    setError(t('auth.telegramLogin'));
   };
 
   return (
@@ -121,14 +116,13 @@ export default function Login() {
             <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
               <span className="text-white text-2xl font-bold">EL</span>
             </div>
-            <CardTitle className="text-2xl font-bold">Sign In to EthosLife</CardTitle>
+            <CardTitle className="text-2xl font-bold">{t('auth.loginTitle')}</CardTitle>
             <CardDescription>
-              Sign in to your account or create a new one
+              {t('auth.noAccount')} {t('nav.register')}
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
-            {/* Configuration Warning */}
             {configError && (
               <Alert className="bg-amber-50 border-amber-200">
                 <AlertCircle className="h-4 w-4 text-amber-600" />
@@ -138,11 +132,10 @@ export default function Login() {
               </Alert>
             )}
 
-            {/* Email/Password Form */}
             <form onSubmit={handleEmailLogin} className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-                  Email
+                  {t('auth.email')}
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -159,7 +152,7 @@ export default function Login() {
 
               <div>
                 <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-                  Password
+                  {t('auth.password')}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -196,24 +189,22 @@ export default function Login() {
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
-                    Sign In
+                    {t('auth.loginButton')}
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </>
                 )}
               </Button>
             </form>
 
-            {/* Divider */}
             <div className="relative py-2">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-slate-200"></div>
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-white px-4 text-sm text-slate-500">or</span>
+                <span className="bg-white px-4 text-sm text-slate-500">{t('auth.or')}</span>
               </div>
             </div>
 
-            {/* Social Login */}
             <div className="space-y-3">
               <Button
                 variant="outline"
@@ -221,7 +212,7 @@ export default function Login() {
                 onClick={handleGoogleLogin}
               >
                 <Chrome className="mr-2 w-5 h-5 text-red-500" />
-                Continue with Google
+                {t('auth.googleLogin')}
               </Button>
 
               <Button
@@ -230,29 +221,27 @@ export default function Login() {
                 onClick={handleTelegramLogin}
               >
                 <MessageCircle className="mr-2 w-5 h-5 text-blue-500" />
-                Continue with Telegram
+                {t('auth.telegramLogin')}
               </Button>
             </div>
 
-            {/* Register Link */}
             <div className="text-center pt-4 border-t border-slate-100">
               <p className="text-slate-600">
-                Don't have an account?{' '}
+                {t('auth.noAccount')}{' '}
                 <button
                   onClick={() => setLocation('/register')}
                   className="text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  Sign Up
+                  {t('nav.register')}
                 </button>
               </p>
             </div>
 
-            {/* Back to Home */}
             <button
               onClick={() => setLocation('/')}
               className="w-full text-center text-sm text-slate-400 hover:text-slate-600 pt-2"
             >
-              ← Back to Home
+              ← {t('common.back')}
             </button>
           </CardContent>
         </Card>

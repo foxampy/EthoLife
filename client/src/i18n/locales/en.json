@@ -1,11 +1,14 @@
 {
   "app": {
     "name": "EthosLife",
-    "tagline": "Health is a lifestyle habit",
+    "tagline": "Health is a daily habit. We make this habit easy, rewarding, and effective.",
     "description": "Comprehensive health ecosystem for managing your wellbeing"
   },
   "nav": {
     "menu": "Menu",
+    "main": "Main",
+    "platform": "Platform",
+    "info": "Info",
     "home": "Home",
     "dashboard": "Dashboard",
     "health": "Health",
@@ -33,7 +36,9 @@
     "roadmap": "Roadmap",
     "investment": "Investment",
     "specialistOffer": "For Specialists",
-    "centerOffer": "For Centers"
+    "centerOffer": "For Centers",
+    "landing": "Landing",
+    "presentation": "Presentation"
   },
   "auth": {
     "loginTitle": "Sign in to EthosLife",
@@ -288,63 +293,173 @@
     "tomorrow": "Tomorrow"
   },
   "landing": {
+    "nav": {
+      "features": "Features",
+      "modules": "Modules",
+      "pricing": "Pricing",
+      "specialists": "Specialists",
+      "login": "Sign In",
+      "dashboard": "Dashboard"
+    },
     "hero": {
-      "title": "Your Health Journey Starts Here",
-      "subtitle": "Track, analyze, and improve all aspects of your health with AI-powered insights",
+      "title": "Health is a daily habit",
+      "subtitle": "We make this habit easy, rewarding, and effective",
+      "description": "Track, analyze, and improve all aspects of your health with AI-powered insights. Get personalized recommendations based on 2000+ health indicators.",
       "ctaPrimary": "Get Started Free",
-      "ctaSecondary": "Learn More"
+      "ctaSecondary": "Watch Demo",
+      "badge": "Health ecosystem of the future"
     },
-    "features": {
-      "title": "Everything You Need",
-      "subtitle": "Comprehensive health tracking in one place",
-      "tracking": {
-        "title": "Track Everything",
-        "desc": "Monitor 7 key health areas: medicine, movement, nutrition, psychology, sleep, relationships, and habits"
-      },
-      "ai": {
-        "title": "AI Assistant",
-        "desc": "Get personalized health recommendations from our advanced AI"
-      },
-      "community": {
-        "title": "Expert Support",
-        "desc": "Connect with certified health specialists when you need professional help"
-      }
+    "bonus": {
+      "title": "Limited Offer: Premium 50% OFF"
     },
-    "howItWorks": {
-      "title": "How It Works",
-      "step1": {
-        "title": "Create Account",
-        "desc": "Sign up in seconds and set up your health profile"
-      },
-      "step2": {
-        "title": "Track Health",
-        "desc": "Log your daily activities, meals, sleep, and mood"
-      },
-      "step3": {
-        "title": "Get Insights",
-        "desc": "Receive AI-powered recommendations and track progress"
-      }
+    "trust": {
+      "freeStart": "Free to start",
+      "noCard": "No credit card",
+      "cancelAnytime": "Cancel anytime"
     },
-    "testimonials": {
-      "title": "What Users Say"
+    "preview": {
+      "steps": "Steps today",
+      "mood": "Mood",
+      "great": "Great!"
+    },
+    "stats": {
+      "users": "Active Users",
+      "rating": "App Rating",
+      "specialists": "Specialists",
+      "satisfaction": "Satisfaction"
+    },
+    "problem": {
+      "title": "The Problem",
+      "subtitle": "Health data is scattered across different apps. No unified picture, no personalization, no comprehensive approach.",
+      "apps": "Dozens of separate apps for different health aspects",
+      "disconnected": "Data doesn't sync between platforms",
+      "ai": "No AI to analyze your patterns",
+      "expensive": "Specialists are expensive and hard to access"
+    },
+    "solution": {
+      "title": "EthosLife Solution",
+      "description": "One unified platform for all your health data. AI analyzes 2000+ indicators to give personalized recommendations. Access to 500+ certified specialists at fair prices."
+    },
+    "modules": {
+      "title": "7 Health Modules",
+      "subtitle": "Everything you need in one place",
+      "nutrition": "Nutrition",
+      "nutritionDesc": "Meal tracking, calorie counting, personalized meal plans",
+      "movement": "Movement",
+      "movementDesc": "Activity tracking, workout plans, fitness goals",
+      "sleep": "Sleep",
+      "sleepDesc": "Sleep quality tracking, smart alarms, insights",
+      "psychology": "Psychology",
+      "psychologyDesc": "Mood tracking, meditation, stress management",
+      "medicine": "Medicine",
+      "medicineDesc": "Medical records, lab results, medication reminders",
+      "social": "Social",
+      "socialDesc": "Connect with others on similar health journeys",
+      "habits": "Habits",
+      "habitsDesc": "Build healthy habits, track streaks, stay motivated"
+    },
+    "offer": {
+      "limited": "Limited time offer",
+      "title": "Get Premium + Personal Team of Experts",
+      "description": "For the first 100 users: Get Premium access for 1 year + personal team of 6 specialists",
+      "includes": "Your team includes",
+      "bonus1": "1-on-1 sessions with each specialist",
+      "bonus2": "Personalized health plan",
+      "bonus3": "24/7 chat support",
+      "bonus4": "Priority access to new features",
+      "team": "Your team",
+      "cta": "Claim Your Offer",
+      "left": "Bonus packages left",
+      "of": "of"
+    },
+    "specialists": {
+      "mentor": "Health Mentor",
+      "doctor": "Doctor",
+      "trainer": "Fitness Trainer",
+      "nutritionist": "Nutritionist",
+      "psychologist": "Psychologist",
+      "coach": "Life Coach"
     },
     "cta": {
-      "title": "Ready to Start?",
-      "subtitle": "Join thousands of users improving their health",
-      "button": "Start Your Journey"
+      "startFree": "Start Free",
+      "watchDemo": "Watch Demo"
+    },
+    "footer": {
+      "rights": "All rights reserved."
     }
   },
   "onboarding": {
-    "welcome": "Welcome to EthosLife",
-    "setup": "Let's set up your profile",
-    "healthGoals": "What are your health goals?",
-    "trackingPreferences": "What would you like to track?",
-    "notifications": "Enable notifications to stay on track",
-    "finish": "You're all set!",
-    "skip": "Skip for now",
-    "next": "Next",
+    "step": "Step",
+    "of": "of",
     "back": "Back",
-    "finishSetup": "Finish Setup"
+    "next": "Next",
+    "mood": {
+      "title": "How are you feeling today?",
+      "subtitle": "This helps us understand your current state and personalize recommendations",
+      "terrible": "Terrible",
+      "excellent": "Excellent"
+    },
+    "goals": {
+      "title": "What are your health goals?",
+      "subtitle": "Select 2-3 goals that matter most to you",
+      "weight": "Lose weight",
+      "energy": "More energy",
+      "sleep": "Better sleep",
+      "stress": "Less stress",
+      "fitness": "Get fit",
+      "nutrition": "Eat healthier"
+    },
+    "activity": {
+      "title": "How active are you?",
+      "subtitle": "Be honest - we won't judge!",
+      "sedentary": "Mostly sitting",
+      "sedentaryDesc": "Office work, little exercise",
+      "light": "Light activity",
+      "lightDesc": "Walking 1-2 times a week",
+      "moderate": "Moderate",
+      "moderateDesc": "Exercise 3-4 times a week",
+      "active": "Very active",
+      "activeDesc": "Exercise 5+ times a week"
+    },
+    "sleep": {
+      "title": "How much do you sleep?",
+      "subtitle": "On average per night",
+      "less5": "Less than 5h",
+      "5-6": "5-6 hours",
+      "7-8": "7-8 hours",
+      "more8": "More than 8h"
+    },
+    "plan": {
+      "title": "Your personalized plan is ready!",
+      "subtitle": "Based on your answers, we've created a 21-day program just for you",
+      "program": "Your 21-Day Program",
+      "week1": "Week 1: Foundation - Establish basic habits",
+      "week2": "Week 2: Build - Increase intensity gradually",
+      "week3": "Week 3: Optimize - Fine-tune based on results",
+      "aiTitle": "AI Recommendation",
+      "aiTip": "Start with 10-minute morning walks and replace one sugary drink with water daily",
+      "activate": "Activate My Plan",
+      "time": "Takes 2 minutes"
+    }
+  },
+  "healthCenter": {
+    "title": "Health Center",
+    "subtitle": "Your personal health management hub",
+    "quickAccess": "Quick Access",
+    "modules": "modules",
+    "today": "Today",
+    "done": "done",
+    "progress": "Progress",
+    "noPlans": "No plans for today",
+    "createPlan": "Create Plan",
+    "reminders": "Reminders",
+    "noReminders": "No reminders",
+    "overview": "Overview",
+    "metrics": "Metrics",
+    "goals": "Goals",
+    "reports": "Reports",
+    "noGoals": "No goals yet",
+    "reportsSoon": "Reports coming soon"
   },
   "roadmap": {
     "title": "Roadmap",

@@ -8,14 +8,16 @@ import {
   ChevronRight, Sparkles, BarChart3, Target, FileText
 } from 'lucide-react';
 import SketchIcon from '@/components/SketchIcon';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useI18n } from '@/i18n';
 
 export default function HealthCenter() {
   const { user } = useUser();
+  const { t } = useI18n();
   const [, setLocation] = useLocation();
   const [loading, setLoading] = useState(true);
   const [todayPlans, setTodayPlans] = useState<any[]>([]);
@@ -24,13 +26,13 @@ export default function HealthCenter() {
   const [goals, setGoals] = useState<any[]>([]);
 
   const quickActions = [
-    { id: 'movement', label: 'Movement', icon: 'movement', color: '#3B82F6', path: '/health/movement' },
-    { id: 'nutrition', label: 'Nutrition', icon: 'nutrition', color: '#10B981', path: '/health/nutrition' },
-    { id: 'sleep', label: 'Sleep', icon: 'sleep', color: '#8B5CF6', path: '/health/sleep' },
-    { id: 'psychology', label: 'Psychology', icon: 'psychology', color: '#F59E0B', path: '/health/psychology' },
-    { id: 'medicine', label: 'Medicine', icon: 'medicine', color: '#EF4444', path: '/health/medicine' },
-    { id: 'relationships', label: 'Relationships', icon: 'relationships', color: '#EC4899', path: '/health/relationships' },
-    { id: 'habits', label: 'Habits', icon: 'spirituality', color: '#06B6D4', path: '/health/habits' },
+    { id: 'movement', label: t('health.modules.movement'), icon: 'movement', color: '#3B82F6', path: '/health/movement' },
+    { id: 'nutrition', label: t('health.modules.nutrition'), icon: 'nutrition', color: '#10B981', path: '/health/nutrition' },
+    { id: 'sleep', label: t('health.modules.sleep'), icon: 'sleep', color: '#8B5CF6', path: '/health/sleep' },
+    { id: 'psychology', label: t('health.modules.psychology'), icon: 'psychology', color: '#F59E0B', path: '/health/psychology' },
+    { id: 'medicine', label: t('health.modules.medicine'), icon: 'medicine', color: '#EF4444', path: '/health/medicine' },
+    { id: 'relationships', label: t('health.modules.relationships'), icon: 'relationships', color: '#EC4899', path: '/health/relationships' },
+    { id: 'habits', label: t('health.modules.habits'), icon: 'spirituality', color: '#06B6D4', path: '/health/habits' },
   ];
 
   useEffect(() => {
@@ -96,7 +98,7 @@ export default function HealthCenter() {
           className="text-center"
         >
           <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-          <p className="text-sm text-foreground/60">Loading...</p>
+          <p className="text-sm text-foreground/60">{t('common.loading')}</p>
         </motion.div>
       </div>
     );
@@ -115,10 +117,10 @@ export default function HealthCenter() {
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2">
                 <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                Health Center
+                {t('healthCenter.title')}
               </h1>
               <p className="text-xs sm:text-sm text-foreground/60 mt-0.5">
-                Your personal health management hub
+                {t('healthCenter.subtitle')}
               </p>
             </div>
             <Button
@@ -144,10 +146,10 @@ export default function HealthCenter() {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm flex items-center gap-1.5">
                   <Zap className="w-4 h-4 text-primary" />
-                  Quick Access
+                  {t('healthCenter.quickAccess')}
                 </CardTitle>
                 <Badge variant="outline" className="text-xs">
-                  {quickActions.length} modules
+                  {quickActions.length} {t('healthCenter.modules')}
                 </Badge>
               </div>
             </CardHeader>
@@ -186,10 +188,10 @@ export default function HealthCenter() {
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm flex items-center gap-1.5">
                     <Calendar className="w-4 h-4 text-primary" />
-                    Today
+                    {t('healthCenter.today')}
                   </CardTitle>
                   <Badge variant="outline" className="text-xs">
-                    {completedPlans}/{totalPlans} done
+                    {completedPlans}/{totalPlans} {t('healthCenter.done')}
                   </Badge>
                 </div>
               </CardHeader>
@@ -198,7 +200,7 @@ export default function HealthCenter() {
                   <div className="space-y-3">
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs text-foreground/60">Progress</span>
+                        <span className="text-xs text-foreground/60">{t('healthCenter.progress')}</span>
                         <span className="text-xs font-semibold">{progressPercent}%</span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
@@ -246,14 +248,14 @@ export default function HealthCenter() {
                 ) : (
                   <div className="text-center py-6">
                     <Calendar className="w-10 h-10 text-foreground/30 mx-auto mb-2" />
-                    <p className="text-sm text-foreground/60 mb-2">No plans for today</p>
+                    <p className="text-sm text-foreground/60 mb-2">{t('healthCenter.noPlans')}</p>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => setLocation('/calendar')}
                     >
                       <Plus className="w-4 h-4 mr-1" />
-                      Create Plan
+                      {t('healthCenter.createPlan')}
                     </Button>
                   </div>
                 )}
@@ -269,7 +271,7 @@ export default function HealthCenter() {
           >
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">Reminders</CardTitle>
+                <CardTitle className="text-sm">{t('healthCenter.reminders')}</CardTitle>
               </CardHeader>
               <CardContent>
                 {reminders.length > 0 ? (
@@ -290,7 +292,7 @@ export default function HealthCenter() {
                   </ScrollArea>
                 ) : (
                   <div className="text-center py-6 text-sm text-foreground/60">
-                    No reminders
+                    {t('healthCenter.noReminders')}
                   </div>
                 )}
               </CardContent>
@@ -303,19 +305,19 @@ export default function HealthCenter() {
           <TabsList className="grid w-full grid-cols-4 h-9">
             <TabsTrigger value="overview" className="text-xs">
               <BarChart3 className="w-3.5 h-3.5 mr-1" />
-              Overview
+              {t('healthCenter.overview')}
             </TabsTrigger>
             <TabsTrigger value="metrics" className="text-xs">
               <Activity className="w-3.5 h-3.5 mr-1" />
-              Metrics
+              {t('healthCenter.metrics')}
             </TabsTrigger>
             <TabsTrigger value="goals" className="text-xs">
               <Target className="w-3.5 h-3.5 mr-1" />
-              Goals
+              {t('healthCenter.goals')}
             </TabsTrigger>
             <TabsTrigger value="reports" className="text-xs">
               <FileText className="w-3.5 h-3.5 mr-1" />
-              Reports
+              {t('healthCenter.reports')}
             </TabsTrigger>
           </TabsList>
 
@@ -346,10 +348,10 @@ export default function HealthCenter() {
                         <h3 className="font-semibold text-sm">{direction.label}</h3>
                         {total > 0 ? (
                           <div className="text-xs text-foreground/60">
-                            {completed}/{total} done
+                            {completed}/{total} {t('healthCenter.done')}
                           </div>
                         ) : (
-                          <div className="text-xs text-foreground/40">No plans</div>
+                          <div className="text-xs text-foreground/40">{t('dashboard.noData')}</div>
                         )}
                       </div>
                     );
@@ -375,7 +377,7 @@ export default function HealthCenter() {
                   ))}
                   {metrics.length === 0 && (
                     <div className="col-span-full text-center py-8 text-sm text-foreground/60">
-                      No metrics yet
+                      {t('dashboard.noData')}
                     </div>
                   )}
                 </div>
@@ -393,9 +395,9 @@ export default function HealthCenter() {
                         <div className="flex items-center justify-between">
                           <span className="font-medium text-sm">{goal.title}</span>
                           {goal.completed ? (
-                            <Badge className="bg-green-500 text-xs">Done</Badge>
+                            <Badge className="bg-green-500 text-xs">{t('dashboard.completed')}</Badge>
                           ) : (
-                            <Badge variant="outline" className="text-xs">Active</Badge>
+                            <Badge variant="outline" className="text-xs">{t('dashboard.pending')}</Badge>
                           )}
                         </div>
                       </div>
@@ -404,7 +406,7 @@ export default function HealthCenter() {
                 ) : (
                   <div className="text-center py-8">
                     <Target className="w-10 h-10 text-foreground/30 mx-auto mb-2" />
-                    <p className="text-sm text-foreground/60">No goals yet</p>
+                    <p className="text-sm text-foreground/60">{t('healthCenter.noGoals')}</p>
                   </div>
                 )}
               </CardContent>
@@ -414,7 +416,7 @@ export default function HealthCenter() {
           <TabsContent value="reports">
             <Card>
               <CardContent className="p-4 text-center text-sm text-foreground/60">
-                Reports coming soon
+                {t('healthCenter.reportsSoon')}
               </CardContent>
             </Card>
           </TabsContent>

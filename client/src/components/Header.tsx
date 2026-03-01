@@ -19,11 +19,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useAuth } from '@/contexts/AuthContext';
+import { useI18n } from '@/i18n';
 import { cn } from '@/lib/utils';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { user, logout } = useAuth();
+  const { t } = useI18n();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -73,25 +75,25 @@ export function Header() {
                 <DropdownMenuItem asChild>
                   <Link href="/dashboard" className="cursor-pointer text-xs">
                     <User className="w-3.5 h-3.5 mr-2" />
-                    Profile
+                    {t('nav.profile')}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/wallet" className="cursor-pointer text-xs">
                     <Wallet className="w-3.5 h-3.5 mr-2" />
-                    Wallet
+                    {t('nav.wallet')}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/settings" className="cursor-pointer text-xs">
                     <Settings className="w-3.5 h-3.5 mr-2" />
-                    Settings
+                    {t('nav.settings')}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout} className="text-red-600 cursor-pointer text-xs">
                   <LogOut className="w-3.5 h-3.5 mr-2" />
-                  Logout
+                  {t('nav.logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -99,12 +101,12 @@ export function Header() {
             <div className="flex items-center gap-1">
               <Link href="/login">
                 <Button variant="ghost" size="sm" className="h-7 text-xs px-2">
-                  Login
+                  {t('nav.login')}
                 </Button>
               </Link>
               <Link href="/register">
                 <Button size="sm" className="h-7 text-xs px-2 bg-emerald-600 hover:bg-emerald-700">
-                  Register
+                  {t('nav.register')}
                 </Button>
               </Link>
             </div>

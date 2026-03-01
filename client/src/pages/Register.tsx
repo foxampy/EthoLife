@@ -16,10 +16,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUser } from '@/contexts/UserContext';
+import { useI18n } from '@/i18n';
 
 export default function Register() {
   const [, setLocation] = useLocation();
   const { refreshUser } = useUser();
+  const { t } = useI18n();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -35,13 +37,13 @@ export default function Register() {
     setError(null);
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('errors.passwordMismatch'));
       setLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError(t('errors.invalidPassword'));
       setLoading(false);
       return;
     }
@@ -63,10 +65,10 @@ export default function Register() {
         }, 1500);
       } else {
         const errorData = await response.json();
-        setError(errorData.error || 'Registration error');
+        setError(errorData.error || t('errors.generic'));
       }
     } catch (err) {
-      setError('Server connection error');
+      setError(t('auth.connectionError'));
     } finally {
       setLoading(false);
     }
@@ -77,7 +79,7 @@ export default function Register() {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     
     if (!clientId) {
-      setError('Google OAuth is not configured');
+      setError(t('errors.serverError'));
       return;
     }
     
@@ -105,8 +107,8 @@ export default function Register() {
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-10 h-10 text-green-600" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Success!</h2>
-          <p className="text-slate-600">Your account has been created. Redirecting...</p>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">{t('common.success')}</h2>
+          <p className="text-slate-600">{t('auth.redirecting')}</p>
         </motion.div>
       </div>
     );
@@ -124,9 +126,9 @@ export default function Register() {
             <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
               <User className="w-8 h-8 text-white" />
             </div>
-            <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
+            <CardTitle className="text-2xl font-bold">{t('auth.registerTitle')}</CardTitle>
             <CardDescription>
-              Sign up to start your health journey
+              {t('auth.hasAccount')} {t('nav.login')}
             </CardDescription>
           </CardHeader>
 
@@ -134,7 +136,7 @@ export default function Register() {
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-                  Full Name
+                  {t('auth.name')}
                 </label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -151,7 +153,7 @@ export default function Register() {
 
               <div>
                 <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-                  Email
+                  {t('auth.email')}
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -168,7 +170,7 @@ export default function Register() {
 
               <div>
                 <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-                  Password
+                  {t('auth.password')}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -192,7 +194,7 @@ export default function Register() {
 
               <div>
                 <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-                  Confirm Password
+                  {t('auth.confirmPassword')}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -222,7 +224,7 @@ export default function Register() {
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
-                    Create Account
+                    {t('auth.registerButton')}
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </>
                 )}
@@ -234,7 +236,7 @@ export default function Register() {
                 <div className="w-full border-t border-slate-200"></div>
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-white px-4 text-sm text-slate-500">or</span>
+                <span className="bg-white px-4 text-sm text-slate-500">{t('auth.or')}</span>
               </div>
             </div>
 
@@ -244,17 +246,17 @@ export default function Register() {
               onClick={handleGoogleRegister}
             >
               <Chrome className="mr-2 w-5 h-5 text-red-500" />
-              Continue with Google
+              {t('auth.googleLogin')}
             </Button>
 
             <div className="text-center pt-4 border-t border-slate-100">
               <p className="text-slate-600">
-                Already have an account?{' '}
+                {t('auth.hasAccount')}{' '}
                 <button
                   onClick={() => setLocation('/login')}
                   className="text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  Sign In
+                  {t('nav.login')}
                 </button>
               </p>
             </div>
@@ -263,7 +265,7 @@ export default function Register() {
               onClick={() => setLocation('/')}
               className="w-full text-center text-sm text-slate-400 hover:text-slate-600 pt-2"
             >
-              ← Back to Home
+              ← {t('common.back')}
             </button>
           </CardContent>
         </Card>

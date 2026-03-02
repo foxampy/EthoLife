@@ -84,7 +84,7 @@ router.get('/modules', async (req, res) => {
  * GET /api/health/dashboard
  * Получить общий dashboard здоровья
  */
-router.get('/dashboard', authMiddleware, async (req: AuthRequest, res) => {
+router.get('/dashboard', requireAuth, async (req: AuthRequest, res) => {
   try {
     const userId = req.user?.id;
     if (!userId) {
@@ -145,7 +145,7 @@ router.get('/dashboard', authMiddleware, async (req: AuthRequest, res) => {
  * GET /api/health/stats
  * Получить quick stats
  */
-router.get('/stats', authMiddleware, async (req: AuthRequest, res) => {
+router.get('/stats', requireAuth, async (req: AuthRequest, res) => {
   try {
     const userId = req.user?.id;
     if (!userId) {
@@ -199,7 +199,7 @@ router.get('/stats', authMiddleware, async (req: AuthRequest, res) => {
  * GET /api/health/:moduleId/metrics
  * Получить метрики модуля
  */
-router.get('/:moduleId/metrics', authMiddleware, async (req: AuthRequest, res) => {
+router.get('/:moduleId/metrics', requireAuth, async (req: AuthRequest, res) => {
   try {
     const userId = req.user?.id;
     const { moduleId } = req.params;
@@ -244,7 +244,7 @@ router.get('/:moduleId/metrics', authMiddleware, async (req: AuthRequest, res) =
  * POST /api/health/:moduleId/metrics
  * Добавить метрику модуля
  */
-router.post('/:moduleId/metrics', authMiddleware, async (req: AuthRequest, res) => {
+router.post('/:moduleId/metrics', requireAuth, async (req: AuthRequest, res) => {
   try {
     const userId = req.user?.id;
     const { moduleId } = req.params;
@@ -291,7 +291,7 @@ router.post('/:moduleId/metrics', authMiddleware, async (req: AuthRequest, res) 
  * GET /api/health/:moduleId/metrics/summary
  * Получить сводку метрик
  */
-router.get('/:moduleId/metrics/summary', authMiddleware, async (req: AuthRequest, res) => {
+router.get('/:moduleId/metrics/summary', requireAuth, async (req: AuthRequest, res) => {
   try {
     const userId = req.user?.id;
     const { moduleId } = req.params;
@@ -355,7 +355,7 @@ router.get('/:moduleId/metrics/summary', authMiddleware, async (req: AuthRequest
  * PUT /api/health/:moduleId/metrics/:metricId
  * Обновить метрику
  */
-router.put('/:moduleId/metrics/:metricId', authMiddleware, async (req: AuthRequest, res) => {
+router.put('/:moduleId/metrics/:metricId', requireAuth, async (req: AuthRequest, res) => {
   try {
     const userId = req.user?.id;
     const { moduleId, metricId } = req.params;
@@ -393,7 +393,7 @@ router.put('/:moduleId/metrics/:metricId', authMiddleware, async (req: AuthReque
  * DELETE /api/health/:moduleId/metrics/:metricId
  * Удалить метрику
  */
-router.delete('/:moduleId/metrics/:metricId', authMiddleware, async (req: AuthRequest, res) => {
+router.delete('/:moduleId/metrics/:metricId', requireAuth, async (req: AuthRequest, res) => {
   try {
     const userId = req.user?.id;
     const { moduleId, metricId } = req.params;

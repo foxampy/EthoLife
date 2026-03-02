@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { query } from '../database-postgres';
+import { query, isDatabaseConfigured } from '../database-postgres';
 
 const router = Router();
 
@@ -16,9 +16,24 @@ const generateToken = (userId: string | number, email: string, role: string = 'u
   );
 };
 
+// Check database connection
+const checkDatabase = () => {
+  if (!isDatabaseConfigured()) {
+    return { error: 'Database not configured. Please set DATABASE_URL in environment variables.' };
+  }
+  return null;
+};
+
 // Register with email/password
 router.post('/register', async (req, res) => {
   try {
+    // Check database configuration
+    const dbError = checkDatabase();
+    if (dbError) {
+      console.error('[Auth] Database not configured');
+      return res.status(503).json({ error: 'Server not configured properly. Please contact support.' });
+    }
+    
     const { email, password, name } = req.body;
 
     if (!email || !password || !name) {
@@ -72,6 +87,13 @@ router.post('/register', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
   try {
+    // Check database configuration
+    const dbError = checkDatabase();
+    if (dbError) {
+      console.error('[Auth] Database not configured');
+      return res.status(503).json({ error: 'Server not configured properly. Please contact support.' });
+    }
+    
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -131,6 +153,13 @@ router.post('/telegram-auth', async (req, res) => {
 
 async function handleTelegramAuth(req: any, res: any) {
   try {
+    // Check database configuration
+    const dbError = checkDatabase();
+    if (dbError) {
+      console.error('[Auth] Database not configured');
+      return res.status(503).json({ error: 'Server not configured properly. Please contact support.' });
+    }
+    
     const { telegram_id, telegram_username, first_name, last_name } = req.body;
 
     if (!telegram_id) {

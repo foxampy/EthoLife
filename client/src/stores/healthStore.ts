@@ -1,381 +1,417 @@
+/**
+ * Health Store - Zustand Store для управления состоянием здоровья
+ * Единый store для всех 7 модулей здоровья
+ */
+
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { supabase } from '@/lib/supabase';
+import { healthAPI } from '@/services/healthAPI';
+import type {
+  HealthMetric,
+  MetricSummary,
+  HealthGoal,
+  HealthPlan,
+  AnalyticsData,
+  ModuleScore,
+} from '@/types/health-modules';
 
-export type HealthModule = 
-  | 'nutrition' 
-  | 'movement' 
-  | 'sleep' 
-  | 'psychology' 
-  | 'medicine' 
-  | 'relationships' 
-  | 'habits';
+// ============================================================================
+# STATE INTERFACES
+# ============================================================================
 
-export interface ModuleScore {
-  nutrition: number;
-  movement: number;
-  sleep: number;
-  psychology: number;
-  medicine: number;
-  relationships: number;
-  habits: number;
-}
-
-export interface DailySnapshot {
-  id: string;
-  date: string;
-  overall_score: number;
-  module_scores: ModuleScore;
-  key_metrics: Record<string, any>;
-  streaks: Record<string, number>;
-  ai_insights: any[];
-  modules_completed: string[];
-}
-
-export interface HealthProfile {
-  id: string;
-  user_id: string;
-  birth_date?: string;
-  gender?: string;
-  blood_type?: string;
-  height_cm?: number;
-  current_weight_kg?: number;
-  activity_level?: string;
-  chronotype?: string;
-  primary_goal?: string;
-  current_overall_streak: number;
-  longest_overall_streak: number;
-}
-
-interface HealthState {
-  // Data
-  profile: HealthProfile | null;
-  todaySnapshot: DailySnapshot | null;
-  weekSnapshots: DailySnapshot[];
-  correlations: any[];
-  notifications: any[];
+interface ModuleState {
+  // Метрики
+  metrics: Record<string, HealthMetric[]>; // key: moduleId
+  metricSummaries: Record<string, MetricSummary[]>; // key: moduleId
   
-  // Loading states
-  isLoading: boolean;
-  isInitialized: boolean;
+  // Цели
+  goals: HealthGoal[];
+  activeGoals: HealthGoal[];
+  completedGoals: HealthGoal[];
+  
+  // Планы
+  plans: HealthPlan[];
+  activePlans: HealthPlan[];
+  
+  // Аналитика
+  analytics: Record<string, AnalyticsData>; // key: moduleId
+  
+  // Scores
+  moduleScores: Record<string, ModuleScore>; // key: moduleId
+  overallScore: number;
+  
+  // Загрузка
+  loading: Record<string, boolean>;
+  error: string | null;
   
   // Actions
-  initialize: () => Promise<void>;
-  fetchProfile: () => Promise<void>;
-  fetchTodaySnapshot: () => Promise<void>;
-  fetchWeekSnapshots: () => Promise<void>;
-  updateModuleScore: (module: HealthModule, score: number) => Promise<void>;
-  updateKeyMetric: (key: string, value: any) => Promise<void>;
-  markModuleCompleted: (module: HealthModule) => Promise<void>;
-  calculateOverallScore: () => number;
-  
-  // Getters
-  getModuleScore: (module: HealthModule) => number;
-  getModuleColor: (module: HealthModule) => string;
-  getStreak: (type: string) => number;
+  actions: HealthActions;
 }
 
-export const moduleColors: Record<HealthModule, { primary: string; secondary: string; bg: string }> = {
-  nutrition: { primary: '#22c55e', secondary: '#86efac', bg: '#f0fdf4' },
-  movement: { primary: '#f97316', secondary: '#fdba74', bg: '#fff7ed' },
-  sleep: { primary: '#8b5cf6', secondary: '#c4b5fd', bg: '#f5f3ff' },
-  psychology: { primary: '#06b6d4', secondary: '#67e8f9', bg: '#ecfeff' },
-  medicine: { primary: '#ef4444', secondary: '#fca5a5', bg: '#fef2f2' },
-  relationships: { primary: '#ec4899', secondary: '#f9a8d4', bg: '#fdf2f8' },
-  habits: { primary: '#eab308', secondary: '#fde047', bg: '#fefce8' },
+interface HealthActions {
+  // Metrics
+  loadMetrics: (moduleId: string, options?: any) => Promise<void>;
+  addMetric: (moduleId: string, data: any) => Promise<HealthMetric>;
+  updateMetric: (moduleId: string, metricId: string, data: any) => Promise<void>;
+  deleteMetric: (moduleId: string, metricId: string) => Promise<void>;
+  
+  // Goals
+  loadGoals: (moduleId?: string, status?: string) => Promise<void>;
+  createGoal: (data: any) => Promise<HealthGoal>;
+  updateGoal: (goalId: string, data: any) => Promise<void>;
+  completeGoal: (goalId: string) => Promise<void>;
+  
+  // Plans
+  loadPlans: (moduleId?: string, status?: string) => Promise<void>;
+  createPlan: (data: any) => Promise<HealthPlan>;
+  completePlanTask: (planId: string, taskId: string) => Promise<void>;
+  
+  // Analytics
+  loadAnalytics: (moduleId: string, period?: string) => Promise<void>;
+  loadDashboard: () => Promise<void>;
+  
+  // Common
+  setLoading: (key: string, value: boolean) => void;
+  setError: (error: string | null) => void;
+  clearError: () => void;
+}
+
+// ============================================================================
+# INITIAL STATE
+# ============================================================================
+
+const initialState: Omit<ModuleState, 'actions'> = {
+  metrics: {},
+  metricSummaries: {},
+  goals: [],
+  activeGoals: [],
+  completedGoals: [],
+  plans: [],
+  activePlans: [],
+  analytics: {},
+  moduleScores: {},
+  overallScore: 0,
+  loading: {},
+  error: null,
 };
 
-export const useHealthStore = create<HealthState>()(
+// ============================================================================
+# STORE
+# ============================================================================
+
+export const useHealthStore = create<ModuleState>()(
   persist(
     (set, get) => ({
-      profile: null,
-      todaySnapshot: null,
-      weekSnapshots: [],
-      correlations: [],
-      notifications: [],
-      isLoading: false,
-      isInitialized: false,
-
-      initialize: async () => {
-        const { fetchProfile, fetchTodaySnapshot, fetchWeekSnapshots } = get();
-        await Promise.all([
-          fetchProfile(),
-          fetchTodaySnapshot(),
-          fetchWeekSnapshots(),
-        ]);
-        set({ isInitialized: true });
-      },
-
-      fetchProfile: async () => {
-        try {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (!user) return;
-
-          const { data, error } = await supabase
-            .from('health_profiles')
-            .select('*')
-            .eq('user_id', user.id)
-            .single();
-
-          if (error && error.code !== 'PGRST116') {
-            console.error('Error fetching profile:', error);
-            return;
-          }
-
-          if (data) {
-            set({ profile: data });
-          } else {
-            // Create default profile
-            const { data: newProfile, error: createError } = await supabase
-              .from('health_profiles')
-              .insert({ user_id: user.id })
-              .select()
-              .single();
-            
-            if (!createError && newProfile) {
-              set({ profile: newProfile });
-            }
-          }
-        } catch (err) {
-          console.error('Error in fetchProfile:', err);
-        }
-      },
-
-      fetchTodaySnapshot: async () => {
-        try {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (!user) return;
-
-          const today = new Date().toISOString().split('T')[0];
+      ...initialState,
+      
+      actions: {
+        // ============================================================================
+        // METRICS ACTIONS
+        // ============================================================================
+        
+        loadMetrics: async (moduleId: string, options = {}) => {
+          set({ loading: { ...get().loading, [moduleId]: true }, error: null });
           
-          const { data, error } = await supabase
-            .from('daily_health_snapshots')
-            .select('*')
-            .eq('user_id', user.id)
-            .eq('date', today)
-            .single();
-
-          if (error && error.code !== 'PGRST116') {
-            console.error('Error fetching snapshot:', error);
-            return;
-          }
-
-          if (data) {
-            set({ todaySnapshot: data });
-          } else {
-            // Create today's snapshot
-            const { data: newSnapshot, error: createError } = await supabase
-              .from('daily_health_snapshots')
-              .insert({ 
-                user_id: user.id,
-                date: today,
-                module_scores: {
-                  nutrition: 0,
-                  movement: 0,
-                  sleep: 0,
-                  psychology: 0,
-                  medicine: 0,
-                  relationships: 0,
-                  habits: 0,
-                },
-                overall_score: 0,
-              })
-              .select()
-              .single();
+          try {
+            const metrics = await healthAPI.getMetrics(moduleId, options);
+            const summaries = await healthAPI.getMetricSummary(moduleId);
             
-            if (!createError && newSnapshot) {
-              set({ todaySnapshot: newSnapshot });
-            }
+            set({
+              metrics: { ...get().metrics, [moduleId]: metrics },
+              metricSummaries: { ...get().metricSummaries, [moduleId]: summaries },
+              loading: { ...get().loading, [moduleId]: false },
+            });
+          } catch (error) {
+            set({
+              error: error instanceof Error ? error.message : 'Failed to load metrics',
+              loading: { ...get().loading, [moduleId]: false },
+            });
           }
-        } catch (err) {
-          console.error('Error in fetchTodaySnapshot:', err);
-        }
-      },
-
-      fetchWeekSnapshots: async () => {
-        try {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (!user) return;
-
-          const weekAgo = new Date();
-          weekAgo.setDate(weekAgo.getDate() - 7);
-
-          const { data, error } = await supabase
-            .from('daily_health_snapshots')
-            .select('*')
-            .eq('user_id', user.id)
-            .gte('date', weekAgo.toISOString().split('T')[0])
-            .order('date', { ascending: false });
-
-          if (!error && data) {
-            set({ weekSnapshots: data });
-          }
-        } catch (err) {
-          console.error('Error in fetchWeekSnapshots:', err);
-        }
-      },
-
-      updateModuleScore: async (module, score) => {
-        try {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (!user) return;
-
-          const today = new Date().toISOString().split('T')[0];
-          const snapshot = get().todaySnapshot;
-
-          if (!snapshot) return;
-
-          const newModuleScores = {
-            ...snapshot.module_scores,
-            [module]: Math.min(100, Math.max(0, score)),
-          };
-
-          // Calculate overall score with weights
-          const weights = {
-            nutrition: 0.15,
-            movement: 0.15,
-            sleep: 0.20,
-            psychology: 0.20,
-            medicine: 0.10,
-            relationships: 0.10,
-            habits: 0.10,
-          };
-
-          const overallScore = Math.round(
-            Object.entries(newModuleScores).reduce(
-              (sum, [key, value]) => sum + (value as number) * (weights[key as HealthModule] || 0),
-              0
-            )
+        },
+        
+        addMetric: async (moduleId: string, data: any) => {
+          const metric = await healthAPI.addMetric(moduleId, data);
+          
+          const currentMetrics = get().metrics[moduleId] || [];
+          set({
+            metrics: {
+              ...get().metrics,
+              [moduleId]: [...currentMetrics, metric],
+            },
+          });
+          
+          return metric;
+        },
+        
+        updateMetric: async (moduleId: string, metricId: string, data: any) => {
+          await healthAPI.updateMetric(moduleId, metricId, data);
+          
+          const metrics = get().metrics[moduleId] || [];
+          const updatedMetrics = metrics.map(m =>
+            m.id === metricId ? { ...m, ...data } : m
           );
-
-          const { error } = await supabase
-            .from('daily_health_snapshots')
-            .update({
-              module_scores: newModuleScores,
-              overall_score: overallScore,
-              updated_at: new Date().toISOString(),
-            })
-            .eq('id', snapshot.id);
-
-          if (!error) {
+          
+          set({
+            metrics: {
+              ...get().metrics,
+              [moduleId]: updatedMetrics,
+            },
+          });
+        },
+        
+        deleteMetric: async (moduleId: string, metricId: string) => {
+          await healthAPI.deleteMetric(moduleId, metricId);
+          
+          const metrics = get().metrics[moduleId] || [];
+          const filteredMetrics = metrics.filter(m => m.id !== metricId);
+          
+          set({
+            metrics: {
+              ...get().metrics,
+              [moduleId]: filteredMetrics,
+            },
+          });
+        },
+        
+        // ============================================================================
+        // GOALS ACTIONS
+        // ============================================================================
+        
+        loadGoals: async (moduleId, status = 'all') => {
+          set({ loading: { ...get().loading, goals: true }, error: null });
+          
+          try {
+            const goals = await healthAPI.getGoals(moduleId, status as any);
+            
             set({
-              todaySnapshot: {
-                ...snapshot,
-                module_scores: newModuleScores,
-                overall_score: overallScore,
-              },
+              goals,
+              activeGoals: goals.filter(g => g.status === 'active'),
+              completedGoals: goals.filter(g => g.status === 'completed'),
+              loading: { ...get().loading, goals: false },
+            });
+          } catch (error) {
+            set({
+              error: error instanceof Error ? error.message : 'Failed to load goals',
+              loading: { ...get().loading, goals: false },
             });
           }
-        } catch (err) {
-          console.error('Error updating module score:', err);
-        }
-      },
-
-      updateKeyMetric: async (key, value) => {
-        try {
-          const snapshot = get().todaySnapshot;
-          if (!snapshot) return;
-
-          const newKeyMetrics = {
-            ...snapshot.key_metrics,
-            [key]: value,
-          };
-
-          const { error } = await supabase
-            .from('daily_health_snapshots')
-            .update({
-              key_metrics: newKeyMetrics,
-              updated_at: new Date().toISOString(),
-            })
-            .eq('id', snapshot.id);
-
-          if (!error) {
+        },
+        
+        createGoal: async (data: any) => {
+          const goal = await healthAPI.createGoal(data);
+          
+          set({
+            goals: [...get().goals, goal],
+            activeGoals: [...get().activeGoals, goal],
+          });
+          
+          return goal;
+        },
+        
+        updateGoal: async (goalId: string, data: any) => {
+          await healthAPI.updateGoal(goalId, data);
+          
+          const goals = get().goals.map(g =>
+            g.id === goalId ? { ...g, ...data } : g
+          );
+          
+          set({
+            goals,
+            activeGoals: goals.filter(g => g.status === 'active'),
+            completedGoals: goals.filter(g => g.status === 'completed'),
+          });
+        },
+        
+        completeGoal: async (goalId: string) => {
+          await healthAPI.completeGoal(goalId);
+          
+          const goals = get().goals.map(g =>
+            g.id === goalId ? { ...g, status: 'completed' as const } : g
+          );
+          
+          set({
+            goals,
+            activeGoals: goals.filter(g => g.status === 'active'),
+            completedGoals: goals.filter(g => g.status === 'completed'),
+          });
+        },
+        
+        // ============================================================================
+        // PLANS ACTIONS
+        // ============================================================================
+        
+        loadPlans: async (moduleId, status = 'all') => {
+          set({ loading: { ...get().loading, plans: true }, error: null });
+          
+          try {
+            const plans = await healthAPI.getPlans(moduleId, status as any);
+            
             set({
-              todaySnapshot: {
-                ...snapshot,
-                key_metrics: newKeyMetrics,
-              },
+              plans,
+              activePlans: plans.filter(p => p.status === 'active'),
+              loading: { ...get().loading, plans: false },
+            });
+          } catch (error) {
+            set({
+              error: error instanceof Error ? error.message : 'Failed to load plans',
+              loading: { ...get().loading, plans: false },
             });
           }
-        } catch (err) {
-          console.error('Error updating key metric:', err);
-        }
-      },
-
-      markModuleCompleted: async (module) => {
-        try {
-          const snapshot = get().todaySnapshot;
-          if (!snapshot) return;
-
-          const completed = snapshot.modules_completed || [];
-          if (completed.includes(module)) return;
-
-          const newCompleted = [...completed, module];
-
-          const { error } = await supabase
-            .from('daily_health_snapshots')
-            .update({
-              modules_completed: newCompleted,
-              updated_at: new Date().toISOString(),
-            })
-            .eq('id', snapshot.id);
-
-          if (!error) {
+        },
+        
+        createPlan: async (data: any) => {
+          const plan = await healthAPI.createPlan(data);
+          
+          set({
+            plans: [...get().plans, plan],
+            activePlans: [...get().activePlans, plan],
+          });
+          
+          return plan;
+        },
+        
+        completePlanTask: async (planId: string, taskId: string) => {
+          const updatedPlan = await healthAPI.completePlanTask(planId, taskId);
+          
+          const plans = get().plans.map(p =>
+            p.id === planId ? updatedPlan : p
+          );
+          
+          set({
+            plans,
+            activePlans: plans.filter(p => p.status === 'active'),
+          });
+        },
+        
+        // ============================================================================
+        // ANALYTICS ACTIONS
+        // ============================================================================
+        
+        loadAnalytics: async (moduleId: string, period = 'week') => {
+          set({ loading: { ...get().loading, [`analytics_${moduleId}`]: true }, error: null });
+          
+          try {
+            const analytics = await healthAPI.getAnalytics(moduleId, period as any);
+            
             set({
-              todaySnapshot: {
-                ...snapshot,
-                modules_completed: newCompleted,
-              },
+              analytics: { ...get().analytics, [moduleId]: analytics },
+              loading: { ...get().loading, [`analytics_${moduleId}`]: false },
+            });
+          } catch (error) {
+            set({
+              error: error instanceof Error ? error.message : 'Failed to load analytics',
+              loading: { ...get().loading, [`analytics_${moduleId}`]: false },
             });
           }
-        } catch (err) {
-          console.error('Error marking module completed:', err);
-        }
-      },
-
-      calculateOverallScore: () => {
-        const snapshot = get().todaySnapshot;
-        if (!snapshot) return 0;
-
-        const weights = {
-          nutrition: 0.15,
-          movement: 0.15,
-          sleep: 0.20,
-          psychology: 0.20,
-          medicine: 0.10,
-          relationships: 0.10,
-          habits: 0.10,
-        };
-
-        return Math.round(
-          Object.entries(snapshot.module_scores).reduce(
-            (sum, [key, value]) => sum + (value as number) * (weights[key as HealthModule] || 0),
-            0
-          )
-        );
-      },
-
-      getModuleScore: (module) => {
-        return get().todaySnapshot?.module_scores[module] || 0;
-      },
-
-      getModuleColor: (module) => {
-        return moduleColors[module].primary;
-      },
-
-      getStreak: (type) => {
-        if (type === 'overall') {
-          return get().profile?.current_overall_streak || 0;
-        }
-        return get().todaySnapshot?.streaks?.[type] || 0;
+        },
+        
+        loadDashboard: async () => {
+          set({ loading: { ...get().loading, dashboard: true }, error: null });
+          
+          try {
+            const dashboard = await healthAPI.getHealthDashboard();
+            
+            set({
+              overallScore: dashboard.overall_score,
+              moduleScores: dashboard.modules.reduce((acc: any, module: any) => ({
+                ...acc,
+                [module.id]: module.score,
+              }), {}),
+              loading: { ...get().loading, dashboard: false },
+            });
+          } catch (error) {
+            set({
+              error: error instanceof Error ? error.message : 'Failed to load dashboard',
+              loading: { ...get().loading, dashboard: false },
+            });
+          }
+        },
+        
+        // ============================================================================
+        // COMMON ACTIONS
+        // ============================================================================
+        
+        setLoading: (key: string, value: boolean) => {
+          set({
+            loading: { ...get().loading, [key]: value },
+          });
+        },
+        
+        setError: (error: string | null) => {
+          set({ error });
+        },
+        
+        clearError: () => {
+          set({ error: null });
+        },
       },
     }),
     {
-      name: 'health-store',
+      name: 'health-storage',
       partialize: (state) => ({
-        profile: state.profile,
-        isInitialized: state.isInitialized,
+        goals: state.goals,
+        plans: state.plans,
+        overallScore: state.overall_score,
       }),
     }
   )
 );
+
+// ============================================================================
+# HOOKS
+# ============================================================================
+
+export const useModuleMetrics = (moduleId: string) => {
+  const metrics = useHealthStore((state) => state.metrics[moduleId] || []);
+  const summaries = useHealthStore((state) => state.metricSummaries[moduleId] || []);
+  const loadMetrics = useHealthStore((state) => state.actions.loadMetrics);
+  
+  return { metrics, summaries, loadMetrics };
+};
+
+export const useModuleGoals = (moduleId?: string) => {
+  const goals = useHealthStore((state) => {
+    if (!moduleId) return state.goals;
+    return state.goals.filter(g => g.module_id === moduleId);
+  });
+  const activeGoals = useHealthStore((state) => {
+    if (!moduleId) return state.activeGoals;
+    return state.activeGoals.filter(g => g.module_id === moduleId);
+  });
+  const loadGoals = useHealthStore((state) => state.actions.loadGoals);
+  const createGoal = useHealthStore((state) => state.actions.createGoal);
+  
+  return { goals, activeGoals, loadGoals, createGoal };
+};
+
+export const useModulePlans = (moduleId?: string) => {
+  const plans = useHealthStore((state) => {
+    if (!moduleId) return state.plans;
+    return state.plans.filter(p => p.module_id === moduleId);
+  });
+  const activePlans = useHealthStore((state) => {
+    if (!moduleId) return state.activePlans;
+    return state.activePlans.filter(p => p.module_id === moduleId);
+  });
+  const loadPlans = useHealthStore((state) => state.actions.loadPlans);
+  const createPlan = useHealthStore((state) => state.actions.createPlan);
+  
+  return { plans, activePlans, loadPlans, createPlan };
+};
+
+export const useModuleAnalytics = (moduleId: string) => {
+  const analytics = useHealthStore((state) => state.analytics[moduleId]);
+  const loadAnalytics = useHealthStore((state) => state.actions.loadAnalytics);
+  
+  return { analytics, loadAnalytics };
+};
+
+export const useHealthScore = () => {
+  const overallScore = useHealthStore((state) => state.overallScore);
+  const moduleScores = useHealthStore((state) => state.moduleScores);
+  const loadDashboard = useHealthStore((state) => state.actions.loadDashboard);
+  
+  return { overallScore, moduleScores, loadDashboard };
+};
+
+export default useHealthStore;

@@ -1,33 +1,39 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
-interface User {
+export interface User {
   id: string;
   email: string;
+  name?: string;
   first_name?: string;
   last_name?: string;
   username?: string;
   avatar_url?: string;
-  role: string;
-  subscription_tier: string;
-  subscription_status?: string;
+  role: 'user' | 'specialist' | 'center_admin' | 'investor' | 'admin';
+  subscription_tier: 'free' | 'basic' | 'premium' | 'family';
+  subscription_status?: 'active' | 'cancelled' | 'expired';
   referral_code?: string;
+  telegram_connected?: boolean;
+  telegram_username?: string;
+  created_at?: string;
 }
 
-interface AuthContextType {
+export interface AuthContextType {
   user: User | null;
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (data: RegisterData) => Promise<void>;
-  logout: () => void;
-  updateProfile: (data: Partial<User>) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
+  register: (data: RegisterData) => Promise<User>;
+  logout: () => Promise<void>;
+  updateProfile: (data: Partial<User>) => Promise<User>;
   refreshUser: () => Promise<void>;
+  hasRole: (roles: string[]) => boolean;
 }
 
-interface RegisterData {
+export interface RegisterData {
   email: string;
   password: string;
+  name?: string;
   first_name?: string;
   last_name?: string;
   username?: string;
@@ -43,41 +49,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(localStorage.getItem('auth_token'));
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check token on mount
+  // Проверка токена при загрузке
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = localStorage.getItem('auth_token');
+      
       if (storedToken) {
         try {
-          // Verify token and get user data
           const response = await fetch(`${API_URL}/auth/me`, {
             headers: {
               'Authorization': `Bearer ${storedToken}`,
             },
           });
-          
+
           if (response.ok) {
             const data = await response.json();
             setUser(data.user);
-            setToken(storedToken);
           } else {
-            // Token invalid, clear it
             localStorage.removeItem('auth_token');
             setToken(null);
+            setUser(null);
           }
         } catch (error) {
           console.error('Auth initialization error:', error);
           localStorage.removeItem('auth_token');
           setToken(null);
+          setUser(null);
         }
       }
+      
       setIsLoading(false);
     };
 
     initAuth();
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string): Promise<User> => {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -85,17 +92,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Login failed');
+      const error = await response.json().catch(() => ({ error: 'Login failed' }));
+      throw new Error(error.error || 'Неверный email или пароль');
     }
 
     const data = await response.json();
+    
     setUser(data.user);
     setToken(data.token);
     localStorage.setItem('auth_token', data.token);
+    
+    return data.user;
   }, []);
 
-  const register = useCallback(async (data: RegisterData) => {
+  const register = useCallback(async (data: RegisterData): Promise<User> => {
     const response = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -103,14 +113,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Registration failed');
+      const error = await response.json().catch(() => ({ error: 'Registration failed' }));
+      throw new Error(error.error || 'Ошибка регистрации');
     }
 
     const result = await response.json();
+    
     setUser(result.user);
     setToken(result.token);
     localStorage.setItem('auth_token', result.token);
+    
+    return result.user;
   }, []);
 
   const logout = useCallback(async () => {
@@ -124,14 +137,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('Logout error:', error);
       }
     }
-    
+
     setUser(null);
     setToken(null);
     localStorage.removeItem('auth_token');
+    
+    // Перезагрузка страницы для очистки всех состояний
+    window.location.href = '/';
   }, [token]);
 
-  const updateProfile = useCallback(async (data: Partial<User>) => {
-    if (!token) throw new Error('Not authenticated');
+  const updateProfile = useCallback(async (data: Partial<User>): Promise<User> => {
+    if (!token) throw new Error('Не авторизован');
 
     const response = await fetch(`${API_URL}/auth/profile`, {
       method: 'PATCH',
@@ -143,26 +159,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to update profile');
+      const error = await response.json().catch(() => ({ error: 'Failed to update profile' }));
+      throw new Error(error.error || 'Ошибка обновления профиля');
     }
 
     const result = await response.json();
     setUser(result.user);
+    return result.user;
   }, [token]);
 
   const refreshUser = useCallback(async () => {
-    if (!token) return;
+    if (!token) {
+      setUser(null);
+      return;
+    }
 
-    const response = await fetch(`${API_URL}/auth/me`, {
-      headers: { 'Authorization': `Bearer ${token}` },
-    });
+    try {
+      const response = await fetch(`${API_URL}/auth/me`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
 
-    if (response.ok) {
-      const data = await response.json();
-      setUser(data.user);
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
+      } else {
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem('auth_token');
+      }
+    } catch (error) {
+      console.error('Refresh user error:', error);
+      setUser(null);
     }
   }, [token]);
+
+  const hasRole = useCallback((roles: string[]): boolean => {
+    if (!user?.role) return false;
+    return roles.includes(user.role);
+  }, [user?.role]);
 
   const value: AuthContextType = {
     user,
@@ -174,6 +208,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     logout,
     updateProfile,
     refreshUser,
+    hasRole,
   };
 
   return (
@@ -186,16 +221,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth должен использоваться внутри AuthProvider');
   }
   return context;
 }
 
-// Hook for making authenticated API calls
+// Хук для авторизованных API запросов
 export function useApi() {
   const { token } = useAuth();
 
-  const apiCall = useCallback(async (endpoint: string, options: RequestInit = {}) => {
+  const apiCall = useCallback(async <T,>(endpoint: string, options: RequestInit = {}): Promise<T> => {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...options.headers as Record<string, string>,

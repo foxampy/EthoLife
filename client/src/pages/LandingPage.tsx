@@ -6,12 +6,16 @@ import {
   Heart, Activity, Brain, Moon, Users, Star, Zap, Shield,
   ChevronRight, CheckCircle, ArrowRight, Play, Smartphone,
   Sparkles, Award, TrendingUp, Clock, Globe, Menu, X,
-  ChevronLeft, Apple, Dumbbell, Smile, Stethoscope, Sprout, Gift
+  ChevronLeft, Apple, Dumbbell, Smile, Stethoscope, Sprout, Gift,
+  Target, Calendar, BarChart3, Lock, CheckCircle2, Circle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/contexts/AuthContext';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 
 // Types
 interface OnboardingData {
@@ -20,12 +24,14 @@ interface OnboardingData {
   challenges: string[];
   activity: string;
   sleep: string;
+  name?: string;
+  email?: string;
 }
 
 // Language selector component for landing
 function LandingLanguageSwitcher() {
   const { locale, setLocale } = useI18n();
-  
+
   const toggleLanguage = () => {
     const newLang = locale === 'en' ? 'ru' : 'en';
     setLocale(newLang);
@@ -57,10 +63,10 @@ function Header({ onStartClick }: { onStartClick: () => void }) {
   }, []);
 
   const navItems = [
-    { label: t('landing.nav.features'), href: '#features' },
-    { label: t('landing.nav.modules'), href: '#modules' },
-    { label: t('landing.nav.pricing'), href: '#pricing' },
-    { label: t('landing.nav.specialists'), href: '#specialists' },
+    { label: 'Возможности', href: '#features' },
+    { label: 'Модули', href: '#modules' },
+    { label: 'Тарифы', href: '#pricing' },
+    { label: 'Отзывы', href: '#testimonials' },
   ];
 
   const scrollToSection = (href: string) => {
@@ -73,19 +79,20 @@ function Header({ onStartClick }: { onStartClick: () => void }) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 pt-[env(safe-area-inset-top)] ${
         isScrolled ? 'bg-white/95 backdrop-blur-md shadow-sm' : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-2"
+            onClick={() => navigate('/')}
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg">
               <Heart className="w-5 h-5 text-white" />
             </div>
             <span className={`text-xl font-bold ${isScrolled ? 'text-gray-900' : 'text-white'}`}>
@@ -109,30 +116,33 @@ function Header({ onStartClick }: { onStartClick: () => void }) {
           </nav>
 
           {/* Right Side */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <LandingLanguageSwitcher />
-            
+
             {user ? (
               <Button
                 onClick={() => navigate('/dashboard')}
-                className="bg-emerald-500 hover:bg-emerald-600 text-white"
+                className="bg-emerald-500 hover:bg-emerald-600 text-white text-sm px-3 sm:px-4 shadow-lg"
+                size="sm"
               >
-                {t('landing.nav.dashboard')}
+                Дашборд
               </Button>
             ) : (
               <div className="hidden sm:flex items-center gap-2">
                 <Button
                   variant="ghost"
+                  size="sm"
                   onClick={() => navigate('/login')}
-                  className={isScrolled ? 'text-gray-700' : 'text-white'}
+                  className={isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10'}
                 >
-                  {t('landing.nav.login')}
+                  Войти
                 </Button>
                 <Button
+                  size="sm"
                   onClick={onStartClick}
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white"
+                  className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg"
                 >
-                  {t('landing.cta.startFree')}
+                  Начать бесплатно
                 </Button>
               </div>
             )}
@@ -140,7 +150,7 @@ function Header({ onStartClick }: { onStartClick: () => void }) {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2"
+              className="md:hidden p-2 -mr-2"
             >
               {mobileMenuOpen ? (
                 <X className={`w-6 h-6 ${isScrolled ? 'text-gray-900' : 'text-white'}`} />
@@ -159,7 +169,7 @@ function Header({ onStartClick }: { onStartClick: () => void }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t"
+            className="md:hidden bg-white border-t shadow-lg"
           >
             <div className="px-4 py-4 space-y-3">
               {navItems.map((item) => (
@@ -171,7 +181,7 @@ function Header({ onStartClick }: { onStartClick: () => void }) {
                   {item.label}
                 </button>
               ))}
-              <hr />
+              <hr className="my-3" />
               {!user && (
                 <>
                   <Button
@@ -179,13 +189,13 @@ function Header({ onStartClick }: { onStartClick: () => void }) {
                     onClick={() => navigate('/login')}
                     className="w-full"
                   >
-                    {t('landing.nav.login')}
+                    Войти
                   </Button>
                   <Button
                     onClick={onStartClick}
                     className="w-full bg-emerald-500 hover:bg-emerald-600"
                   >
-                    {t('landing.cta.startFree')}
+                    Начать бесплатно
                   </Button>
                 </>
               )}
@@ -224,6 +234,7 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-400 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-400 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-teal-400 rounded-full blur-[120px]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
@@ -231,11 +242,11 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-medium mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-medium mb-8 shadow-lg"
         >
           <Gift className="w-4 h-4" />
-          <span>{t('landing.bonus.title')}</span>
-          <span className="font-bold">
+          <span>Первым 100 пользователям — персональная программа в подарок!</span>
+          <span className="font-bold tabular-nums">
             {String(countdown.hours).padStart(2, '0')}:
             {String(countdown.minutes).padStart(2, '0')}:
             {String(countdown.seconds).padStart(2, '0')}
@@ -249,15 +260,15 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-5xl lg:text-7xl font-bold text-white leading-tight mb-6">
-              {t('landing.hero.title')}
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight mb-6">
+              Ваша экосистема
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">
-                {t('landing.hero.subtitle')}
+                здоровья и долголетия
               </span>
             </h1>
 
-            <p className="text-xl text-gray-300 mb-8 max-w-xl">
-              {t('landing.hero.description')}
+            <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-xl">
+              7 модулей здоровья, AI-планировщик и команда специалистов для достижения ваших целей. Начните бесплатно за 2 минуты.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -266,7 +277,7 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
                 onClick={onStartClick}
                 className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-6 text-lg rounded-xl shadow-lg shadow-emerald-500/25"
               >
-                {t('landing.cta.startFree')}
+                Начать бесплатно
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               <Button
@@ -275,23 +286,23 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
                 className="border-white/30 text-white hover:bg-white/10 px-8 py-6 text-lg rounded-xl"
               >
                 <Play className="mr-2 w-5 h-5" />
-                {t('landing.cta.watchDemo')}
+                Смотреть демо
               </Button>
             </div>
 
             {/* Trust Badges */}
-            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-400">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm text-gray-400">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-emerald-400" />
-                <span>{t('landing.trust.freeStart')}</span>
+                <span>Бесплатный старт</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-emerald-400" />
-                <span>{t('landing.trust.noCard')}</span>
+                <span>Карта не требуется</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-emerald-400" />
-                <span>{t('landing.trust.cancelAnytime')}</span>
+                <span>Отмена в любой момент</span>
               </div>
             </div>
           </motion.div>
@@ -303,15 +314,15 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="relative"
           >
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-white/10 backdrop-blur-sm">
               <img
-                src="/dashboard-preview.jpg"
+                src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop"
                 alt="EthosLife Dashboard"
-                className="w-full"
+                className="w-full h-[400px] sm:h-[500px] object-cover opacity-80"
               />
               {/* Floating Cards */}
               <motion.div
-                className="absolute -left-6 top-1/4 bg-white rounded-2xl p-4 shadow-xl"
+                className="absolute -left-4 sm:-left-6 top-1/4 bg-white rounded-2xl p-4 shadow-xl"
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 4, repeat: Infinity }}
               >
@@ -320,14 +331,14 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
                     <Activity className="w-6 h-6 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">{t('landing.preview.steps')}</p>
+                    <p className="text-xs text-gray-500">Шаги сегодня</p>
                     <p className="text-xl font-bold text-gray-900">8,432</p>
                   </div>
                 </div>
               </motion.div>
 
               <motion.div
-                className="absolute -right-6 bottom-1/3 bg-white rounded-2xl p-4 shadow-xl"
+                className="absolute -right-4 sm:-right-6 bottom-1/3 bg-white rounded-2xl p-4 shadow-xl"
                 animate={{ y: [0, 10, 0] }}
                 transition={{ duration: 3, repeat: Infinity }}
               >
@@ -336,8 +347,8 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
                     <Brain className="w-6 h-6 text-purple-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">{t('landing.preview.mood')}</p>
-                    <p className="text-xl font-bold text-gray-900">{t('landing.preview.great')}</p>
+                    <p className="text-xs text-gray-500">Настроение</p>
+                    <p className="text-xl font-bold text-gray-900">Отличное!</p>
                   </div>
                 </div>
               </motion.div>
@@ -351,13 +362,11 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
 
 // Social Proof Section
 function SocialProofSection() {
-  const { t } = useI18n();
-
   const stats = [
-    { value: '100K+', label: t('landing.stats.users') },
-    { value: '4.9', label: t('landing.stats.rating') },
-    { value: '500+', label: t('landing.stats.specialists') },
-    { value: '95%', label: t('landing.stats.satisfaction') },
+    { value: '100K+', label: 'Пользователей' },
+    { value: '4.9', label: 'Рейтинг в App Store' },
+    { value: '500+', label: 'Специалистов' },
+    { value: '95%', label: 'Довольных клиентов' },
   ];
 
   return (
@@ -385,13 +394,11 @@ function SocialProofSection() {
 
 // Problem Section
 function ProblemSection() {
-  const { t } = useI18n();
-
   const problems = [
-    { icon: '📱', text: t('landing.problems.apps') },
-    { icon: '🔌', text: t('landing.problems.disconnected') },
-    { icon: '🤖', text: t('landing.problems.ai') },
-    { icon: '💰', text: t('landing.problems.expensive') },
+    { icon: '📱', text: 'Разрозненные приложения' },
+    { icon: '🔌', text: 'Нет связи между аспектами здоровья' },
+    { icon: '🤖', text: 'Сложные AI без понимания контекста' },
+    { icon: '💰', text: 'Дорогие специалисты без системы' },
   ];
 
   return (
@@ -399,9 +406,9 @@ function ProblemSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {t('landing.problem.title')}
+            Знакомые проблемы?
           </h2>
-          <p className="text-xl text-gray-600">{t('landing.problem.subtitle')}</p>
+          <p className="text-xl text-gray-600">Мы создали решение, которое объединяет всё</p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
@@ -424,13 +431,13 @@ function ProblemSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-8 md:p-12 text-center text-white"
+          className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-8 md:p-12 text-center text-white shadow-xl"
         >
           <h3 className="text-2xl md:text-3xl font-bold mb-4">
-            {t('landing.solution.title')}
+            EthoLife — первая целостная экосистема здоровья
           </h3>
           <p className="text-lg text-emerald-100 max-w-2xl mx-auto">
-            {t('landing.solution.description')}
+            7 взаимосвязанных модулей, AI-планировщик и доступ к специалистам в одном приложении
           </p>
         </motion.div>
       </div>
@@ -440,16 +447,14 @@ function ProblemSection() {
 
 // Features Grid (7 Modules)
 function FeaturesGrid() {
-  const { t } = useI18n();
-
   const modules = [
-    { icon: Apple, color: 'bg-green-500', title: t('landing.modules.nutrition'), desc: t('landing.modules.nutritionDesc') },
-    { icon: Dumbbell, color: 'bg-blue-500', title: t('landing.modules.movement'), desc: t('landing.modules.movementDesc') },
-    { icon: Moon, color: 'bg-purple-500', title: t('landing.modules.sleep'), desc: t('landing.modules.sleepDesc') },
-    { icon: Smile, color: 'bg-pink-500', title: t('landing.modules.psychology'), desc: t('landing.modules.psychologyDesc') },
-    { icon: Stethoscope, color: 'bg-red-500', title: t('landing.modules.medicine'), desc: t('landing.modules.medicineDesc') },
-    { icon: Users, color: 'bg-orange-500', title: t('landing.modules.social'), desc: t('landing.modules.socialDesc') },
-    { icon: Sprout, color: 'bg-teal-500', title: t('landing.modules.habits'), desc: t('landing.modules.habitsDesc') },
+    { icon: Apple, color: 'bg-green-500', title: 'Питание', desc: 'Калории, макросы, вода, персональные планы' },
+    { icon: Dumbbell, color: 'bg-blue-500', title: 'Движение', desc: 'Тренировки, шаги, активность, прогресс' },
+    { icon: Moon, color: 'bg-purple-500', title: 'Сон', desc: 'Фазы сна, качество, восстановление' },
+    { icon: Smile, color: 'bg-pink-500', title: 'Психология', desc: 'Настроение, стресс, медитации' },
+    { icon: Stethoscope, color: 'bg-red-500', title: 'Медицина', desc: 'Анализы, приемы, медикаменты' },
+    { icon: Users, color: 'bg-orange-500', title: 'Отношения', desc: 'Социальные связи, общение' },
+    { icon: Sprout, color: 'bg-teal-500', title: 'Привычки', desc: 'Трекер привычек, цели, streaks' },
   ];
 
   return (
@@ -457,28 +462,301 @@ function FeaturesGrid() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {t('landing.modules.title')}
+            7 модулей здоровья
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            {t('landing.modules.subtitle')}
+            Каждый модуль собирает данные, анализирует и дает персональные рекомендации
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Mobile: horizontal scroll, Desktop: grid */}
+        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 snap-x snap-mandatory">
           {modules.map((module, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group bg-gray-50 rounded-2xl p-6 hover:shadow-xl transition-all cursor-pointer"
+              transition={{ delay: index * 0.05 }}
+              className="group flex-shrink-0 w-[280px] md:w-auto bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:border-emerald-200 transition-all cursor-pointer snap-start"
             >
-              <div className={`w-14 h-14 rounded-xl ${module.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+              <div className={`w-14 h-14 rounded-2xl ${module.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
                 <module.icon className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{module.title}</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{module.title}</h3>
               <p className="text-gray-600">{module.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// How It Works Section
+function HowItWorksSection() {
+  const steps = [
+    {
+      icon: Target,
+      title: 'Определите цели',
+      desc: 'Пройдите 5-минутный онбординг и получите персональную программу',
+      color: 'bg-blue-500',
+    },
+    {
+      icon: BarChart3,
+      title: 'Отслеживайте прогресс',
+      desc: 'Вносите данные в модули здоровья и наблюдайте за улучшениями',
+      color: 'bg-emerald-500',
+    },
+    {
+      icon: Award,
+      title: 'Достигайте результатов',
+      desc: 'AI анализирует данные и корректирует план для максимального эффекта',
+      color: 'bg-purple-500',
+    },
+  ];
+
+  return (
+    <section className="py-24 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Как это работает
+          </h2>
+          <p className="text-xl text-gray-600">Три простых шага к здоровью</p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {steps.map((step, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="relative"
+            >
+              <Card className="text-center p-8 h-full">
+                <CardContent className="pt-6">
+                  <div className={`w-16 h-16 rounded-2xl ${step.color} flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                    <step.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
+                  <p className="text-gray-600">{step.desc}</p>
+                </CardContent>
+              </Card>
+              {index < steps.length - 1 && (
+                <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
+                  <ChevronRight className="w-8 h-8 text-gray-300" />
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Pricing Section
+function PricingSection({ onStartClick }: { onStartClick: () => void }) {
+  const [annual, setAnnual] = useState(true);
+
+  const plans = [
+    {
+      name: 'Базовый',
+      price: annual ? '0' : '0',
+      period: 'навсегда',
+      description: 'Для знакомства с экосистемой',
+      features: [
+        '1 модуль здоровья',
+        'Базовая статистика',
+        'AI-чат ограничено',
+      ],
+      cta: 'Начать бесплатно',
+      popular: false,
+    },
+    {
+      name: 'Премиум',
+      price: annual ? '490' : '690',
+      period: 'в месяц',
+      description: 'Полный доступ ко всем функциям',
+      features: [
+        'Все 7 модулей здоровья',
+        'AI-планировщик',
+        'Персональные рекомендации',
+        'Приоритетная поддержка',
+        'Ранний доступ к функциям',
+      ],
+      cta: 'Попробовать 7 дней бесплатно',
+      popular: true,
+    },
+    {
+      name: 'Семейный',
+      price: annual ? '890' : '1190',
+      period: 'в месяц',
+      description: 'Для всей семьи',
+      features: [
+        'Всё из Премиум',
+        'До 5 аккаунтов',
+        'Семейные цели',
+        'Совместные челленджи',
+        'Семейная статистика',
+      ],
+      cta: 'Начать семейный доступ',
+      popular: false,
+    },
+  ];
+
+  return (
+    <section id="pricing" className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Простые тарифы
+          </h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Начните бесплатно, платите за расширенные функции
+          </p>
+
+          {/* Toggle */}
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <span className={`text-sm ${!annual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
+              Ежемесячно
+            </span>
+            <button
+              onClick={() => setAnnual(!annual)}
+              className={`relative w-14 h-7 rounded-full transition-colors ${
+                annual ? 'bg-emerald-500' : 'bg-gray-300'
+              }`}
+            >
+              <div
+                className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                  annual ? 'left-8' : 'left-1'
+                }`}
+              />
+            </button>
+            <span className={`text-sm ${annual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
+              Ежегодно <span className="text-emerald-500 font-bold">-30%</span>
+            </span>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {plans.map((plan, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <Card className={`relative h-full ${
+                plan.popular ? 'border-emerald-500 border-2 shadow-xl' : 'border-gray-200'
+              }`}>
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <Badge className="bg-emerald-500 text-white px-4 py-1">
+                      Популярный
+                    </Badge>
+                  </div>
+                )}
+                <CardContent className="p-8">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                  <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-gray-900">₽{plan.price}</span>
+                    <span className="text-gray-500">/{plan.period}</span>
+                  </div>
+                  <ul className="space-y-3 mb-8">
+                    {plan.features.map((feature, i) => (
+                      <li key={i} className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                        <span className="text-gray-700">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    onClick={onStartClick}
+                    className={`w-full ${
+                      plan.popular
+                        ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
+                    }`}
+                  >
+                    {plan.cta}
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Testimonials Section
+function TestimonialsSection() {
+  const testimonials = [
+    {
+      name: 'Анна, 34 года',
+      role: 'Предприниматель',
+      content: 'За 3 месяца я наконец-то наладила сон и питание. AI-планировщик реально работает!',
+      avatar: '👩',
+    },
+    {
+      name: 'Михаил, 42 года',
+      role: 'IT-директор',
+      content: 'Наконец-то все модули здоровья в одном месте. Экономлю кучу времени на анализах.',
+      avatar: '👨',
+    },
+    {
+      name: 'Елена, 28 лет',
+      role: 'Фитнес-тренер',
+      content: 'Использую для клиентов. Видно прогресс по всем аспектам здоровья. Супер!',
+      avatar: '👩‍🦰',
+    },
+  ];
+
+  return (
+    <section id="testimonials" className="py-24 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Отзывы пользователей
+          </h2>
+          <p className="text-xl text-gray-600">Истории тех, кто уже изменил свою жизнь</p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <Card className="h-full">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 mb-6 italic">"{testimonial.content}"</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">{testimonial.name}</p>
+                      <p className="text-sm text-gray-500">{testimonial.role}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </motion.div>
           ))}
         </div>
@@ -489,28 +767,17 @@ function FeaturesGrid() {
 
 // CTA Section with Offer
 function CTASection({ onStartClick }: { onStartClick: () => void }) {
-  const { t } = useI18n();
   const [bonusesLeft, setBonusesLeft] = useState(47);
 
   useEffect(() => {
-    // Simulate decreasing bonuses
     const interval = setInterval(() => {
       setBonusesLeft((prev) => (prev > 3 ? prev - 1 : prev));
-    }, 30000); // Every 30 seconds
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 
-  const specialists = [
-    t('landing.specialists.mentor'),
-    t('landing.specialists.doctor'),
-    t('landing.specialists.trainer'),
-    t('landing.specialists.nutritionist'),
-    t('landing.specialists.psychologist'),
-    t('landing.specialists.coach'),
-  ];
-
   return (
-    <section id="pricing" className="py-24 bg-gradient-to-br from-slate-900 to-slate-800">
+    <section className="py-24 bg-gradient-to-br from-slate-900 to-slate-800">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -520,48 +787,37 @@ function CTASection({ onStartClick }: { onStartClick: () => void }) {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-medium mb-6">
             <Gift className="w-4 h-4" />
-            <span>{t('landing.offer.limited')}</span>
+            <span>Ограниченное предложение</span>
           </div>
 
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {t('landing.offer.title')}
+            Начните путь к здоровью сегодня
           </h2>
 
           <p className="text-lg text-gray-600 mb-8">
-            {t('landing.offer.description')}
+            Первые 100 пользователей получают персональную программу и 7 дней Премиум бесплатно
           </p>
 
           <div className="bg-gray-50 rounded-2xl p-6 mb-8 text-left">
-            <h3 className="font-bold text-gray-900 mb-4">{t('landing.offer.includes')}</h3>
+            <h3 className="font-bold text-gray-900 mb-4">Включено в бесплатный старт:</h3>
             <ul className="space-y-3">
               <li className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                <span>{t('landing.offer.bonus1')}</span>
+                <span>Доступ к 1 модулю здоровья</span>
               </li>
               <li className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                <span>{t('landing.offer.bonus2')}</span>
+                <span>Базовая статистика и трекинг</span>
               </li>
               <li className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                <span>{t('landing.offer.bonus3')}</span>
+                <span>AI-чат для консультаций</span>
               </li>
               <li className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                <span>{t('landing.offer.bonus4')}</span>
+                <span>Персональная программа на неделю</span>
               </li>
             </ul>
-
-            <div className="mt-6 pt-6 border-t">
-              <p className="font-medium text-gray-900 mb-3">{t('landing.offer.team')}:</p>
-              <div className="flex flex-wrap gap-2">
-                {specialists.map((spec, i) => (
-                  <span key={i} className="px-3 py-1 bg-white rounded-full text-sm text-gray-700 border">
-                    {spec}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
 
           <Button
@@ -569,19 +825,20 @@ function CTASection({ onStartClick }: { onStartClick: () => void }) {
             onClick={onStartClick}
             className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-12 py-6 text-lg rounded-xl shadow-lg shadow-emerald-500/25"
           >
-            {t('landing.offer.cta')}
+            Начать бесплатно
+            <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
 
           <div className="mt-6">
-            <p className="text-sm text-gray-500 mb-2">{t('landing.offer.left')}</p>
-            <div className="w-full max-w-xs mx-auto bg-gray-200 rounded-full h-2">
+            <p className="text-sm text-gray-500 mb-2">Осталось бонусных мест:</p>
+            <div className="w-full max-w-xs mx-auto bg-gray-200 rounded-full h-2 overflow-hidden">
               <div
                 className="bg-amber-500 h-2 rounded-full transition-all"
                 style={{ width: `${bonusesLeft}%` }}
               />
             </div>
             <p className="text-sm font-bold text-gray-900 mt-2">
-              {bonusesLeft} {t('landing.offer.of')} 100
+              {bonusesLeft} из 100
             </p>
           </div>
         </motion.div>
@@ -592,18 +849,49 @@ function CTASection({ onStartClick }: { onStartClick: () => void }) {
 
 // Footer
 function Footer() {
-  const { t } = useI18n();
+  const [, navigate] = useLocation();
 
   return (
     <footer className="bg-gray-900 text-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center gap-2 mb-4 md:mb-0">
-            <Heart className="w-6 h-6 text-emerald-500" />
-            <span className="text-xl font-bold">Ethos<span className="text-emerald-500">Life</span></span>
+        <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Heart className="w-6 h-6 text-emerald-500" />
+              <span className="text-xl font-bold">Ethos<span className="text-emerald-500">Life</span></span>
+            </div>
+            <p className="text-gray-400 text-sm">
+              Экосистема здоровья и долголетия
+            </p>
           </div>
+          <div>
+            <h4 className="font-semibold mb-3">Продукт</h4>
+            <ul className="space-y-2 text-sm text-gray-400">
+              <li><button onClick={() => navigate('/pricing')} className="hover:text-white">Тарифы</button></li>
+              <li><button onClick={() => navigate('/features')} className="hover:text-white">Возможности</button></li>
+              <li><button onClick={() => navigate('/roadmap')} className="hover:text-white">Дорожная карта</button></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-3">Компания</h4>
+            <ul className="space-y-2 text-sm text-gray-400">
+              <li><button onClick={() => navigate('/about')} className="hover:text-white">О нас</button></li>
+              <li><button onClick={() => navigate('/contact')} className="hover:text-white">Контакты</button></li>
+              <li><button onClick={() => navigate('/privacy')} className="hover:text-white">Приватность</button></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-3">Поддержка</h4>
+            <ul className="space-y-2 text-sm text-gray-400">
+              <li><button onClick={() => navigate('/help')} className="hover:text-white">Помощь</button></li>
+              <li><button onClick={() => navigate('/faq')} className="hover:text-white">FAQ</button></li>
+              <li><button onClick={() => navigate('/support')} className="hover:text-white">Support</button></li>
+            </ul>
+          </div>
+        </div>
+        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2026 EthoLife. {t('landing.footer.rights')}
+            © 2026 EthoLife. Все права защищены.
           </p>
         </div>
       </div>
@@ -613,7 +901,6 @@ function Footer() {
 
 // 5-Step Onboarding Flow
 function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
-  const { t } = useI18n();
   const [step, setStep] = useState(0);
   const [data, setData] = useState<OnboardingData>({
     mood: 3,
@@ -643,11 +930,11 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
   const MoodStep = () => (
     <div className="text-center">
       <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-        {t('onboarding.mood.title')}
+        Как вы себя чувствуете сегодня?
       </h2>
-      <p className="text-gray-600 mb-8">{t('onboarding.mood.subtitle')}</p>
+      <p className="text-gray-600 mb-8">Это поможет нам понять вашу текущую форму</p>
 
-      <div className="flex justify-center gap-4 flex-wrap">
+      <div className="flex justify-center gap-3 sm:gap-4 flex-wrap">
         {[1, 2, 3, 4, 5].map((mood) => (
           <button
             key={mood}
@@ -655,7 +942,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
               setData({ ...data, mood });
               setTimeout(handleNext, 300);
             }}
-            className={`w-16 h-16 rounded-2xl text-3xl transition-all hover:scale-110 ${
+            className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-3xl transition-all hover:scale-110 ${
               data.mood === mood ? 'bg-emerald-500 shadow-lg scale-110' : 'bg-gray-100 hover:bg-gray-200'
             }`}
           >
@@ -668,9 +955,9 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
         ))}
       </div>
 
-      <div className="flex justify-between text-sm text-gray-500 mt-4">
-        <span>{t('onboarding.mood.terrible')}</span>
-        <span>{t('onboarding.mood.excellent')}</span>
+      <div className="flex justify-between text-sm text-gray-500 mt-4 px-4">
+        <span>Ужасно</span>
+        <span>Отлично</span>
       </div>
     </div>
   );
@@ -678,22 +965,22 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
   // Step 2: Goals
   const GoalsStep = () => {
     const goals = [
-      { id: 'weight', label: t('onboarding.goals.weight'), icon: '⚖️' },
-      { id: 'energy', label: t('onboarding.goals.energy'), icon: '⚡' },
-      { id: 'sleep', label: t('onboarding.goals.sleep'), icon: '😴' },
-      { id: 'stress', label: t('onboarding.goals.stress'), icon: '🧘' },
-      { id: 'fitness', label: t('onboarding.goals.fitness'), icon: '💪' },
-      { id: 'nutrition', label: t('onboarding.goals.nutrition'), icon: '🥗' },
+      { id: 'weight', label: 'Вес', icon: '⚖️' },
+      { id: 'energy', label: 'Энергия', icon: '⚡' },
+      { id: 'sleep', label: 'Сон', icon: '😴' },
+      { id: 'stress', label: 'Стресс', icon: '🧘' },
+      { id: 'fitness', label: 'Фитнес', icon: '💪' },
+      { id: 'nutrition', label: 'Питание', icon: '🥗' },
     ];
 
     return (
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-          {t('onboarding.goals.title')}
+          Какие цели для вас приоритетны?
         </h2>
-        <p className="text-gray-600 mb-8">{t('onboarding.goals.subtitle')}</p>
+        <p className="text-gray-600 mb-8">Выберите 1-3 цели</p>
 
-        <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-md mx-auto">
           {goals.map((goal) => (
             <button
               key={goal.id}
@@ -710,7 +997,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
               }`}
             >
               <span className="text-2xl">{goal.icon}</span>
-              <p className="font-medium text-gray-900 mt-1">{goal.label}</p>
+              <p className="font-medium text-gray-900 mt-1 text-sm">{goal.label}</p>
             </button>
           ))}
         </div>
@@ -720,7 +1007,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
           disabled={data.goals.length === 0}
           className="mt-8 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50"
         >
-          {t('onboarding.next')}
+          Далее
           <ChevronRight className="w-4 h-4 ml-2" />
         </Button>
       </div>
@@ -730,18 +1017,18 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
   // Step 3: Activity Level
   const ActivityStep = () => {
     const activities = [
-      { id: 'sedentary', label: t('onboarding.activity.sedentary'), desc: t('onboarding.activity.sedentaryDesc'), icon: '🪑' },
-      { id: 'light', label: t('onboarding.activity.light'), desc: t('onboarding.activity.lightDesc'), icon: '🚶' },
-      { id: 'moderate', label: t('onboarding.activity.moderate'), desc: t('onboarding.activity.moderateDesc'), icon: '🏃' },
-      { id: 'active', label: t('onboarding.activity.active'), desc: t('onboarding.activity.activeDesc'), icon: '💪' },
+      { id: 'sedentary', label: 'Сидячий', desc: 'Мало движения', icon: '🪑' },
+      { id: 'light', label: 'Легкий', desc: 'Прогулки 1-2 раза в неделю', icon: '🚶' },
+      { id: 'moderate', label: 'Умеренный', desc: 'Тренировки 3-4 раза в неделю', icon: '🏃' },
+      { id: 'active', label: 'Активный', desc: 'Спорт 5+ раз в неделю', icon: '💪' },
     ];
 
     return (
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-          {t('onboarding.activity.title')}
+          Ваш уровень активности?
         </h2>
-        <p className="text-gray-600 mb-8">{t('onboarding.activity.subtitle')}</p>
+        <p className="text-gray-600 mb-8">Честно — это поможет создать реалистичный план</p>
 
         <div className="space-y-3 max-w-md mx-auto">
           {activities.map((activity) => (
@@ -772,18 +1059,18 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
   // Step 4: Sleep
   const SleepStep = () => {
     const sleepOptions = [
-      { id: 'less-5', label: t('onboarding.sleep.less5'), hours: '< 5' },
-      { id: '5-6', label: t('onboarding.sleep.5-6'), hours: '5-6' },
-      { id: '7-8', label: t('onboarding.sleep.7-8'), hours: '7-8' },
-      { id: 'more-8', label: t('onboarding.sleep.more8'), hours: '8+' },
+      { id: 'less-5', label: '< 5 часов', hours: '< 5' },
+      { id: '5-6', label: '5-6 часов', hours: '5-6' },
+      { id: '7-8', label: '7-8 часов', hours: '7-8' },
+      { id: 'more-8', label: '8+ часов', hours: '8+' },
     ];
 
     return (
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-          {t('onboarding.sleep.title')}
+          Сколько вы спите?
         </h2>
-        <p className="text-gray-600 mb-8">{t('onboarding.sleep.subtitle')}</p>
+        <p className="text-gray-600 mb-8">Сон — основа здоровья</p>
 
         <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
           {sleepOptions.map((option) => (
@@ -823,44 +1110,46 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
       </motion.div>
 
       <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-        {t('onboarding.plan.title')}
+        Ваша персональная программа готова!
       </h2>
-      <p className="text-gray-600 mb-8">{t('onboarding.plan.subtitle')}</p>
+      <p className="text-gray-600 mb-8">Мы создали план на основе ваших ответов</p>
 
       <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 max-w-md mx-auto text-left mb-8">
-        <h3 className="font-bold text-gray-900 mb-4">{t('onboarding.plan.program')}</h3>
+        <h3 className="font-bold text-gray-900 mb-4">Что вас ждет:</h3>
         <ul className="space-y-3">
           <li className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-            <span className="text-gray-700">{t('onboarding.plan.week1')}</span>
+            <span className="text-gray-700">Персональные рекомендации по питанию</span>
           </li>
           <li className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-            <span className="text-gray-700">{t('onboarding.plan.week2')}</span>
+            <span className="text-gray-700">План тренировок под ваш уровень</span>
           </li>
           <li className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-            <span className="text-gray-700">{t('onboarding.plan.week3')}</span>
+            <span className="text-gray-700">Программа улучшения сна</span>
           </li>
         </ul>
 
         <div className="mt-6 pt-6 border-t border-emerald-200">
-          <p className="text-sm text-gray-600 mb-2">{t('onboarding.plan.aiTitle')}</p>
-          <p className="text-emerald-800 font-medium">{t('onboarding.plan.aiTip')}</p>
+          <p className="text-sm text-gray-600 mb-2">💡 AI-совет:</p>
+          <p className="text-emerald-800 font-medium">
+            Начните с малого — первые 7 дней фокусируемся на {data.goals[0] || 'целях'}
+          </p>
         </div>
       </div>
 
       <Button
         size="lg"
         onClick={handleNext}
-        className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-6 text-lg rounded-xl shadow-lg shadow-emerald-500/25"
+        className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-6 text-lg rounded-xl shadow-lg shadow-emerald-500/25 w-full sm:w-auto"
       >
-        {t('onboarding.plan.activate')}
+        Активировать программу
         <ArrowRight className="w-5 h-5 ml-2" />
       </Button>
 
       <p className="text-sm text-gray-500 mt-4">
-        {t('onboarding.plan.time')}
+        Это займет 2 минуты
       </p>
     </div>
   );
@@ -879,7 +1168,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
         {/* Progress */}
         <div className="mb-8">
           <div className="flex justify-between text-sm text-gray-500 mb-2">
-            <span>{t('onboarding.step')} {step + 1} {t('onboarding.of')} {totalSteps}</span>
+            <span>Шаг {step + 1} из {totalSteps}</span>
             <span>{Math.round(((step + 1) / totalSteps) * 100)}%</span>
           </div>
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -899,7 +1188,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.3 }}
-          className="bg-white rounded-3xl shadow-xl p-8 md:p-12"
+          className="bg-white rounded-3xl shadow-xl p-6 sm:p-8 md:p-12"
         >
           {steps[step]}
         </motion.div>
@@ -911,7 +1200,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
             className="mt-6 text-gray-500 hover:text-gray-700 flex items-center gap-2 mx-auto"
           >
             <ChevronLeft className="w-4 h-4" />
-            {t('onboarding.back')}
+            Назад
           </button>
         )}
       </div>
@@ -930,7 +1219,6 @@ export default function LandingPage() {
   };
 
   const completeOnboarding = () => {
-    // Save onboarding data and redirect to registration
     navigate('/register?from=onboarding');
   };
 
@@ -945,6 +1233,9 @@ export default function LandingPage() {
       <SocialProofSection />
       <ProblemSection />
       <FeaturesGrid />
+      <HowItWorksSection />
+      <TestimonialsSection />
+      <PricingSection onStartClick={startOnboarding} />
       <CTASection onStartClick={startOnboarding} />
       <Footer />
     </div>

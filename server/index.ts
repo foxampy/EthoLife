@@ -7,6 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Import API routes
 import authRoutes from './api/auth.js';
+import healthRoutes from './routes/health.js';
 
 // Import and start Telegram bot
 import './telegram-bot.js';
@@ -38,6 +39,7 @@ app.get('/health', (_req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/health', healthRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/payments', paymentsRoutes);

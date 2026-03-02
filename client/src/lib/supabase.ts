@@ -3,7 +3,20 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+// Проверка переменных окружения
+if (!supabaseUrl) {
+  console.error('[Supabase] VITE_SUPABASE_URL is not defined!');
+  console.error('[Supabase] Make sure to set VITE_SUPABASE_URL environment variable in Render Dashboard');
+}
+if (!supabaseKey) {
+  console.error('[Supabase] VITE_SUPABASE_ANON_KEY is not defined!');
+  console.error('[Supabase] Make sure to set VITE_SUPABASE_ANON_KEY environment variable in Render Dashboard');
+}
+
+// Создаем клиент только если есть URL и ключ
+export const supabase = supabaseUrl && supabaseKey 
+  ? createClient(supabaseUrl, supabaseKey)
+  : createClient('https://placeholder.supabase.co', 'placeholder');
 
 export type Database = {
   public: {

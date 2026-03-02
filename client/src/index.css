@@ -177,6 +177,11 @@
     word-break: normal;
     overflow-wrap: normal;
     writing-mode: horizontal-tb;
+    /* Safe area для мобильных устройств */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
     /* Текстура фона - матовое зернистое стекло */
     background-image: 
       radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 0),

@@ -124,6 +124,7 @@ if (TELEGRAM_BOT_TOKEN) {
     await ctx.reply(
       `📋 Доступные команды:\n\n` +
       `• /start - Начать работу с ботом\n` +
+      `• /app - Открыть приложение EthosLife\n` +
       `• /help - Показать эту справку\n` +
       `• /settings - Настройки уведомлений\n` +
       `• /today - План на сегодня\n` +
@@ -132,6 +133,23 @@ if (TELEGRAM_BOT_TOKEN) {
       `• /complete <номер> - Отметить задачу выполненной\n` +
       `• /note <текст> - Добавить заметку\n\n` +
       `💡 Вы также можете использовать кнопки меню для быстрого доступа.`
+    );
+  });
+
+  // Open WebApp command
+  bot.command('app', async (ctx: Context) => {
+    const webAppUrl = process.env.WEBAPP_URL || 'https://etholife.onrender.com';
+    
+    await ctx.reply(
+      `🚀 Откройте EthosLife для полного доступа ко всем функциям:\n\n` +
+      `• Персональный дашборд здоровья\n` +
+      `• AI-ассистент\n` +
+      `• Каталог специалистов\n` +
+      `• Социальная сеть\n` +
+      `• И многое другое!`,
+      Markup.inlineKeyboard([
+        Markup.button.webApp('🚀 Открыть EthosLife', webAppUrl)
+      ])
     );
   });
 
@@ -556,11 +574,16 @@ if (TELEGRAM_BOT_TOKEN) {
       const completedCount = todayPlans.filter(p => p.completed).length;
       const totalCount = todayPlans.length;
 
+      const webAppUrl = process.env.WEBAPP_URL || 'https://etholife.onrender.com';
+      
       await ctx.reply(
         `📋 Главное меню\n\n` +
         `📅 Сегодня: ${completedCount}/${totalCount} задач выполнено\n\n` +
         `Выберите действие:`,
         Markup.inlineKeyboard([
+          [
+            Markup.button.webApp('🚀 Открыть приложение', webAppUrl),
+          ],
           [
             Markup.button.callback('📅 Сегодня', 'quick_today'),
             Markup.button.callback('📊 Метрики', 'quick_metrics'),

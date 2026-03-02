@@ -4,6 +4,11 @@ services:
     env: node
     buildCommand: pnpm install && pnpm run build
     startCommand: pnpm run start
+    buildEnv:
+      # Vite build-time variables
+      NODE_ENV: production
+      VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
+      VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
     envVars:
       - key: NODE_ENV
         value: production
@@ -13,6 +18,10 @@ services:
       - key: DATABASE_URL
         sync: false
       - key: POSTGRES_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
         sync: false
       # Auth
       - key: JWT_SECRET
@@ -34,4 +43,6 @@ services:
       # Telegram
       - key: TELEGRAM_BOT_TOKEN
         sync: false
+      - key: WEBAPP_URL
+        value: https://etholife.onrender.com
     healthCheckPath: /health

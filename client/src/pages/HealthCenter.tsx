@@ -1,22 +1,34 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useUser } from '@/contexts/UserContext';
 import { useLocation } from 'wouter';
-import { 
-  Calendar, Clock, CheckCircle2, Circle, Zap, 
-  TrendingUp, Activity, Heart, Plus, Settings, 
-  ChevronRight, Sparkles, BarChart3, Target, FileText
+import {
+  Calendar, Clock, CheckCircle2, Circle, Zap,
+  TrendingUp, Activity, Heart, Plus, Settings,
+  ChevronRight, Sparkles, BarChart3, Target, FileText,
+  Apple, Dumbbell, Moon as MoonIcon, Smile, Stethoscope, Users, Sprout,
+  ArrowRight, Bell, Award
 } from 'lucide-react';
-import SketchIcon from '@/components/SketchIcon';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Progress } from '@/components/ui/progress';
+import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/i18n';
 
+const modules = [
+  { id: 'movement', label: 'Движение', icon: Dumbbell, color: '#3B82F6', bg: 'bg-blue-50', description: 'Шаги, тренировки, активность' },
+  { id: 'nutrition', label: 'Питание', icon: Apple, color: '#10B981', bg: 'bg-green-50', description: 'Калории, макросы, вода' },
+  { id: 'sleep', label: 'Сон', icon: MoonIcon, color: '#8B5CF6', bg: 'bg-purple-50', description: 'Качество, фазы, восстановление' },
+  { id: 'psychology', label: 'Психология', icon: Smile, color: '#F59E0B', bg: 'bg-amber-50', description: 'Настроение, стресс, журнал' },
+  { id: 'medicine', label: 'Медицина', icon: Stethoscope, color: '#EF4444', bg: 'bg-red-50', description: 'Анализы, приемы, медикаменты' },
+  { id: 'relationships', label: 'Отношения', icon: Users, color: '#EC4899', bg: 'bg-pink-50', description: 'Социальные связи, общение' },
+  { id: 'habits', label: 'Привычки', icon: Sprout, color: '#06B6D4', bg: 'bg-cyan-50', description: 'Трекер, streaks, цели' },
+];
+
 export default function HealthCenter() {
-  const { user } = useUser();
+  const { user, token } = useAuth();
   const { t } = useI18n();
   const [, setLocation] = useLocation();
   const [loading, setLoading] = useState(true);
@@ -24,16 +36,7 @@ export default function HealthCenter() {
   const [reminders, setReminders] = useState<any[]>([]);
   const [metrics, setMetrics] = useState<any[]>([]);
   const [goals, setGoals] = useState<any[]>([]);
-
-  const quickActions = [
-    { id: 'movement', label: t('health.modules.movement'), icon: 'movement', color: '#3B82F6', path: '/health/movement' },
-    { id: 'nutrition', label: t('health.modules.nutrition'), icon: 'nutrition', color: '#10B981', path: '/health/nutrition' },
-    { id: 'sleep', label: t('health.modules.sleep'), icon: 'sleep', color: '#8B5CF6', path: '/health/sleep' },
-    { id: 'psychology', label: t('health.modules.psychology'), icon: 'psychology', color: '#F59E0B', path: '/health/psychology' },
-    { id: 'medicine', label: t('health.modules.medicine'), icon: 'medicine', color: '#EF4444', path: '/health/medicine' },
-    { id: 'relationships', label: t('health.modules.relationships'), icon: 'relationships', color: '#EC4899', path: '/health/relationships' },
-    { id: 'habits', label: t('health.modules.habits'), icon: 'spirituality', color: '#06B6D4', path: '/health/habits' },
-  ];
+  const [moduleScores, setModuleScores] = useState<Record<string, number>>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,11 +49,14 @@ export default function HealthCenter() {
         const userId = user.id.toString();
         const today = new Date().toISOString().split('T')[0];
 
-        const plansResponse = await fetch(`/api/users/${userId}/plans?date=${today}`);
+        // Load plans
+        const plansResponse = await fetch(`/api/users/${userId}/plans?date=${today}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
         if (plansResponse.ok) {
           const plansData = await plansResponse.json();
           setTodayPlans(plansData.plans || []);
-          
+
           const planReminders = (plansData.plans || [])
             .filter((p: any) => !p.completed && p.time)
             .slice(0, 5)
@@ -64,17 +70,42 @@ export default function HealthCenter() {
           setReminders(planReminders);
         }
 
-        const metricsResponse = await fetch(`/api/users/${userId}/metrics?limit=5`);
+        // Load metrics
+        const metricsResponse = await fetch(`/api/users/${userId}/metrics?limit=10`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
         if (metricsResponse.ok) {
           const metricsData = await metricsResponse.json();
           setMetrics(metricsData.metrics || []);
         }
 
-        const goalsResponse = await fetch(`/api/users/${userId}/goals`);
+        // Load goals
+        const goalsResponse = await fetch(`/api/users/${userId}/goals`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
         if (goalsResponse.ok) {
           const goalsData = await goalsResponse.json();
           setGoals(goalsData.goals || []);
         }
+
+        // Load module scores
+        const scoresPromises = modules.map(async (module) => {
+          try {
+            const res = await fetch(`/api/users/${userId}/metrics?metric_type=${module.id}&limit=1`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+              const data = await res.json();
+              const metric = data.metrics?.[0];
+              const score = calculateScore(module.id, metric?.value);
+              setModuleScores(prev => ({ ...prev, [module.id]: score }));
+            }
+          } catch (e) {
+            console.error(`Error loading ${module.id}:`, e);
+          }
+        });
+
+        await Promise.all(scoresPromises);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -83,330 +114,337 @@ export default function HealthCenter() {
     };
 
     fetchData();
-  }, [user?.id]);
+  }, [user?.id, token]);
+
+  const calculateScore = (moduleId: string, value: number): number => {
+    if (!value || value === 0) return 0;
+    
+    const targets: Record<string, number> = {
+      movement: 10000,
+      nutrition: 2000,
+      sleep: 8,
+      psychology: 100,
+      medicine: 10,
+      relationships: 100,
+      habits: 30,
+    };
+    
+    const target = targets[moduleId] || 100;
+    return Math.min(100, Math.round((value / target) * 100));
+  };
 
   const completedPlans = todayPlans.filter(p => p.completed).length;
   const totalPlans = todayPlans.length;
   const progressPercent = totalPlans > 0 ? Math.round((completedPlans / totalPlans) * 100) : 0;
 
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return 'text-green-500 bg-green-100';
+    if (score >= 60) return 'text-yellow-500 bg-yellow-100';
+    if (score > 0) return 'text-red-500 bg-red-100';
+    return 'text-gray-500 bg-gray-100';
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center pt-10">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50 flex items-center justify-center pt-10">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="text-center"
         >
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-          <p className="text-sm text-foreground/60">{t('common.loading')}</p>
+          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-sm text-gray-600 font-medium">Загрузка данных...</p>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background pt-10 pb-16">
-      <div className="w-full max-w-7xl mx-auto px-3 py-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50 pt-14 pb-24">
+      <div className="w-full max-w-7xl mx-auto px-4 py-6 space-y-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-4"
+          className="flex items-start justify-between gap-4"
         >
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2">
-                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                {t('healthCenter.title')}
-              </h1>
-              <p className="text-xs sm:text-sm text-foreground/60 mt-0.5">
-                {t('healthCenter.subtitle')}
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setLocation('/settings')}
-              className="h-8 px-2 shrink-0"
-            >
-              <Settings className="w-4 h-4" />
-            </Button>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2">
+              <Sparkles className="w-7 h-7 text-emerald-500" />
+              Центр здоровья
+            </h1>
+            <p className="text-sm text-gray-600 mt-1">
+              Все модули здоровья в одном месте
+            </p>
           </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setLocation('/settings')}
+            className="shrink-0"
+          >
+            <Settings className="w-4 h-4" />
+          </Button>
         </motion.div>
 
-        {/* Quick Actions */}
+        {/* Overall Health Score */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mb-4"
         >
-          <Card>
-            <CardHeader className="pb-2">
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-emerald-500 to-teal-600 text-white">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm flex items-center gap-1.5">
-                  <Zap className="w-4 h-4 text-primary" />
-                  {t('healthCenter.quickAccess')}
-                </CardTitle>
-                <Badge variant="outline" className="text-xs">
-                  {quickActions.length} {t('healthCenter.modules')}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-7 gap-2">
-                {quickActions.map((action) => (
-                  <button
-                    key={action.id}
-                    onClick={() => setLocation(action.path)}
-                    className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    <div 
-                      className="w-9 h-9 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: action.color + '20' }}
-                    >
-                      <SketchIcon icon={action.icon as any} size={18} style={{ color: action.color }} />
-                    </div>
-                    <span className="text-xs font-medium text-center leading-tight">{action.label}</span>
-                  </button>
-                ))}
+                <div>
+                  <p className="text-emerald-100 text-sm mb-1">Общий индекс здоровья</p>
+                  <div className="text-4xl font-bold">
+                    {Object.keys(moduleScores).length > 0
+                      ? Math.round(Object.values(moduleScores).reduce((a, b) => a + b, 0) / Object.values(moduleScores).length)
+                      : '--'
+                    }
+                    <span className="text-2xl ml-1">%</span>
+                  </div>
+                  <p className="text-emerald-100 text-xs mt-2">
+                    На основе {Object.keys(moduleScores).length} модулей
+                  </p>
+                </div>
+                <div className="text-right">
+                  <Award className="w-16 h-16 text-emerald-300 opacity-50" />
+                </div>
               </div>
             </CardContent>
           </Card>
         </motion.div>
 
         {/* Today's Progress */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            className="lg:col-span-2"
-          >
-            <Card>
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4 text-primary" />
-                    {t('healthCenter.today')}
-                  </CardTitle>
-                  <Badge variant="outline" className="text-xs">
-                    {completedPlans}/{totalPlans} {t('healthCenter.done')}
-                  </Badge>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+        >
+          <Card className="border-0 shadow-md">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-emerald-500" />
+                  <CardTitle className="text-base">План на сегодня</CardTitle>
                 </div>
-              </CardHeader>
-              <CardContent>
-                {totalPlans > 0 ? (
-                  <div className="space-y-3">
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs text-foreground/60">{t('healthCenter.progress')}</span>
-                        <span className="text-xs font-semibold">{progressPercent}%</span>
-                      </div>
-                      <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${progressPercent}%` }}
-                          transition={{ duration: 0.5 }}
-                          className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full"
-                        />
-                      </div>
-                    </div>
-
-                    <ScrollArea className="h-[200px]">
-                      <div className="space-y-1">
-                        {todayPlans.map((plan, idx) => (
-                          <motion.div
-                            key={plan.id || idx}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.1 + idx * 0.05 }}
-                            className={`flex items-center gap-2 p-2 rounded-lg border text-sm ${
-                              plan.completed 
-                                ? 'bg-green-50/50 border-green-200' 
-                                : 'bg-card border-border'
-                            }`}
-                          >
-                            <Clock className="w-3.5 h-3.5 text-foreground/60 shrink-0" />
-                            <span className="font-mono text-xs text-foreground/70 shrink-0">
-                              {plan.time || '00:00'}
-                            </span>
-                            <span className="flex-1 truncate">{plan.title}</span>
-                            {plan.category && (
-                              <SketchIcon icon={plan.category as any} size={14} className="text-primary shrink-0" />
-                            )}
-                            {plan.completed ? (
-                              <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
-                            ) : (
-                              <Circle className="w-4 h-4 text-foreground/30 shrink-0" />
-                            )}
-                          </motion.div>
-                        ))}
-                      </div>
-                    </ScrollArea>
-                  </div>
-                ) : (
-                  <div className="text-center py-6">
-                    <Calendar className="w-10 h-10 text-foreground/30 mx-auto mb-2" />
-                    <p className="text-sm text-foreground/60 mb-2">{t('healthCenter.noPlans')}</p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setLocation('/calendar')}
-                    >
-                      <Plus className="w-4 h-4 mr-1" />
-                      {t('healthCenter.createPlan')}
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Reminders */}
-          <motion.div
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm">{t('healthCenter.reminders')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {reminders.length > 0 ? (
-                  <ScrollArea className="h-[200px]">
+                <Badge variant="secondary" className="text-xs">
+                  {completedPlans}/{totalPlans} выполнено
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {totalPlans > 0 ? (
+                <div className="space-y-3">
+                  <Progress value={progressPercent} className="h-2" />
+                  
+                  <ScrollArea className="h-[180px]">
                     <div className="space-y-2">
-                      {reminders.map((reminder, idx) => (
-                        <div
-                          key={reminder.id}
-                          className="p-2 rounded-lg border border-border bg-card text-sm"
+                      {todayPlans.map((plan, idx) => (
+                        <motion.div
+                          key={plan.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.05 * idx }}
+                          className={`flex items-center gap-3 p-3 rounded-lg border text-sm ${
+                            plan.completed
+                              ? 'bg-green-50 border-green-200'
+                              : 'bg-white border-gray-200'
+                          }`}
                         >
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-medium truncate">{reminder.title}</span>
-                            <span className="text-xs text-foreground/60 shrink-0">{reminder.time}</span>
+                          {plan.completed ? (
+                            <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
+                          ) : (
+                            <Circle className="w-5 h-5 text-gray-300 shrink-0" />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className={`font-medium truncate ${
+                              plan.completed ? 'line-through text-gray-400' : 'text-gray-900'
+                            }`}>
+                              {plan.title}
+                            </p>
+                            {plan.time && (
+                              <p className="text-xs text-gray-500 font-mono">{plan.time}</p>
+                            )}
                           </div>
-                        </div>
+                          {plan.category && (
+                            <Badge variant="outline" className="text-xs shrink-0">
+                              {modules.find(m => m.id === plan.category)?.label || plan.category}
+                            </Badge>
+                          )}
+                        </motion.div>
                       ))}
                     </div>
                   </ScrollArea>
-                ) : (
-                  <div className="text-center py-6 text-sm text-foreground/60">
-                    {t('healthCenter.noReminders')}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-sm text-gray-500 mb-3">Нет задач на сегодня</p>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setLocation('/dashboard')}
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Добавить задачу
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        {/* Tabs */}
-        <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4 h-9">
-            <TabsTrigger value="overview" className="text-xs">
-              <BarChart3 className="w-3.5 h-3.5 mr-1" />
-              {t('healthCenter.overview')}
+        {/* Modules Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Модули здоровья</h2>
+            <Button variant="ghost" size="sm" onClick={() => setLocation('/health')}>
+              Все данные <ArrowRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {modules.map((module, index) => {
+              const Icon = module.icon;
+              const score = moduleScores[module.id] || 0;
+              
+              return (
+                <motion.div
+                  key={module.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.05 * index }}
+                >
+                  <Card 
+                    className="border-0 shadow-md hover:shadow-xl transition-all cursor-pointer group overflow-hidden"
+                    onClick={() => setLocation(`/health/${module.id}`)}
+                  >
+                    <CardContent className="p-5">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className={`w-14 h-14 rounded-2xl ${module.bg} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                          <Icon className="w-7 h-7" style={{ color: module.color }} />
+                        </div>
+                        <div className={`text-xs font-bold px-3 py-1.5 rounded-full ${getScoreColor(score)}`}>
+                          {score > 0 ? `${score}%` : '—'}
+                        </div>
+                      </div>
+
+                      <h3 className="font-bold text-gray-900 text-lg mb-1">{module.label}</h3>
+                      <p className="text-sm text-gray-500 mb-4">{module.description}</p>
+
+                      <div className="flex items-center justify-between">
+                        <Progress value={score} className="h-1.5 flex-1 mr-3" />
+                        <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-emerald-500 transition-colors shrink-0" />
+                      </div>
+
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="w-full mt-3 bg-gray-50 hover:bg-white"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setLocation(`/health/${module.id}/new`);
+                        }}
+                      >
+                        <Plus className="w-3.5 h-3.5 mr-1.5" />
+                        Добавить данные
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        {/* Tabs Section */}
+        <Tabs defaultValue="metrics" className="space-y-4">
+          <TabsList className="grid w-full grid-cols-3 h-11">
+            <TabsTrigger value="metrics" className="text-sm">
+              <BarChart3 className="w-4 h-4 mr-1.5" />
+              Метрики
             </TabsTrigger>
-            <TabsTrigger value="metrics" className="text-xs">
-              <Activity className="w-3.5 h-3.5 mr-1" />
-              {t('healthCenter.metrics')}
+            <TabsTrigger value="goals" className="text-sm">
+              <Target className="w-4 h-4 mr-1.5" />
+              Цели
             </TabsTrigger>
-            <TabsTrigger value="goals" className="text-xs">
-              <Target className="w-3.5 h-3.5 mr-1" />
-              {t('healthCenter.goals')}
-            </TabsTrigger>
-            <TabsTrigger value="reports" className="text-xs">
-              <FileText className="w-3.5 h-3.5 mr-1" />
-              {t('healthCenter.reports')}
+            <TabsTrigger value="reports" className="text-sm">
+              <FileText className="w-4 h-4 mr-1.5" />
+              Отчёты
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview">
-            <Card>
-              <CardContent className="p-4">
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {quickActions.map((direction) => {
-                    const directionPlans = todayPlans.filter(p => p.category === direction.id);
-                    const completed = directionPlans.filter(p => p.completed).length;
-                    const total = directionPlans.length;
-                    
-                    return (
-                      <div
-                        key={direction.id}
-                        onClick={() => setLocation(direction.path)}
-                        className="p-3 rounded-lg border hover:border-primary/50 cursor-pointer transition-colors"
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          <div 
-                            className="w-8 h-8 rounded flex items-center justify-center"
-                            style={{ backgroundColor: direction.color + '20' }}
-                          >
-                            <SketchIcon icon={direction.icon as any} size={16} style={{ color: direction.color }} />
-                          </div>
-                          <ChevronRight className="w-4 h-4 text-foreground/40 ml-auto" />
-                        </div>
-                        <h3 className="font-semibold text-sm">{direction.label}</h3>
-                        {total > 0 ? (
-                          <div className="text-xs text-foreground/60">
-                            {completed}/{total} {t('healthCenter.done')}
-                          </div>
-                        ) : (
-                          <div className="text-xs text-foreground/40">{t('dashboard.noData')}</div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
           <TabsContent value="metrics">
-            <Card>
+            <Card className="border-0 shadow-md">
               <CardContent className="p-4">
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {metrics.map((metric, idx) => (
-                    <div key={idx} className="p-3 rounded-lg border bg-card">
-                      <div className="text-xs text-foreground/60 mb-1">
-                        {metric.metric_type}
-                      </div>
-                      <div className="text-lg font-bold">
-                        {metric.value} <span className="text-xs font-normal text-foreground/60">{metric.unit || ''}</span>
-                      </div>
-                    </div>
-                  ))}
-                  {metrics.length === 0 && (
-                    <div className="col-span-full text-center py-8 text-sm text-foreground/60">
-                      {t('dashboard.noData')}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="goals">
-            <Card>
-              <CardContent className="p-4">
-                {goals.length > 0 ? (
-                  <div className="space-y-2">
-                    {goals.map((goal, idx) => (
-                      <div key={idx} className="p-3 rounded-lg border bg-card">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-sm">{goal.title}</span>
-                          {goal.completed ? (
-                            <Badge className="bg-green-500 text-xs">{t('dashboard.completed')}</Badge>
-                          ) : (
-                            <Badge variant="outline" className="text-xs">{t('dashboard.pending')}</Badge>
-                          )}
-                        </div>
+                {metrics.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {metrics.slice(0, 6).map((metric, idx) => (
+                      <div key={idx} className="p-4 rounded-xl border bg-gray-50">
+                        <p className="text-xs text-gray-500 mb-1 capitalize">
+                          {metric.metric_type}
+                        </p>
+                        <p className="text-xl font-bold text-gray-900">
+                          {metric.value}
+                          <span className="text-xs font-normal text-gray-500 ml-1">
+                            {metric.unit || ''}
+                          </span>
+                        </p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          {new Date(metric.recorded_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })}
+                        </p>
                       </div>
                     ))}
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <Target className="w-10 h-10 text-foreground/30 mx-auto mb-2" />
-                    <p className="text-sm text-foreground/60">{t('healthCenter.noGoals')}</p>
+                    <BarChart3 className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                    <p className="text-sm text-gray-500">Нет данных метрик</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="goals">
+            <Card className="border-0 shadow-md">
+              <CardContent className="p-4">
+                {goals.length > 0 ? (
+                  <div className="space-y-2">
+                    {goals.map((goal: any, idx: number) => (
+                      <div key={idx} className="p-4 rounded-xl border bg-gray-50 flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-gray-900">{goal.title}</p>
+                          {goal.description && (
+                            <p className="text-xs text-gray-500 mt-1">{goal.description}</p>
+                          )}
+                        </div>
+                        <Badge className={goal.completed ? 'bg-green-500' : 'bg-gray-200'}>
+                          {goal.completed ? 'Выполнено' : 'В процессе'}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Target className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                    <p className="text-sm text-gray-500">Нет активных целей</p>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="mt-3"
+                      onClick={() => setLocation('/habits')}
+                    >
+                      <Plus className="w-4 h-4 mr-1" />
+                      Создать цель
+                    </Button>
                   </div>
                 )}
               </CardContent>
@@ -414,9 +452,16 @@ export default function HealthCenter() {
           </TabsContent>
 
           <TabsContent value="reports">
-            <Card>
-              <CardContent className="p-4 text-center text-sm text-foreground/60">
-                {t('healthCenter.reportsSoon')}
+            <Card className="border-0 shadow-md">
+              <CardContent className="p-8 text-center">
+                <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="font-semibold text-gray-900 mb-2">Отчёты в разработке</h3>
+                <p className="text-sm text-gray-500 mb-4">
+                  Скоро здесь появятся детальные отчёты по всем модулям здоровья
+                </p>
+                <Button variant="outline" onClick={() => setLocation('/dashboard')}>
+                  Вернуться на дашборд
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>

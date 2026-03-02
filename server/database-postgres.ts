@@ -1,26 +1,46 @@
 // Postgres database adapter for Vercel/Supabase
-// This is a template - needs to be configured with actual connection
 
 import { Pool } from 'pg';
 
 // Initialize connection pool
 let pool: Pool | null = null;
+let connectionError: string | null = null;
 
 function getPool() {
   if (!pool) {
     const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
     
     if (!connectionString) {
-      throw new Error('DATABASE_URL or POSTGRES_URL environment variable is required');
+      connectionError = 'DATABASE_URL or POSTGRES_URL environment variable is required';
+      console.error('[Database] ERROR:', connectionError);
+      throw new Error(connectionError);
     }
 
-    pool = new Pool({
-      connectionString,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-    });
+    try {
+      pool = new Pool({
+        connectionString,
+        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      });
+      
+      console.log('[Database] Connected successfully');
+    } catch (error) {
+      connectionError = `Failed to connect to database: ${error}`;
+      console.error('[Database] ERROR:', connectionError);
+      throw new Error(connectionError);
+    }
   }
   
   return pool;
+}
+
+// Check if database is configured
+export function isDatabaseConfigured(): boolean {
+  return !!(process.env.DATABASE_URL || process.env.POSTGRES_URL);
+}
+
+// Get connection error if any
+export function getConnectionError(): string | null {
+  return connectionError;
 }
 
 // Simple query helper function

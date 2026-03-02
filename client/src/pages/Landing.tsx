@@ -231,12 +231,18 @@ export default function Landing() {
             >
               <h3 className="text-2xl font-bold mb-4 engraved-text">{t('landing.problem.problemTitle')}</h3>
               <ul className="space-y-3 text-foreground/80">
-                {t('landing.problem.problemList').map((item: string, idx: number) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500 mt-1">✗</span>
+                  <span>Разрозненные приложения для разных аспектов здоровья</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500 mt-1">✗</span>
+                  <span>Нет персонализации под ваши цели</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500 mt-1">✗</span>
+                  <span>Сложно отслеживать прогресс</span>
+                </li>
               </ul>
             </motion.div>
 
@@ -248,12 +254,18 @@ export default function Landing() {
             >
               <h3 className="text-2xl font-bold mb-4 engraved-text">{t('landing.problem.solutionTitle')}</h3>
               <ul className="space-y-3 text-foreground/80">
-                {t('landing.problem.solutionList').map((item: string, idx: number) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <CheckCircle2 className="text-green-500 mt-1 w-5 h-5 flex-shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="text-green-500 mt-1 w-5 h-5 flex-shrink-0" />
+                  <span>Все 7 направлений здоровья в одном приложении</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="text-green-500 mt-1 w-5 h-5 flex-shrink-0" />
+                  <span>AI-ассистент персонализирует рекомендации</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="text-green-500 mt-1 w-5 h-5 flex-shrink-0" />
+                  <span>Визуальная аналитика прогресса</span>
+                </li>
               </ul>
             </motion.div>
           </div>

@@ -410,8 +410,19 @@ export const useHealthScore = () => {
   const overallScore = useHealthStore((state) => state.overallScore);
   const moduleScores = useHealthStore((state) => state.moduleScores);
   const loadDashboard = useHealthStore((state) => state.actions.loadDashboard);
-  
+
   return { overallScore, moduleScores, loadDashboard };
+};
+
+// Module colors export
+export const moduleColors = {
+  movement: { primary: '#3B82F6', bg: 'bg-blue-50' },
+  nutrition: { primary: '#10B981', bg: 'bg-green-50' },
+  sleep: { primary: '#8B5CF6', bg: 'bg-purple-50' },
+  psychology: { primary: '#F59E0B', bg: 'bg-amber-50' },
+  medicine: { primary: '#EF4444', bg: 'bg-red-50' },
+  relationships: { primary: '#EC4899', bg: 'bg-pink-50' },
+  habits: { primary: '#06B6D4', bg: 'bg-cyan-50' },
 };
 
 export default useHealthStore;

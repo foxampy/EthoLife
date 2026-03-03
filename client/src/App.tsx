@@ -5,7 +5,7 @@ import { Route, Switch, useLocation } from "wouter";
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ErrorBoundary from "./components/ErrorBoundary";
-import { LoadingScreen } from "./components/LoadingScreen";
+import LoadingScreen from "./components/LoadingScreen";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { UserProvider } from "./contexts/UserContext";

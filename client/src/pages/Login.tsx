@@ -240,22 +240,6 @@ export default function Login() {
             </button>
           </CardContent>
         </Card>
-
-        {/* Footer с преимуществами */}
-        <div className="mt-6 grid grid-cols-3 gap-4 text-center">
-          <div>
-            <div className="text-2xl mb-1">🔒</div>
-            <p className="text-xs text-gray-500">Безопасно</p>
-          </div>
-          <div>
-            <div className="text-2xl mb-1">⚡</div>
-            <p className="text-xs text-gray-500">Быстро</p>
-          </div>
-          <div>
-            <div className="text-2xl mb-1">💚</div>
-            <p className="text-xs text-gray-500">Бесплатно</p>
-          </div>
-        </div>
       </motion.div>
     </div>
   );

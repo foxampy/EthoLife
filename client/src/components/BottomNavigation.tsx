@@ -28,6 +28,12 @@ import {
   Home,
   ChevronRight,
   MessageCircle,
+  Award,
+  Zap,
+  Globe,
+  Building,
+  Bell,
+  Shield,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -48,134 +54,103 @@ export function BottomNavigation() {
     return location.startsWith(path);
   };
 
-  // Основная навигация - только 3 ключевые точки
+  // Основная навигация - 3 кнопки: Здоровье, AI, Дашборд
   const mainNavItems = [
-    { path: '/health-center', icon: Heart, label: 'Здоровье' },
+    { path: '/health-center', icon: Heart, label: t('nav.health') },
     { path: '/ai-chat', icon: Bot, label: 'AI' },
-    { path: '/dashboard', icon: LayoutDashboard, label: 'Дашборд' },
+    { path: '/dashboard', icon: LayoutDashboard, label: t('nav.dashboard') },
   ];
 
   // Модули здоровья для быстрого доступа
   const healthModules = [
-    { path: '/health/movement', icon: Dumbbell, label: 'Движение', color: 'text-blue-500' },
-    { path: '/health/nutrition', icon: Apple, label: 'Питание', color: 'text-green-500' },
-    { path: '/health/sleep', icon: Moon, label: 'Сон', color: 'text-purple-500' },
-    { path: '/health/psychology', icon: Smile, label: 'Психология', color: 'text-amber-500' },
-    { path: '/health/medicine', icon: Stethoscope, label: 'Медицина', color: 'text-red-500' },
-    { path: '/health/habits', icon: Sparkles, label: 'Привычки', color: 'text-cyan-500' },
+    { path: '/health/movement', icon: Dumbbell, label: t('health.modules.movement'), color: 'text-blue-500' },
+    { path: '/health/nutrition', icon: Apple, label: t('health.modules.nutrition'), color: 'text-green-500' },
+    { path: '/health/sleep', icon: Moon, label: t('health.modules.sleep'), color: 'text-purple-500' },
+    { path: '/health/psychology', icon: Smile, label: t('health.modules.psychology'), color: 'text-amber-500' },
+    { path: '/health/medicine', icon: Stethoscope, label: t('health.modules.medicine'), color: 'text-red-500' },
+    { path: '/health/habits', icon: Sparkles, label: t('health.modules.habits'), color: 'text-cyan-500' },
   ];
 
   // Полное меню
   const fullMenuSections = [
     {
-      title: 'Основное',
+      title: '',
       items: [
-        { path: '/', label: 'Главная', icon: Home },
-        { path: '/health-center', label: 'Центр здоровья', icon: Heart },
-        { path: '/dashboard', label: 'Дашборд', icon: LayoutDashboard },
-        { path: '/ai-chat', label: 'AI помощник', icon: Bot },
-        { path: '/calendar', label: 'Календарь', icon: Calendar },
+        { path: '/whitepaper', label: 'Whitepaper', icon: BookOpen },
+        { path: '/wallet', label: t('nav.wallet'), icon: Wallet },
+        { path: '/messages', label: t('nav.messages'), icon: MessageCircle },
+        { path: '/profile', label: t('nav.profile'), icon: User },
+        { path: '/settings', label: t('nav.settings'), icon: Settings },
       ],
     },
     {
-      title: 'Здоровье',
+      title: '',
+      items: [
+        { path: '/specialists', label: t('nav.specialists'), icon: Users },
+        { path: '/shop', label: t('nav.shop'), icon: ShoppingBag },
+        { path: '/centers', label: t('nav.centers'), icon: Building },
+        { path: '/landings', label: 'Landings', icon: Menu },
+      ],
+    },
+    {
+      title: '',
       items: healthModules,
     },
     {
-      title: 'Платформа',
+      title: '',
       items: [
-        { path: '/wallet', label: 'Кошелёк', icon: Wallet },
-        { path: '/specialists', label: 'Специалисты', icon: Users },
-        { path: '/map', label: 'Карта', icon: Map },
-        { path: '/shop', label: 'Магазин', icon: ShoppingBag },
-        { path: '/news', label: 'Новости', icon: Newspaper },
-      ],
-    },
-    {
-      title: 'Инструменты',
-      items: [
-        { path: '/habits', label: 'Привычки', icon: Sparkles },
-        { path: '/journal', label: 'Журнал', icon: BookOpen },
-        { path: '/library', label: 'Библиотека', icon: BookOpen },
-        { path: '/posture', label: 'Осанка', icon: Activity },
-      ],
-    },
-    {
-      title: 'Информация',
-      items: [
-        { path: '/landings', label: 'Лендинги', icon: Menu },
-        { path: '/roadmap', label: 'Дорожная карта', icon: Map },
-        { path: '/pricing', label: 'Тарифы', icon: Wallet },
-        { path: '/whitepaper', label: 'Whitepaper', icon: BookOpen },
+        { path: '/news', label: t('nav.news'), icon: Newspaper },
+        { path: '/subscriptions', label: 'Subscriptions & NFT', icon: Award },
+        { path: '/daily-assistant', label: 'Daily Assistant', icon: Bell },
+        { path: '/projects', label: 'Projects & Products', icon: Zap },
+        { path: '/certification', label: 'Verification', icon: Shield },
+        { path: '/roadmap', label: t('nav.roadmap'), icon: Map },
+        { path: '/pricing', label: t('nav.pricing'), icon: Wallet },
       ],
     },
   ];
 
   return (
     <>
-      {/* Bottom Navigation - только 3 основные кнопки */}
+      {/* Bottom Navigation - 3 основные кнопки + Меню слева, без фона */}
       <nav className="fixed bottom-0 left-0 right-0 z-40">
-        <div
-          className="absolute inset-0 bg-white/95 backdrop-blur-xl border-t border-gray-200/50 shadow-lg"
-          style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-        />
+        {/* Spacer для safe area */}
+        <div className="h-4" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} />
 
-        <div className="relative flex items-center justify-around h-16 max-w-lg mx-auto px-2">
+        <div className="flex items-center justify-center gap-8 pb-4 px-4">
+          {/* Menu Button - слева */}
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="flex flex-col items-center justify-center w-14 h-14 group"
+          >
+            <div className="relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200 text-gray-400 group-hover:text-gray-600 group-hover:bg-white/50">
+              <Menu className="w-6 h-6" />
+            </div>
+          </button>
+
+          {/* 3 основные кнопки */}
           {mainNavItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
 
             return (
               <Link key={item.path} href={item.path}>
-                <button className="relative flex flex-col items-center justify-center min-w-[80px] h-14 group">
-                  {/* Active indicator */}
-                  {active && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute -top-0.5 w-12 h-1 bg-emerald-500 rounded-full"
-                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                    />
-                  )}
-
+                <button className="flex flex-col items-center justify-center w-14 h-14 group">
                   {/* Icon */}
                   <div className={cn(
                     "relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200",
-                    active 
-                      ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 scale-110" 
-                      : "text-gray-400 group-hover:text-gray-600 group-hover:bg-gray-50"
+                    active
+                      ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 scale-110"
+                      : "text-gray-400 group-hover:text-gray-600 group-hover:bg-white/50"
                   )}>
                     <Icon className="w-6 h-6" />
                   </div>
-
-                  {/* Label */}
-                  <span className={cn(
-                    "text-[10px] mt-0.5 font-medium transition-colors",
-                    active ? "text-emerald-600" : "text-gray-400 group-hover:text-gray-600"
-                  )}>
-                    {item.label}
-                  </span>
                 </button>
               </Link>
             );
           })}
-
-          {/* Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(true)}
-            className="relative flex flex-col items-center justify-center min-w-[80px] h-14 group"
-          >
-            <div className="relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200 text-gray-400 group-hover:text-gray-600 group-hover:bg-gray-50">
-              <Menu className="w-6 h-6" />
-            </div>
-            <span className="text-[10px] mt-0.5 font-medium text-gray-400 group-hover:text-gray-600">
-              Меню
-            </span>
-          </button>
         </div>
       </nav>
-
-      {/* Spacer */}
-      <div className="h-16" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} />
 
       {/* Menu Overlay */}
       <AnimatePresence>
@@ -254,11 +229,8 @@ export function BottomNavigation() {
               {/* Menu Content */}
               <ScrollArea className="flex-1">
                 <div className="p-4 space-y-6">
-                  {/* Quick Health Modules Access */}
+                  {/* Health Modules Grid */}
                   <div>
-                    <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-2">
-                      Быстрый доступ
-                    </h3>
                     <div className="grid grid-cols-3 gap-2">
                       {healthModules.map((module) => {
                         const Icon = module.icon;
@@ -280,16 +252,13 @@ export function BottomNavigation() {
                   </div>
 
                   {/* Full Menu Sections */}
-                  {fullMenuSections.map((section) => (
-                    <div key={section.title}>
-                      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-2">
-                        {section.title}
-                      </h3>
+                  {fullMenuSections.map((section, sectionIndex) => (
+                    <div key={sectionIndex}>
                       <div className="space-y-1">
                         {section.items.map((item) => {
                           const ItemIcon = item.icon;
                           const active = isActive(item.path);
-                          
+
                           return (
                             <Link key={item.path} href={item.path}>
                               <button
@@ -327,12 +296,12 @@ export function BottomNavigation() {
                 <div className="p-4 border-t border-gray-100 bg-gray-50 space-y-2">
                   <Link href="/login">
                     <Button variant="outline" className="w-full rounded-xl h-11">
-                      Войти
+                      {t('auth.loginButton')}
                     </Button>
                   </Link>
                   <Link href="/register">
                     <Button className="w-full bg-emerald-600 hover:bg-emerald-700 rounded-xl h-11">
-                      Регистрация
+                      {t('auth.registerButton')}
                     </Button>
                   </Link>
                 </div>
@@ -341,13 +310,13 @@ export function BottomNavigation() {
                   <Link href="/profile">
                     <Button variant="outline" className="w-full rounded-xl h-11 gap-2">
                       <User className="w-4 h-4" />
-                      Профиль
+                      {t('nav.profile')}
                     </Button>
                   </Link>
                   <Link href="/settings">
                     <Button variant="outline" className="w-full rounded-xl h-11 gap-2">
                       <Settings className="w-4 h-4" />
-                      Настройки
+                      {t('nav.settings')}
                     </Button>
                   </Link>
                   <Button
@@ -359,7 +328,7 @@ export function BottomNavigation() {
                     }}
                   >
                     <LogOut className="w-4 h-4" />
-                    Выйти
+                    {t('nav.logout')}
                   </Button>
                 </div>
               )}

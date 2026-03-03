@@ -9,6 +9,7 @@
     "main": "Main",
     "platform": "Platform",
     "info": "Info",
+    "social": "Social",
     "home": "Home",
     "dashboard": "Dashboard",
     "health": "Health",
@@ -38,7 +39,10 @@
     "specialistOffer": "For Specialists",
     "centerOffer": "For Centers",
     "landing": "Landing",
-    "presentation": "Presentation"
+    "presentation": "Presentation",
+    "friends": "Friends",
+    "messages": "Messages",
+    "certificates": "Certificates"
   },
   "auth": {
     "loginTitle": "Sign in to EthosLife",
@@ -460,6 +464,41 @@
     "reports": "Reports",
     "noGoals": "No goals yet",
     "reportsSoon": "Reports coming soon"
+  },
+  "footer": {
+    "product": "Product",
+    "features": "Features",
+    "pricing": "Pricing",
+    "roadmap": "Roadmap",
+    "tokenomics": "Tokenomics",
+    "company": "Company",
+    "about": "About Us",
+    "contact": "Contact",
+    "careers": "Careers",
+    "press": "Press",
+    "support": "Support",
+    "help": "Help",
+    "faq": "FAQ",
+    "privacy": "Privacy Policy",
+    "legal": "Legal",
+    "terms": "Terms of Service",
+    "cookies": "Cookie Policy",
+    "allRightsReserved": "All rights reserved"
+  },
+  "staking": {
+    "title": "UNITY Token Staking",
+    "subtitle": "Participate in our internal investment program",
+    "description": "Purchase UNITY tokens and stake them to earn rewards. Get exclusive benefits with annual subscription.",
+    "currentPrice": "Current Price",
+    "1USD": "1 USD = 8.5 UNITY",
+    "minPurchase": "Minimum purchase for staking: $100 (850 UNITY)",
+    "annualBenefit": "Annual Subscription Benefits",
+    "discount": "50% OFF",
+    "lifetimeAccess": "Lifetime access to Standard tier",
+    "freeSessions": "FREE individual sessions with specialists",
+    "sessionsDesc": "One-on-one consultations with experts in each health module",
+    "learnMore": "Learn More",
+    "stakeNow": "Stake Now"
   },
   "roadmap": {
     "title": "Roadmap",

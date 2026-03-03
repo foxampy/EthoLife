@@ -323,22 +323,6 @@ export default function Register() {
             </button>
           </CardContent>
         </Card>
-
-        {/* Footer с преимуществами */}
-        <div className="mt-6 space-y-3">
-          <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
-            <span>Бесплатный старт</span>
-          </div>
-          <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
-            <span>7 дней премиум в подарок</span>
-          </div>
-          <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
-            <span>Отмена в любой момент</span>
-          </div>
-        </div>
       </motion.div>
     </div>
   );

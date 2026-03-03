@@ -2,7 +2,10 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import ErrorBoundary from "./components/ErrorBoundary";
+import { LoadingScreen } from "./components/LoadingScreen";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { UserProvider } from "./contexts/UserContext";
@@ -93,6 +96,18 @@ import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
 import LandingsPage from "./pages/LandingsPage";
 import DeepOnboarding from "./pages/DeepOnboarding";
 import AdminDashboard from "./pages/admin/Dashboard";
+import Features from "./pages/Features";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Help from "./pages/Help";
+import FAQ from "./pages/FAQ";
+import Support from "./pages/Support";
+import Privacy from "./pages/Privacy";
+import ProjectsProducts from "./pages/ProjectsProducts";
+import DailyAssistant from "./pages/DailyAssistant";
+import CertificationVerification from "./pages/CertificationVerification";
+import SubscriptionsCertificates from "./pages/SubscriptionsCertificates";
+import ProjectStatus from "./pages/ProjectStatus";
 
 function Router() {
   return (
@@ -111,6 +126,21 @@ function Router() {
       <Route path={"/economic-model"} component={EconomicModel} />
       <Route path={"/investment"} component={InvestmentProposal} />
       <Route path={"/pricing"} component={Pricing} />
+      
+      {/* Info Pages */}
+      <Route path={"/features"} component={Features} />
+      <Route path={"/about"} component={About} />
+      <Route path={"/contact"} component={Contact} />
+      <Route path={"/help"} component={Help} />
+      <Route path={"/faq"} component={FAQ} />
+      <Route path={"/support"} component={Support} />
+      <Route path={"/privacy"} component={Privacy} />
+      <Route path={"/projects"} component={ProjectsProducts} />
+      <Route path={"/daily-assistant"} component={DailyAssistant} />
+      <Route path={"/certification"} component={CertificationVerification} />
+      <Route path={"/subscriptions"} component={SubscriptionsCertificates} />
+      <Route path={"/project-status"} component={ProjectStatus} />
+      
       <Route path={"/login"} component={Login} />
       <Route path={"/register"} component={Register} />
       <Route path={"/auth/callback"} component={GoogleCallback} />
@@ -337,6 +367,8 @@ function ConditionalHeader() {
 }
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
@@ -344,6 +376,9 @@ function App() {
           <UserProvider>
             <TooltipProvider>
               <Toaster />
+              <AnimatePresence>
+                {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+              </AnimatePresence>
               <ConditionalHeader />
               <Router />
               <BottomNavigation />

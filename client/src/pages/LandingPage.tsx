@@ -16,6 +16,7 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Footer as NewFooter } from '@/components/Footer';
 
 // Types
 interface OnboardingData {
@@ -48,34 +49,18 @@ function LandingLanguageSwitcher() {
   );
 }
 
-// Header Component
+// Header Component - минималистичный, только лого и переключатель языка
 function Header({ onStartClick }: { onStartClick: () => void }) {
   const { t } = useI18n();
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const navItems = [
-    { label: 'Возможности', href: '#features' },
-    { label: 'Модули', href: '#modules' },
-    { label: 'Тарифы', href: '#pricing' },
-    { label: 'Отзывы', href: '#testimonials' },
-  ];
-
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-    setMobileMenuOpen(false);
-  };
 
   return (
     <header
@@ -89,7 +74,7 @@ function Header({ onStartClick }: { onStartClick: () => void }) {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 cursor-pointer"
             onClick={() => navigate('/')}
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg">
@@ -100,109 +85,12 @@ function Header({ onStartClick }: { onStartClick: () => void }) {
             </span>
           </motion.div>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navItems.map((item) => (
-              <button
-                key={item.href}
-                onClick={() => scrollToSection(item.href)}
-                className={`text-sm font-medium transition-colors hover:text-emerald-500 ${
-                  isScrolled ? 'text-gray-700' : 'text-white/90'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
-
-          {/* Right Side */}
+          {/* Right Side - только переключатель языка */}
           <div className="flex items-center gap-2 sm:gap-3">
             <LandingLanguageSwitcher />
-
-            {user ? (
-              <Button
-                onClick={() => navigate('/dashboard')}
-                className="bg-emerald-500 hover:bg-emerald-600 text-white text-sm px-3 sm:px-4 shadow-lg"
-                size="sm"
-              >
-                Дашборд
-              </Button>
-            ) : (
-              <div className="hidden sm:flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate('/login')}
-                  className={isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10'}
-                >
-                  Войти
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={onStartClick}
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg"
-                >
-                  Начать бесплатно
-                </Button>
-              </div>
-            )}
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 -mr-2"
-            >
-              {mobileMenuOpen ? (
-                <X className={`w-6 h-6 ${isScrolled ? 'text-gray-900' : 'text-white'}`} />
-              ) : (
-                <Menu className={`w-6 h-6 ${isScrolled ? 'text-gray-900' : 'text-white'}`} />
-              )}
-            </button>
           </div>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t shadow-lg"
-          >
-            <div className="px-4 py-4 space-y-3">
-              {navItems.map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => scrollToSection(item.href)}
-                  className="block w-full text-left py-2 text-gray-700 hover:text-emerald-500"
-                >
-                  {item.label}
-                </button>
-              ))}
-              <hr className="my-3" />
-              {!user && (
-                <>
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate('/login')}
-                    className="w-full"
-                  >
-                    Войти
-                  </Button>
-                  <Button
-                    onClick={onStartClick}
-                    className="w-full bg-emerald-500 hover:bg-emerald-600"
-                  >
-                    Начать бесплатно
-                  </Button>
-                </>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </header>
   );
 }
@@ -290,20 +178,60 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
               </Button>
             </div>
 
-            {/* Trust Badges */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm text-gray-400">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-emerald-400" />
-                <span>Бесплатный старт</span>
+            {/* Special Offer Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="bg-gradient-to-r from-amber-500/90 to-orange-500/90 backdrop-blur-sm rounded-2xl p-5 mb-8 border border-white/20 shadow-xl"
+            >
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                  <Gift className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-white text-sm mb-1">
+                    🎁 6+6 Месяцев Premium
+                  </h3>
+                  <ul className="text-xs text-white/90 space-y-1">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-3 h-3" />
+                      <span>6 месяцев + 6 в подарок</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-3 h-3" />
+                      <span>Консультация со специалистом по каждому модулю</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-3 h-3" />
+                      <span>Пожизненный PRO статус</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-3 h-3" />
+                      <span className="font-bold">Достижение "Будь Первым"</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-emerald-400" />
-                <span>Карта не требуется</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-emerald-400" />
-                <span>Отмена в любой момент</span>
-              </div>
+            </motion.div>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button
+                size="lg"
+                onClick={onStartClick}
+                className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-6 text-lg rounded-xl shadow-lg shadow-emerald-500/25"
+              >
+                Начать бесплатно
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white/30 text-white hover:bg-white/10 px-8 py-6 text-lg rounded-xl"
+              >
+                <Play className="mr-2 w-5 h-5" />
+                Смотреть демо
+              </Button>
             </div>
           </motion.div>
 
@@ -354,38 +282,6 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
               </motion.div>
             </div>
           </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Social Proof Section
-function SocialProofSection() {
-  const stats = [
-    { value: '100K+', label: 'Пользователей' },
-    { value: '4.9', label: 'Рейтинг в App Store' },
-    { value: '500+', label: 'Специалистов' },
-    { value: '95%', label: 'Довольных клиентов' },
-  ];
-
-  return (
-    <section className="py-16 bg-white border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="text-center"
-            >
-              <p className="text-4xl font-bold text-emerald-500">{stat.value}</p>
-              <p className="text-gray-600 mt-1">{stat.label}</p>
-            </motion.div>
-          ))}
         </div>
       </div>
     </section>
@@ -458,19 +354,19 @@ function FeaturesGrid() {
   ];
 
   return (
-    <section id="modules" className="py-24 bg-white">
+    <section id="modules" className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
             7 модулей здоровья
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base text-gray-600 max-w-2xl mx-auto">
             Каждый модуль собирает данные, анализирует и дает персональные рекомендации
           </p>
         </div>
 
-        {/* Mobile: horizontal scroll, Desktop: grid */}
-        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 snap-x snap-mandatory">
+        {/* Mobile: compact horizontal scroll, Desktop: grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
           {modules.map((module, index) => (
             <motion.div
               key={index}
@@ -478,13 +374,13 @@ function FeaturesGrid() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.05 }}
-              className="group flex-shrink-0 w-[280px] md:w-auto bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:border-emerald-200 transition-all cursor-pointer snap-start"
+              className="group bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-sm border border-gray-100 hover:shadow-lg hover:border-emerald-200 transition-all cursor-pointer"
             >
-              <div className={`w-14 h-14 rounded-2xl ${module.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                <module.icon className="w-7 h-7 text-white" />
+              <div className={`w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl ${module.color} flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-md`}>
+                <module.icon className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">{module.title}</h3>
-              <p className="text-gray-600">{module.desc}</p>
+              <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-1">{module.title}</h3>
+              <p className="text-[10px] sm:text-xs text-gray-500 leading-tight">{module.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -558,52 +454,153 @@ function HowItWorksSection() {
   );
 }
 
+// Staking & Annual Benefits Section
+function StakingSection({ onStartClick }: { onStartClick: () => void }) {
+  const { t, locale } = useI18n();
+
+  return (
+    <section className="py-24 bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            {t('staking.title')}
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            {t('staking.description')}
+          </p>
+        </div>
+
+        {/* Staking Info Cards */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
+          {/* Token Info */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="bg-white rounded-3xl p-8 shadow-lg border border-emerald-100"
+          >
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold text-white">U</span>
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900">UNITY Token</h3>
+                <p className="text-gray-500">{t('staking.currentPrice')}</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-4">
+                <p className="text-lg font-bold text-gray-900">{t('staking.1USD')}</p>
+              </div>
+              <p className="text-gray-600">
+                {t('staking.minPurchase')}
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Annual Benefits */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl p-8 shadow-xl text-white"
+          >
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                <span className="text-2xl">🎁</span>
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold">{t('staking.annualBenefit')}</h3>
+                <p className="text-emerald-100">Exclusive rewards</p>
+              </div>
+            </div>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-sm">✓</span>
+                </div>
+                <div>
+                  <p className="font-bold text-yellow-300">{t('staking.discount')}</p>
+                  <p className="text-emerald-100 text-sm">{t('staking.lifetimeAccess')}</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-sm">✓</span>
+                </div>
+                <div>
+                  <p className="font-bold text-yellow-300">{t('staking.freeSessions')}</p>
+                  <p className="text-emerald-100 text-sm">{t('staking.sessionsDesc')}</p>
+                </div>
+              </li>
+            </ul>
+          </motion.div>
+        </div>
+
+        {/* CTA */}
+        <div className="text-center">
+          <Button
+            size="lg"
+            onClick={onStartClick}
+            className="bg-emerald-500 hover:bg-emerald-600 text-white px-12 py-6 text-lg rounded-xl shadow-lg shadow-emerald-500/25"
+          >
+            {t('staking.learnMore')}
+            <ArrowRight className="ml-2 w-5 h-5" />
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // Pricing Section
 function PricingSection({ onStartClick }: { onStartClick: () => void }) {
+  const { t, locale } = useI18n();
   const [annual, setAnnual] = useState(true);
 
   const plans = [
     {
-      name: 'Базовый',
-      price: annual ? '0' : '0',
-      period: 'навсегда',
-      description: 'Для знакомства с экосистемой',
+      name: locale === 'en' ? 'Free' : 'Бесплатно',
+      price: '0',
+      period: locale === 'en' ? 'forever' : 'навсегда',
+      description: locale === 'en' ? 'To get started' : 'Для знакомства с экосистемой',
       features: [
-        '1 модуль здоровья',
-        'Базовая статистика',
-        'AI-чат ограничено',
+        locale === 'en' ? '1 health module' : '1 модуль здоровья',
+        locale === 'en' ? 'Basic statistics' : 'Базовая статистика',
+        locale === 'en' ? 'Limited AI chat' : 'AI-чат ограничено',
       ],
-      cta: 'Начать бесплатно',
+      cta: locale === 'en' ? 'Start Free' : 'Начать бесплатно',
       popular: false,
     },
     {
-      name: 'Премиум',
-      price: annual ? '490' : '690',
-      period: 'в месяц',
-      description: 'Полный доступ ко всем функциям',
+      name: locale === 'en' ? 'Premium' : 'Премиум',
+      price: annual ? '19' : '29',
+      period: locale === 'en' ? 'per month' : 'в месяц',
+      description: locale === 'en' ? 'Full access to all features' : 'Полный доступ ко всем функциям',
       features: [
-        'Все 7 модулей здоровья',
-        'AI-планировщик',
-        'Персональные рекомендации',
-        'Приоритетная поддержка',
-        'Ранний доступ к функциям',
+        locale === 'en' ? 'All 7 health modules' : 'Все 7 модулей здоровья',
+        locale === 'en' ? 'AI planner' : 'AI-планировщик',
+        locale === 'en' ? 'Personal recommendations' : 'Персональные рекомендации',
+        locale === 'en' ? 'Priority support' : 'Приоритетная поддержка',
+        locale === 'en' ? 'Early access to features' : 'Ранний доступ к функциям',
       ],
-      cta: 'Попробовать 7 дней бесплатно',
+      cta: locale === 'en' ? 'Try 7 days free' : 'Попробовать 7 дней бесплатно',
       popular: true,
     },
     {
-      name: 'Семейный',
-      price: annual ? '890' : '1190',
-      period: 'в месяц',
-      description: 'Для всей семьи',
+      name: locale === 'en' ? 'Family' : 'Семейный',
+      price: annual ? '39' : '49',
+      period: locale === 'en' ? 'per month' : 'в месяц',
+      description: locale === 'en' ? 'For the whole family' : 'Для всей семьи',
       features: [
-        'Всё из Премиум',
-        'До 5 аккаунтов',
-        'Семейные цели',
-        'Совместные челленджи',
-        'Семейная статистика',
+        locale === 'en' ? 'Everything from Premium' : 'Всё из Премиум',
+        locale === 'en' ? 'Up to 5 accounts' : 'До 5 аккаунтов',
+        locale === 'en' ? 'Family goals' : 'Семейные цели',
+        locale === 'en' ? 'Joint challenges' : 'Совместные челленджи',
+        locale === 'en' ? 'Family statistics' : 'Семейная статистика',
       ],
-      cta: 'Начать семейный доступ',
+      cta: locale === 'en' ? 'Start Family Access' : 'Начать семейный доступ',
       popular: false,
     },
   ];
@@ -613,16 +610,16 @@ function PricingSection({ onStartClick }: { onStartClick: () => void }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Простые тарифы
+            {locale === 'en' ? 'Simple Pricing' : 'Простые тарифы'}
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Начните бесплатно, платите за расширенные функции
+            {locale === 'en' ? 'Start free, pay for advanced features' : 'Начните бесплатно, платите за расширенные функции'}
           </p>
 
           {/* Toggle */}
           <div className="flex items-center justify-center gap-4 mb-8">
             <span className={`text-sm ${!annual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
-              Ежемесячно
+              {locale === 'en' ? 'Monthly' : 'Ежемесячно'}
             </span>
             <button
               onClick={() => setAnnual(!annual)}
@@ -637,7 +634,9 @@ function PricingSection({ onStartClick }: { onStartClick: () => void }) {
               />
             </button>
             <span className={`text-sm ${annual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
-              Ежегодно <span className="text-emerald-500 font-bold">-30%</span>
+              {locale === 'en' ? 'Annually' : 'Ежегодно'} <span className="text-emerald-500 font-bold">
+                {annual ? (locale === 'en' ? '-35%' : '-35%') : ''}
+              </span>
             </span>
           </div>
         </div>
@@ -657,7 +656,7 @@ function PricingSection({ onStartClick }: { onStartClick: () => void }) {
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <Badge className="bg-emerald-500 text-white px-4 py-1">
-                      Популярный
+                      {locale === 'en' ? 'Popular' : 'Популярный'}
                     </Badge>
                   </div>
                 )}
@@ -665,9 +664,14 @@ function PricingSection({ onStartClick }: { onStartClick: () => void }) {
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
                   <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
                   <div className="mb-6">
-                    <span className="text-4xl font-bold text-gray-900">₽{plan.price}</span>
+                    <span className="text-4xl font-bold text-gray-900">${plan.price}</span>
                     <span className="text-gray-500">/{plan.period}</span>
                   </div>
+                  {annual && plan.price !== '0' && (
+                    <p className="text-sm text-emerald-600 mb-4">
+                      {locale === 'en' ? 'Billed annually' : 'Оплата ежегодно'}
+                    </p>
+                  )}
                   <ul className="space-y-3 mb-8">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-center gap-3">
@@ -686,75 +690,6 @@ function PricingSection({ onStartClick }: { onStartClick: () => void }) {
                   >
                     {plan.cta}
                   </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Testimonials Section
-function TestimonialsSection() {
-  const testimonials = [
-    {
-      name: 'Анна, 34 года',
-      role: 'Предприниматель',
-      content: 'За 3 месяца я наконец-то наладила сон и питание. AI-планировщик реально работает!',
-      avatar: '👩',
-    },
-    {
-      name: 'Михаил, 42 года',
-      role: 'IT-директор',
-      content: 'Наконец-то все модули здоровья в одном месте. Экономлю кучу времени на анализах.',
-      avatar: '👨',
-    },
-    {
-      name: 'Елена, 28 лет',
-      role: 'Фитнес-тренер',
-      content: 'Использую для клиентов. Видно прогресс по всем аспектам здоровья. Супер!',
-      avatar: '👩‍🦰',
-    },
-  ];
-
-  return (
-    <section id="testimonials" className="py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Отзывы пользователей
-          </h2>
-          <p className="text-xl text-gray-600">Истории тех, кто уже изменил свою жизнь</p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Card className="h-full">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-6 italic">"{testimonial.content}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
-                      {testimonial.avatar}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                      <p className="text-sm text-gray-500">{testimonial.role}</p>
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
             </motion.div>
@@ -847,56 +782,9 @@ function CTASection({ onStartClick }: { onStartClick: () => void }) {
   );
 }
 
-// Footer
+// Footer - используем новый компонент
 function Footer() {
-  const [, navigate] = useLocation();
-
-  return (
-    <footer className="bg-gray-900 text-white py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Heart className="w-6 h-6 text-emerald-500" />
-              <span className="text-xl font-bold">Ethos<span className="text-emerald-500">Life</span></span>
-            </div>
-            <p className="text-gray-400 text-sm">
-              Экосистема здоровья и долголетия
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-3">Продукт</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><button onClick={() => navigate('/pricing')} className="hover:text-white">Тарифы</button></li>
-              <li><button onClick={() => navigate('/features')} className="hover:text-white">Возможности</button></li>
-              <li><button onClick={() => navigate('/roadmap')} className="hover:text-white">Дорожная карта</button></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-3">Компания</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><button onClick={() => navigate('/about')} className="hover:text-white">О нас</button></li>
-              <li><button onClick={() => navigate('/contact')} className="hover:text-white">Контакты</button></li>
-              <li><button onClick={() => navigate('/privacy')} className="hover:text-white">Приватность</button></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-3">Поддержка</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><button onClick={() => navigate('/help')} className="hover:text-white">Помощь</button></li>
-              <li><button onClick={() => navigate('/faq')} className="hover:text-white">FAQ</button></li>
-              <li><button onClick={() => navigate('/support')} className="hover:text-white">Support</button></li>
-            </ul>
-          </div>
-        </div>
-        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm">
-            © 2026 EthoLife. Все права защищены.
-          </p>
-        </div>
-      </div>
-    </footer>
-  );
+  return <NewFooter />;
 }
 
 // 5-Step Onboarding Flow
@@ -1230,11 +1118,10 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white">
       <Header onStartClick={startOnboarding} />
       <HeroSection onStartClick={startOnboarding} />
-      <SocialProofSection />
       <ProblemSection />
       <FeaturesGrid />
       <HowItWorksSection />
-      <TestimonialsSection />
+      <StakingSection onStartClick={startOnboarding} />
       <PricingSection onStartClick={startOnboarding} />
       <CTASection onStartClick={startOnboarding} />
       <Footer />

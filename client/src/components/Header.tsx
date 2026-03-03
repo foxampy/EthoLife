@@ -38,9 +38,9 @@ export function Header() {
   }, []);
 
   const menuItems = [
-    { path: '/dashboard', label: 'Дашборд', icon: User },
-    { path: '/wallet', label: 'Кошелёк', icon: Wallet },
-    { path: '/settings', label: 'Настройки', icon: Settings },
+    { path: '/dashboard', label: t('nav.dashboard'), icon: User },
+    { path: '/wallet', label: t('nav.wallet'), icon: Wallet },
+    { path: '/settings', label: t('nav.settings'), icon: Settings },
   ];
 
   return (
@@ -96,7 +96,7 @@ export function Header() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={logout} className="text-red-600 cursor-pointer flex items-center gap-2">
                       <LogOut className="w-4 h-4" />
-                      Выйти
+                      {t('nav.logout')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -117,12 +117,12 @@ export function Header() {
               <div className="flex items-center gap-1">
                 <Link href="/login">
                   <Button variant="ghost" size="sm" className="h-8 text-xs px-2 sm:px-3 hidden sm:flex">
-                    Вход
+                    {t('auth.loginButton')}
                   </Button>
                 </Link>
                 <Link href="/register">
                   <Button size="sm" className="h-8 text-xs px-2 sm:px-3 bg-emerald-600 hover:bg-emerald-700 shadow-sm">
-                    Регистрация
+                    {t('auth.registerButton')}
                   </Button>
                 </Link>
                 {/* Mobile Login Button */}
@@ -157,7 +157,7 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-[280px] bg-white z-50 overflow-hidden flex flex-col shadow-2xl"
+              className="fixed top-0 right-0 bottom-0 w-full sm:w-[280px] bg-white z-50 overflow-hidden flex flex-col shadow-2xl"
               style={{ paddingTop: 'env(safe-area-inset-top)' }}
             >
               {/* Header */}
@@ -189,7 +189,7 @@ export function Header() {
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-gray-900 truncate">{user.name || 'Пользователь'}</p>
+                          <p className="font-semibold text-gray-900 truncate">{user.name || t('common.user')}</p>
                           <p className="text-xs text-gray-500 truncate">{user.email}</p>
                         </div>
                       </div>
@@ -223,7 +223,7 @@ export function Header() {
                       <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
                         <LogOut className="w-5 h-5 text-red-600" />
                       </div>
-                      <span className="font-medium text-red-600">Выйти</span>
+                      <span className="font-medium text-red-600">{t('nav.logout')}</span>
                     </button>
                   </>
                 ) : (
@@ -236,7 +236,7 @@ export function Header() {
                           size="lg"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          Войти
+                          {t('auth.loginButton')}
                         </Button>
                       </Link>
                       <Link href="/register">
@@ -245,7 +245,7 @@ export function Header() {
                           size="lg"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          Регистрация
+                          {t('auth.registerButton')}
                         </Button>
                       </Link>
                     </div>

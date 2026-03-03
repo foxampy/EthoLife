@@ -112,7 +112,7 @@ export function BottomNavigation() {
 
   return (
     <>
-      {/* Bottom Navigation - 3 основные кнопки + Меню слева, без фона */}
+      {/* Bottom Navigation - 3 основные кнопки + Меню слева */}
       <nav className="fixed bottom-0 left-0 right-0 z-40">
         {/* Spacer для safe area */}
         <div className="h-4" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} />
@@ -123,7 +123,7 @@ export function BottomNavigation() {
             onClick={() => setIsMenuOpen(true)}
             className="flex flex-col items-center justify-center w-14 h-14 group"
           >
-            <div className="relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200 text-gray-400 group-hover:text-gray-600 group-hover:bg-white/50">
+            <div className="relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200 bg-emerald-100 shadow-md text-emerald-600 group-hover:text-emerald-700">
               <Menu className="w-6 h-6" />
             </div>
           </button>
@@ -138,10 +138,10 @@ export function BottomNavigation() {
                 <button className="flex flex-col items-center justify-center w-14 h-14 group">
                   {/* Icon */}
                   <div className={cn(
-                    "relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200",
+                    "relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200 shadow-md",
                     active
-                      ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 scale-110"
-                      : "text-gray-400 group-hover:text-gray-600 group-hover:bg-white/50"
+                      ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white scale-110"
+                      : "bg-emerald-100 text-emerald-600 group-hover:text-emerald-700"
                   )}>
                     <Icon className="w-6 h-6" />
                   </div>
@@ -171,11 +171,11 @@ export function BottomNavigation() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 bottom-0 w-[340px] bg-white z-50 overflow-hidden flex flex-col shadow-2xl"
+              className="fixed top-0 left-0 bottom-0 w-full sm:w-[340px] bg-white z-50 overflow-hidden flex flex-col shadow-2xl"
               style={{ paddingTop: 'env(safe-area-inset-top)' }}
             >
               {/* Header */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-teal-50">
+              <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-teal-50">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md">
                     <Heart className="w-5 h-5 text-white" />
@@ -187,7 +187,7 @@ export function BottomNavigation() {
                 </div>
                 <button
                   onClick={() => setIsMenuOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/80 transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/80 transition-colors flex-shrink-0"
                 >
                   <X className="w-5 h-5 text-gray-500" />
                 </button>
@@ -195,7 +195,7 @@ export function BottomNavigation() {
 
               {/* User Info */}
               {isAuthenticated && user && (
-                <div className="p-4 border-b border-gray-100 bg-gray-50">
+                <div className="flex-shrink-0 p-4 border-b border-gray-100 bg-gray-50">
                   <div className="flex items-center gap-3 mb-3">
                     <Avatar className="w-12 h-12 border-2 border-emerald-500">
                       <AvatarFallback className="bg-emerald-100 text-emerald-700 font-bold">
@@ -211,15 +211,15 @@ export function BottomNavigation() {
                   {/* Quick Stats */}
                   <div className="grid grid-cols-3 gap-2">
                     <div className="bg-white rounded-lg p-2 text-center">
-                      <p className="text-xs text-gray-500">Токены</p>
+                      <p className="text-xs text-gray-500">{t('wallet.tokens')}</p>
                       <p className="text-sm font-bold text-emerald-600">0</p>
                     </div>
                     <div className="bg-white rounded-lg p-2 text-center">
-                      <p className="text-xs text-gray-500">Серия</p>
+                      <p className="text-xs text-gray-500">{t('dashboard.achievements')}</p>
                       <p className="text-sm font-bold text-orange-600">0</p>
                     </div>
                     <div className="bg-white rounded-lg p-2 text-center">
-                      <p className="text-xs text-gray-500">Цели</p>
+                      <p className="text-xs text-gray-500">{t('dashboard.goals')}</p>
                       <p className="text-sm font-bold text-blue-600">0</p>
                     </div>
                   </div>

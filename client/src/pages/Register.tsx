@@ -56,29 +56,29 @@ export default function Register() {
     setLoading(true);
     setError(null);
 
-    // Валидация
+    // Validation
     if (password !== confirmPassword) {
-      setError('Пароли не совпадают');
-      toast.error('Ошибка', {
-        description: 'Пароли не совпадают',
+      setError(t('errors.passwordMismatch'));
+      toast.error(t('errors.passwordMismatch'), {
+        description: t('errors.passwordMismatch'),
       });
       setLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError('Пароль должен быть не менее 6 символов');
-      toast.error('Ошибка', {
-        description: 'Пароль слишком короткий',
+      setError(t('errors.invalidPassword'));
+      toast.error(t('errors.invalidPassword'), {
+        description: t('errors.invalidPassword'),
       });
       setLoading(false);
       return;
     }
 
     if (!email.includes('@')) {
-      setError('Введите корректный email');
-      toast.error('Ошибка', {
-        description: 'Некорректный email',
+      setError(t('errors.invalidEmail'));
+      toast.error(t('errors.invalidEmail'), {
+        description: t('errors.invalidEmail'),
       });
       setLoading(false);
       return;
@@ -93,18 +93,18 @@ export default function Register() {
       });
 
       setSuccess(true);
-      toast.success('Успешно!', {
-        description: 'Аккаунт создан, перенаправляем...',
+      toast.success(t('auth.registrationSuccess'), {
+        description: t('auth.redirecting'),
       });
 
-      // Перенаправление на onboarding
+      // Redirect to onboarding
       setTimeout(() => {
         setLocation('/onboarding');
       }, 1500);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Ошибка регистрации';
+      const errorMessage = err instanceof Error ? err.message : t('errors.generic');
       setError(errorMessage);
-      toast.error('Ошибка регистрации', {
+      toast.error(t('errors.generic'), {
         description: errorMessage,
       });
     } finally {
@@ -117,8 +117,8 @@ export default function Register() {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
     if (!clientId || clientId === 'your-google-client-id') {
-      toast.error('Ошибка', {
-        description: 'Google OAuth не настроен',
+      toast.error(t('errors.generic'), {
+        description: 'Google OAuth is not configured',
       });
       return;
     }
@@ -147,8 +147,8 @@ export default function Register() {
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-10 h-10 text-green-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Аккаунт создан!</h2>
-          <p className="text-gray-600">Перенаправляем на настройку профиля...</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('auth.registrationSuccess')}</h2>
+          <p className="text-gray-600">{t('auth.redirecting')}</p>
         </motion.div>
       </div>
     );

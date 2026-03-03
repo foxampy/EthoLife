@@ -45,14 +45,14 @@ export default function Login() {
 
     try {
       await login(email, password);
-      toast.success('Успешный вход!', {
-        description: 'Добро пожаловать обратно!',
+      toast.success(t('auth.loginTitle'), {
+        description: t('dashboard.welcome'),
       });
       setLocation('/dashboard');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ошибка входа');
-      toast.error('Ошибка входа', {
-        description: err instanceof Error ? err.message : 'Проверьте email и пароль',
+      setError(err instanceof Error ? err.message : t('errors.generic'));
+      toast.error(t('errors.generic'), {
+        description: t('auth.invalidCredentials'),
       });
     } finally {
       setLoading(false);
@@ -64,9 +64,9 @@ export default function Login() {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
     if (!clientId || clientId === 'your-google-client-id') {
-      setError('Google OAuth не настроен. Обратитесь к администратору.');
-      toast.error('Ошибка', {
-        description: 'Google OAuth не настроен',
+      setError('Google OAuth is not configured. Please contact administrator.');
+      toast.error(t('errors.generic'), {
+        description: 'Google OAuth is not configured',
       });
       return;
     }
@@ -91,9 +91,9 @@ export default function Login() {
     const telegramUrl = `https://t.me/${botUsername}?startapp=auth`;
 
     window.open(telegramUrl, '_blank');
-    
+
     toast.info('Telegram', {
-      description: 'Откройте бота и нажмите /app или Start',
+      description: 'Open the bot and press /app or Start',
     });
   };
 

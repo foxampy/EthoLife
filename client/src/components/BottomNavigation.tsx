@@ -183,13 +183,13 @@ export function BottomNavigation() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 bottom-0 w-full sm:w-[340px] bg-white z-50 overflow-hidden flex flex-col shadow-2xl"
-              style={{ paddingTop: 'env(safe-area-inset-top)' }}
+              className="fixed top-0 left-0 bottom-0 w-full sm:w-[320px] max-h-screen bg-white z-50 overflow-hidden flex flex-col shadow-2xl"
+              style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
             >
               {/* Header */}
-              <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-teal-50">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md">
+              <div className="flex-shrink-0 flex items-center justify-between p-3 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-teal-50">
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md">
                     <Heart className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -207,55 +207,55 @@ export function BottomNavigation() {
 
               {/* User Info */}
               {isAuthenticated && user && (
-                <div className="flex-shrink-0 p-4 border-b border-gray-100 bg-gray-50">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Avatar className="w-12 h-12 border-2 border-emerald-500">
-                      <AvatarFallback className="bg-emerald-100 text-emerald-700 font-bold">
+                <div className="flex-shrink-0 p-3 border-b border-gray-100 bg-gray-50">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Avatar className="w-10 h-10 border-2 border-emerald-500">
+                      <AvatarFallback className="bg-emerald-100 text-emerald-700 font-bold text-sm">
                         {user.name?.charAt(0).toUpperCase() || user.email.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-900 truncate">{user.name || user.email}</p>
+                      <p className="font-semibold text-gray-900 truncate text-sm">{user.name || user.email}</p>
                       <p className="text-xs text-gray-500 truncate">{user.role}</p>
                     </div>
                   </div>
-                  
+
                   {/* Quick Stats */}
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="bg-white rounded-lg p-2 text-center">
-                      <p className="text-xs text-gray-500">{t('wallet.tokens')}</p>
-                      <p className="text-sm font-bold text-emerald-600">0</p>
+                  <div className="grid grid-cols-3 gap-1">
+                    <div className="bg-white rounded-md p-1.5 text-center">
+                      <p className="text-[10px] text-gray-500">{t('wallet.tokens')}</p>
+                      <p className="text-xs font-bold text-emerald-600">0</p>
                     </div>
-                    <div className="bg-white rounded-lg p-2 text-center">
-                      <p className="text-xs text-gray-500">{t('dashboard.achievements')}</p>
-                      <p className="text-sm font-bold text-orange-600">0</p>
+                    <div className="bg-white rounded-md p-1.5 text-center">
+                      <p className="text-[10px] text-gray-500">{t('dashboard.achievements')}</p>
+                      <p className="text-xs font-bold text-orange-600">0</p>
                     </div>
-                    <div className="bg-white rounded-lg p-2 text-center">
-                      <p className="text-xs text-gray-500">{t('dashboard.goals')}</p>
-                      <p className="text-sm font-bold text-blue-600">0</p>
+                    <div className="bg-white rounded-md p-1.5 text-center">
+                      <p className="text-[10px] text-gray-500">{t('dashboard.goals')}</p>
+                      <p className="text-xs font-bold text-blue-600">0</p>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Menu Content */}
-              <ScrollArea className="flex-1">
-                <div className="p-4 space-y-6">
-                  {/* Health Modules Grid */}
+              {/* Menu Content - Scrollable */}
+              <div className="flex-1 overflow-y-auto overflow-x-hidden">
+                <div className="p-3 space-y-4">
+                  {/* Health Modules Grid - Compact */}
                   <div>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-3 gap-1.5">
                       {healthModules.map((module) => {
                         const Icon = module.icon;
                         return (
                           <Link key={module.path} href={module.path}>
                             <button
                               onClick={() => setIsMenuOpen(false)}
-                              className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+                              className="flex flex-col items-center gap-0.5 p-1.5 rounded-lg hover:bg-gray-50 transition-colors"
                             >
-                              <div className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center">
-                                <Icon className={cn("w-5 h-5", module.color)} />
+                              <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center">
+                                <Icon className={cn("w-4 h-4", module.color)} />
                               </div>
-                              <span className="text-[10px] text-gray-600">{module.label}</span>
+                              <span className="text-[9px] text-gray-600 text-center leading-tight">{module.label}</span>
                             </button>
                           </Link>
                         );
@@ -283,16 +283,16 @@ export function BottomNavigation() {
                                 )}
                               >
                                 <div className={cn(
-                                  "w-10 h-10 rounded-lg flex items-center justify-center",
+                                  "w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0",
                                   active ? "bg-emerald-100" : "bg-gray-100"
                                 )}>
                                   <ItemIcon className={cn(
-                                    "w-5 h-5",
+                                    "w-4 h-4",
                                     active ? "text-emerald-600" : "text-gray-500"
                                   )} />
                                 </div>
                                 <span className="flex-1 text-left text-sm">{item.label}</span>
-                                {active && <ChevronRight className="w-4 h-4 text-emerald-600" />}
+                                {active && <ChevronRight className="w-4 h-4 text-emerald-600 flex-shrink-0" />}
                               </button>
                             </Link>
                           );
@@ -301,49 +301,51 @@ export function BottomNavigation() {
                     </div>
                   ))}
                 </div>
-              </ScrollArea>
+              </div>
 
-              {/* Footer */}
-              {!isAuthenticated ? (
-                <div className="p-4 border-t border-gray-100 bg-gray-50 space-y-2">
-                  <Link href="/login">
-                    <Button variant="outline" className="w-full rounded-xl h-11">
-                      {t('auth.loginButton')}
+              {/* Footer - Fixed at bottom */}
+              <div className="flex-shrink-0 p-3 border-t border-gray-100 bg-gray-50 space-y-2">
+                {!isAuthenticated ? (
+                  <div className="space-y-2">
+                    <Link href="/login">
+                      <Button variant="outline" className="w-full rounded-lg h-10 text-sm">
+                        {t('auth.loginButton')}
+                      </Button>
+                    </Link>
+                    <Link href="/register">
+                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700 rounded-lg h-10 text-sm">
+                        {t('auth.registerButton')}
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <Link href="/profile">
+                      <Button variant="outline" className="w-full rounded-lg h-10 text-sm gap-2">
+                        <User className="w-4 h-4" />
+                        {t('nav.profile')}
+                      </Button>
+                    </Link>
+                    <Link href="/settings">
+                      <Button variant="outline" className="w-full rounded-lg h-10 text-sm gap-2">
+                        <Settings className="w-4 h-4" />
+                        {t('nav.settings')}
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="outline"
+                      className="w-full rounded-lg h-10 text-red-600 hover:bg-red-50 text-sm gap-2"
+                      onClick={() => {
+                        logout();
+                        setIsMenuOpen(false);
+                      }}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      {t('nav.logout')}
                     </Button>
-                  </Link>
-                  <Link href="/register">
-                    <Button className="w-full bg-emerald-600 hover:bg-emerald-700 rounded-xl h-11">
-                      {t('auth.registerButton')}
-                    </Button>
-                  </Link>
-                </div>
-              ) : (
-                <div className="p-4 border-t border-gray-100 bg-gray-50 space-y-2">
-                  <Link href="/profile">
-                    <Button variant="outline" className="w-full rounded-xl h-11 gap-2">
-                      <User className="w-4 h-4" />
-                      {t('nav.profile')}
-                    </Button>
-                  </Link>
-                  <Link href="/settings">
-                    <Button variant="outline" className="w-full rounded-xl h-11 gap-2">
-                      <Settings className="w-4 h-4" />
-                      {t('nav.settings')}
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="outline"
-                    className="w-full rounded-xl h-11 text-red-600 hover:bg-red-50 gap-2"
-                    onClick={() => {
-                      logout();
-                      setIsMenuOpen(false);
-                    }}
-                  >
-                    <LogOut className="w-4 h-4" />
-                    {t('nav.logout')}
-                  </Button>
-                </div>
-              )}
+                  </div>
+                )}
+              </div>
             </motion.div>
           </>
         )}

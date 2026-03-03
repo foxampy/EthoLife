@@ -157,39 +157,39 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-full sm:w-[280px] bg-white z-50 overflow-hidden flex flex-col shadow-2xl"
-              style={{ paddingTop: 'env(safe-area-inset-top)' }}
+              className="fixed top-0 right-0 bottom-0 w-full sm:w-[280px] max-h-screen bg-white z-50 overflow-hidden flex flex-col shadow-2xl"
+              style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
             >
               {/* Header */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-100">
+              <div className="flex-shrink-0 flex items-center justify-between p-3 border-b border-gray-100">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
                     <Heart className="w-4 h-4 text-white" />
                   </div>
-                  <span className="font-bold text-gray-900">Ethos<span className="text-emerald-600">Life</span></span>
+                  <span className="font-bold text-gray-900 text-sm">Ethos<span className="text-emerald-600">Life</span></span>
                 </div>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+                  className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors flex-shrink-0"
                 >
-                  <X className="w-5 h-5 text-gray-500" />
+                  <X className="w-4 h-4 text-gray-500" />
                 </button>
               </div>
 
-              {/* Menu Content */}
-              <div className="flex-1 overflow-y-auto p-4">
+              {/* Menu Content - Scrollable */}
+              <div className="flex-1 overflow-y-auto overflow-x-hidden p-3">
                 {user ? (
                   <>
                     {/* User Info */}
-                    <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-4 mb-6">
-                      <div className="flex items-center gap-3 mb-3">
-                        <Avatar className="w-12 h-12">
-                          <AvatarFallback className="bg-emerald-200 text-emerald-700 text-lg font-bold">
+                    <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg p-3 mb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Avatar className="w-10 h-10">
+                          <AvatarFallback className="bg-emerald-200 text-emerald-700 text-base font-bold">
                             {user.name?.charAt(0).toUpperCase() || 'U'}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-gray-900 truncate">{user.name || t('common.user')}</p>
+                          <p className="font-semibold text-gray-900 truncate text-sm">{user.name || t('common.user')}</p>
                           <p className="text-xs text-gray-500 truncate">{user.email}</p>
                         </div>
                       </div>
@@ -201,12 +201,12 @@ export function Header() {
                         <Link key={item.path} href={item.path}>
                           <button
                             onClick={() => setMobileMenuOpen(false)}
-                            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors"
+                            className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors"
                           >
-                            <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                              <item.icon className="w-5 h-5 text-emerald-600" />
+                            <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                              <item.icon className="w-4 h-4 text-emerald-600" />
                             </div>
-                            <span className="font-medium text-gray-700">{item.label}</span>
+                            <span className="font-medium text-gray-700 text-sm">{item.label}</span>
                           </button>
                         </Link>
                       ))}
@@ -218,21 +218,21 @@ export function Header() {
                         logout();
                         setMobileMenuOpen(false);
                       }}
-                      className="flex items-center gap-3 w-full px-4 py-3 rounded-xl hover:bg-red-50 transition-colors mt-4"
+                      className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg hover:bg-red-50 transition-colors mt-4"
                     >
-                      <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
-                        <LogOut className="w-5 h-5 text-red-600" />
+                      <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+                        <LogOut className="w-4 h-4 text-red-600" />
                       </div>
-                      <span className="font-medium text-red-600">{t('nav.logout')}</span>
+                      <span className="font-medium text-red-600 text-sm">{t('nav.logout')}</span>
                     </button>
                   </>
                 ) : (
                   <>
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       <Link href="/login">
                         <Button
                           variant="outline"
-                          className="w-full rounded-xl h-12"
+                          className="w-full rounded-lg h-10"
                           size="lg"
                           onClick={() => setMobileMenuOpen(false)}
                         >
@@ -241,7 +241,7 @@ export function Header() {
                       </Link>
                       <Link href="/register">
                         <Button
-                          className="w-full bg-emerald-600 hover:bg-emerald-700 rounded-xl h-12"
+                          className="w-full bg-emerald-600 hover:bg-emerald-700 rounded-lg h-10"
                           size="lg"
                           onClick={() => setMobileMenuOpen(false)}
                         >
@@ -254,7 +254,7 @@ export function Header() {
               </div>
 
               {/* Footer */}
-              <div className="p-4 border-t border-gray-100 bg-gray-50">
+              <div className="flex-shrink-0 p-3 border-t border-gray-100 bg-gray-50">
                 <p className="text-xs text-gray-500 text-center">
                   © 2026 EthoLife
                 </p>

@@ -21,7 +21,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   // English is default (primary) language
   const [locale, setLocaleState] = useState<Locale>(() => {
     const saved = localStorage.getItem('locale') as Locale;
-    return saved || 'en';
+    // Always default to English if not set
+    const initialLocale = saved || 'en';
+    document.documentElement.lang = initialLocale;
+    return initialLocale;
   });
 
   const setLocale = useCallback((newLocale: Locale) => {

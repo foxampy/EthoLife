@@ -32,12 +32,12 @@ export default function Whitepaper() {
           <p className="text-sm text-foreground/50">Version 1.0 | January 2025</p>
         </motion.div>
 
-        {/* Navigation - Fixed with higher z-index */}
+        {/* Navigation - Fixed with lower z-index than bottom nav */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="sticky top-20 z-50 mb-12 bg-card/95 backdrop-blur-md rounded-xl p-4 border border-border shadow-lg"
+          className="sticky top-20 z-30 mb-12 bg-card/95 backdrop-blur-md rounded-xl p-4 border border-border shadow-lg"
         >
           <div className="flex flex-wrap gap-2 justify-center">
             {sections.map((section) => (
@@ -45,6 +45,11 @@ export default function Whitepaper() {
                 key={section.id}
                 href={`#${section.id}`}
                 className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors text-sm"
+                onClick={(e) => {
+                  // Close menu if open on mobile
+                  const menuEvent = new CustomEvent('close-bottom-menu');
+                  window.dispatchEvent(menuEvent);
+                }}
               >
                 <section.icon className="h-4 w-4" />
                 <span className="hidden sm:inline">{section.title}</span>

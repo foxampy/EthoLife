@@ -367,7 +367,10 @@ function ConditionalHeader() {
 }
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    // Only show loading screen on first load, not on navigation
+    return !sessionStorage.getItem('app-loaded');
+  });
 
   return (
     <ErrorBoundary>
@@ -377,7 +380,14 @@ function App() {
             <TooltipProvider>
               <Toaster />
               <AnimatePresence>
-                {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+                {isLoading && (
+                  <LoadingScreen
+                    onComplete={() => {
+                      sessionStorage.setItem('app-loaded', 'true');
+                      setIsLoading(false);
+                    }}
+                  />
+                )}
               </AnimatePresence>
               <ConditionalHeader />
               <Router />

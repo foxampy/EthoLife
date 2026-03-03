@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -48,6 +48,18 @@ export function BottomNavigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout, isAuthenticated } = useAuth();
   const { t } = useI18n();
+
+  // Close menu when navigating or custom event
+  const closeMenu = () => setIsMenuOpen(false);
+
+  // Listen for close events from other components
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleClose = () => closeMenu();
+      window.addEventListener('close-bottom-menu', handleClose);
+      return () => window.removeEventListener('close-bottom-menu', handleClose);
+    }
+  }, []);
 
   const isActive = (path: string) => {
     if (path === '/') return location === '/';
@@ -113,7 +125,7 @@ export function BottomNavigation() {
   return (
     <>
       {/* Bottom Navigation - 3 основные кнопки + Меню слева */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40">
+      <nav className="fixed bottom-0 left-0 right-0 z-[100]">
         {/* Spacer для safe area */}
         <div className="h-4" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} />
 

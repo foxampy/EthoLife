@@ -49,7 +49,7 @@ function LandingLanguageSwitcher() {
   );
 }
 
-// Header Component - минималистичный, только лого и переключатель языка
+// Header Component
 function Header({ onStartClick }: { onStartClick: () => void }) {
   const { t } = useI18n();
   const { user } = useAuth();
@@ -85,7 +85,7 @@ function Header({ onStartClick }: { onStartClick: () => void }) {
             </span>
           </motion.div>
 
-          {/* Right Side - только переключатель языка */}
+          {/* Right Side - only language switcher */}
           <div className="flex items-center gap-2 sm:gap-3">
             <LandingLanguageSwitcher />
           </div>
@@ -133,7 +133,7 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-medium mb-8 shadow-lg"
         >
           <Gift className="w-4 h-4" />
-          <span>Первым 100 пользователям — персональная программа в подарок!</span>
+          <span>First 100 users get a personal program FREE!</span>
           <span className="font-bold tabular-nums">
             {String(countdown.hours).padStart(2, '0')}:
             {String(countdown.minutes).padStart(2, '0')}:
@@ -149,14 +149,14 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight mb-6">
-              Ваша экосистема
+              Your Health &
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">
-                здоровья и долголетия
+                Longevity Ecosystem
               </span>
             </h1>
 
             <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-xl">
-              7 модулей здоровья, AI-планировщик и команда специалистов для достижения ваших целей. Начните бесплатно за 2 минуты.
+              7 health modules, AI planner, and a team of specialists to achieve your goals. Start free in 2 minutes.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -165,7 +165,7 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
                 onClick={onStartClick}
                 className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-6 text-lg rounded-xl shadow-lg shadow-emerald-500/25"
               >
-                Начать бесплатно
+                Start Free
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               <Button
@@ -174,7 +174,7 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
                 className="border-white/30 text-white hover:bg-white/10 px-8 py-6 text-lg rounded-xl"
               >
                 <Play className="mr-2 w-5 h-5" />
-                Смотреть демо
+                Watch Demo
               </Button>
             </div>
 
@@ -191,48 +191,29 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-bold text-white text-sm mb-1">
-                    🎁 6+6 Месяцев Premium
+                    🎁 6+6 Months Premium
                   </h3>
                   <ul className="text-xs text-white/90 space-y-1">
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-3 h-3" />
-                      <span>6 месяцев + 6 в подарок</span>
+                      <span>6 months + 6 free</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-3 h-3" />
-                      <span>Консультация со специалистом по каждому модулю</span>
+                      <span>Specialist consultation for each module</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-3 h-3" />
-                      <span>Пожизненный PRO статус</span>
+                      <span>Lifetime PRO status</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-3 h-3" />
-                      <span className="font-bold">Достижение "Будь Первым"</span>
+                      <span className="font-bold">"Be First" achievement</span>
                     </li>
                   </ul>
                 </div>
               </div>
             </motion.div>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                size="lg"
-                onClick={onStartClick}
-                className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-6 text-lg rounded-xl shadow-lg shadow-emerald-500/25"
-              >
-                Начать бесплатно
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 px-8 py-6 text-lg rounded-xl"
-              >
-                <Play className="mr-2 w-5 h-5" />
-                Смотреть демо
-              </Button>
-            </div>
           </motion.div>
 
           {/* Right Content - App Preview */}
@@ -259,7 +240,7 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
                     <Activity className="w-6 h-6 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Шаги сегодня</p>
+                    <p className="text-xs text-gray-500">Steps today</p>
                     <p className="text-xl font-bold text-gray-900">8,432</p>
                   </div>
                 </div>
@@ -275,8 +256,8 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
                     <Brain className="w-6 h-6 text-purple-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Настроение</p>
-                    <p className="text-xl font-bold text-gray-900">Отличное!</p>
+                    <p className="text-xs text-gray-500">Mood</p>
+                    <p className="text-xl font-bold text-gray-900">Excellent!</p>
                   </div>
                 </div>
               </motion.div>
@@ -291,10 +272,10 @@ function HeroSection({ onStartClick }: { onStartClick: () => void }) {
 // Problem Section
 function ProblemSection() {
   const problems = [
-    { icon: '📱', text: 'Разрозненные приложения' },
-    { icon: '🔌', text: 'Нет связи между аспектами здоровья' },
-    { icon: '🤖', text: 'Сложные AI без понимания контекста' },
-    { icon: '💰', text: 'Дорогие специалисты без системы' },
+    { icon: '📱', text: 'Fragmented apps' },
+    { icon: '🔌', text: 'No connection between health aspects' },
+    { icon: '🤖', text: 'Complex AI without context' },
+    { icon: '💰', text: 'Expensive specialists without system' },
   ];
 
   return (
@@ -302,9 +283,9 @@ function ProblemSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Знакомые проблемы?
+            Sound familiar?
           </h2>
-          <p className="text-xl text-gray-600">Мы создали решение, которое объединяет всё</p>
+          <p className="text-xl text-gray-600">We created a solution that unites everything</p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
@@ -330,10 +311,10 @@ function ProblemSection() {
           className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-8 md:p-12 text-center text-white shadow-xl"
         >
           <h3 className="text-2xl md:text-3xl font-bold mb-4">
-            EthoLife — первая целостная экосистема здоровья
+            EthoLife — the first holistic health ecosystem
           </h3>
           <p className="text-lg text-emerald-100 max-w-2xl mx-auto">
-            7 взаимосвязанных модулей, AI-планировщик и доступ к специалистам в одном приложении
+            7 interconnected modules, AI planner, and access to specialists in one app
           </p>
         </motion.div>
       </div>
@@ -344,13 +325,13 @@ function ProblemSection() {
 // Features Grid (7 Modules)
 function FeaturesGrid() {
   const modules = [
-    { icon: Apple, color: 'bg-green-500', title: 'Питание', desc: 'Калории, макросы, вода, персональные планы' },
-    { icon: Dumbbell, color: 'bg-blue-500', title: 'Движение', desc: 'Тренировки, шаги, активность, прогресс' },
-    { icon: Moon, color: 'bg-purple-500', title: 'Сон', desc: 'Фазы сна, качество, восстановление' },
-    { icon: Smile, color: 'bg-pink-500', title: 'Психология', desc: 'Настроение, стресс, медитации' },
-    { icon: Stethoscope, color: 'bg-red-500', title: 'Медицина', desc: 'Анализы, приемы, медикаменты' },
-    { icon: Users, color: 'bg-orange-500', title: 'Отношения', desc: 'Социальные связи, общение' },
-    { icon: Sprout, color: 'bg-teal-500', title: 'Привычки', desc: 'Трекер привычек, цели, streaks' },
+    { icon: Apple, color: 'bg-green-500', title: 'Nutrition', desc: 'Calories, macros, water, personal plans' },
+    { icon: Dumbbell, color: 'bg-blue-500', title: 'Movement', desc: 'Workouts, steps, activity, progress' },
+    { icon: Moon, color: 'bg-purple-500', title: 'Sleep', desc: 'Sleep phases, quality, recovery' },
+    { icon: Smile, color: 'bg-pink-500', title: 'Psychology', desc: 'Mood, stress, meditation' },
+    { icon: Stethoscope, color: 'bg-red-500', title: 'Medicine', desc: 'Tests, appointments, medications' },
+    { icon: Users, color: 'bg-orange-500', title: 'Relationships', desc: 'Social connections, communication' },
+    { icon: Sprout, color: 'bg-teal-500', title: 'Habits', desc: 'Habit tracker, goals, streaks' },
   ];
 
   return (
@@ -358,10 +339,10 @@ function FeaturesGrid() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-            7 модулей здоровья
+            7 Health Modules
           </h2>
           <p className="text-base text-gray-600 max-w-2xl mx-auto">
-            Каждый модуль собирает данные, анализирует и дает персональные рекомендации
+            Each module collects data, analyzes it, and provides personalized recommendations
           </p>
         </div>
 
@@ -394,20 +375,20 @@ function HowItWorksSection() {
   const steps = [
     {
       icon: Target,
-      title: 'Определите цели',
-      desc: 'Пройдите 5-минутный онбординг и получите персональную программу',
+      title: 'Set Your Goals',
+      desc: 'Take a 5-minute onboarding and get a personalized program',
       color: 'bg-blue-500',
     },
     {
       icon: BarChart3,
-      title: 'Отслеживайте прогресс',
-      desc: 'Вносите данные в модули здоровья и наблюдайте за улучшениями',
+      title: 'Track Progress',
+      desc: 'Enter data in health modules and watch your improvements',
       color: 'bg-emerald-500',
     },
     {
       icon: Award,
-      title: 'Достигайте результатов',
-      desc: 'AI анализирует данные и корректирует план для максимального эффекта',
+      title: 'Achieve Results',
+      desc: 'AI analyzes data and adjusts the plan for maximum effect',
       color: 'bg-purple-500',
     },
   ];
@@ -417,9 +398,9 @@ function HowItWorksSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Как это работает
+            How It Works
           </h2>
-          <p className="text-xl text-gray-600">Три простых шага к здоровью</p>
+          <p className="text-xl text-gray-600">Three simple steps to health</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -464,10 +445,10 @@ function StakingSection({ onStartClick }: { onStartClick: () => void }) {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {t('staking.title')}
+            UNITY Token Rewards
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t('staking.description')}
+            Earn tokens for healthy habits and stake them for additional rewards
           </p>
         </div>
 
@@ -486,15 +467,15 @@ function StakingSection({ onStartClick }: { onStartClick: () => void }) {
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-gray-900">UNITY Token</h3>
-                <p className="text-gray-500">{t('staking.currentPrice')}</p>
+                <p className="text-gray-500">Utility token for the ecosystem</p>
               </div>
             </div>
             <div className="space-y-4">
               <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-4">
-                <p className="text-lg font-bold text-gray-900">{t('staking.1USD')}</p>
+                <p className="text-lg font-bold text-gray-900">1 USD = 20 UNITY</p>
               </div>
               <p className="text-gray-600">
-                {t('staking.minPurchase')}
+                Minimum purchase: 500 UNITY ($25)
               </p>
             </div>
           </motion.div>
@@ -511,8 +492,8 @@ function StakingSection({ onStartClick }: { onStartClick: () => void }) {
                 <span className="text-2xl">🎁</span>
               </div>
               <div>
-                <h3 className="text-2xl font-bold">{t('staking.annualBenefit')}</h3>
-                <p className="text-emerald-100">Exclusive rewards</p>
+                <h3 className="text-2xl font-bold">Annual Benefits</h3>
+                <p className="text-emerald-100">Exclusive rewards for holders</p>
               </div>
             </div>
             <ul className="space-y-4">
@@ -521,8 +502,8 @@ function StakingSection({ onStartClick }: { onStartClick: () => void }) {
                   <span className="text-sm">✓</span>
                 </div>
                 <div>
-                  <p className="font-bold text-yellow-300">{t('staking.discount')}</p>
-                  <p className="text-emerald-100 text-sm">{t('staking.lifetimeAccess')}</p>
+                  <p className="font-bold text-yellow-300">15% Discount</p>
+                  <p className="text-emerald-100 text-sm">On all subscriptions</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
@@ -530,8 +511,8 @@ function StakingSection({ onStartClick }: { onStartClick: () => void }) {
                   <span className="text-sm">✓</span>
                 </div>
                 <div>
-                  <p className="font-bold text-yellow-300">{t('staking.freeSessions')}</p>
-                  <p className="text-emerald-100 text-sm">{t('staking.sessionsDesc')}</p>
+                  <p className="font-bold text-yellow-300">Free Sessions</p>
+                  <p className="text-emerald-100 text-sm">With specialists every month</p>
                 </div>
               </li>
             </ul>
@@ -545,7 +526,7 @@ function StakingSection({ onStartClick }: { onStartClick: () => void }) {
             onClick={onStartClick}
             className="bg-emerald-500 hover:bg-emerald-600 text-white px-12 py-6 text-lg rounded-xl shadow-lg shadow-emerald-500/25"
           >
-            {t('staking.learnMore')}
+            Learn More
             <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
         </div>
@@ -561,46 +542,46 @@ function PricingSection({ onStartClick }: { onStartClick: () => void }) {
 
   const plans = [
     {
-      name: locale === 'en' ? 'Free' : 'Бесплатно',
+      name: 'Free',
       price: '0',
-      period: locale === 'en' ? 'forever' : 'навсегда',
-      description: locale === 'en' ? 'To get started' : 'Для знакомства с экосистемой',
+      period: 'forever',
+      description: 'To get started',
       features: [
-        locale === 'en' ? '1 health module' : '1 модуль здоровья',
-        locale === 'en' ? 'Basic statistics' : 'Базовая статистика',
-        locale === 'en' ? 'Limited AI chat' : 'AI-чат ограничено',
+        '1 health module',
+        'Basic statistics',
+        'Limited AI chat',
       ],
-      cta: locale === 'en' ? 'Start Free' : 'Начать бесплатно',
+      cta: 'Start Free',
       popular: false,
     },
     {
-      name: locale === 'en' ? 'Premium' : 'Премиум',
+      name: 'Premium',
       price: annual ? '19' : '29',
-      period: locale === 'en' ? 'per month' : 'в месяц',
-      description: locale === 'en' ? 'Full access to all features' : 'Полный доступ ко всем функциям',
+      period: 'per month',
+      description: 'Full access to all features',
       features: [
-        locale === 'en' ? 'All 7 health modules' : 'Все 7 модулей здоровья',
-        locale === 'en' ? 'AI planner' : 'AI-планировщик',
-        locale === 'en' ? 'Personal recommendations' : 'Персональные рекомендации',
-        locale === 'en' ? 'Priority support' : 'Приоритетная поддержка',
-        locale === 'en' ? 'Early access to features' : 'Ранний доступ к функциям',
+        'All 7 health modules',
+        'AI planner',
+        'Personal recommendations',
+        'Priority support',
+        'Early access to features',
       ],
-      cta: locale === 'en' ? 'Try 7 days free' : 'Попробовать 7 дней бесплатно',
+      cta: 'Try 7 days free',
       popular: true,
     },
     {
-      name: locale === 'en' ? 'Family' : 'Семейный',
+      name: 'Family',
       price: annual ? '39' : '49',
-      period: locale === 'en' ? 'per month' : 'в месяц',
-      description: locale === 'en' ? 'For the whole family' : 'Для всей семьи',
+      period: 'per month',
+      description: 'For the whole family',
       features: [
-        locale === 'en' ? 'Everything from Premium' : 'Всё из Премиум',
-        locale === 'en' ? 'Up to 5 accounts' : 'До 5 аккаунтов',
-        locale === 'en' ? 'Family goals' : 'Семейные цели',
-        locale === 'en' ? 'Joint challenges' : 'Совместные челленджи',
-        locale === 'en' ? 'Family statistics' : 'Семейная статистика',
+        'Everything from Premium',
+        'Up to 5 accounts',
+        'Family goals',
+        'Joint challenges',
+        'Family statistics',
       ],
-      cta: locale === 'en' ? 'Start Family Access' : 'Начать семейный доступ',
+      cta: 'Start Family Access',
       popular: false,
     },
   ];
@@ -610,16 +591,16 @@ function PricingSection({ onStartClick }: { onStartClick: () => void }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {locale === 'en' ? 'Simple Pricing' : 'Простые тарифы'}
+            Simple Pricing
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            {locale === 'en' ? 'Start free, pay for advanced features' : 'Начните бесплатно, платите за расширенные функции'}
+            Start free, pay for advanced features
           </p>
 
           {/* Toggle */}
           <div className="flex items-center justify-center gap-4 mb-8">
             <span className={`text-sm ${!annual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
-              {locale === 'en' ? 'Monthly' : 'Ежемесячно'}
+              Monthly
             </span>
             <button
               onClick={() => setAnnual(!annual)}
@@ -634,8 +615,8 @@ function PricingSection({ onStartClick }: { onStartClick: () => void }) {
               />
             </button>
             <span className={`text-sm ${annual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
-              {locale === 'en' ? 'Annually' : 'Ежегодно'} <span className="text-emerald-500 font-bold">
-                {annual ? (locale === 'en' ? '-35%' : '-35%') : ''}
+              Annually <span className="text-emerald-500 font-bold">
+                {annual ? '-35%' : ''}
               </span>
             </span>
           </div>
@@ -656,7 +637,7 @@ function PricingSection({ onStartClick }: { onStartClick: () => void }) {
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <Badge className="bg-emerald-500 text-white px-4 py-1">
-                      {locale === 'en' ? 'Popular' : 'Популярный'}
+                      Popular
                     </Badge>
                   </div>
                 )}
@@ -669,7 +650,7 @@ function PricingSection({ onStartClick }: { onStartClick: () => void }) {
                   </div>
                   {annual && plan.price !== '0' && (
                     <p className="text-sm text-emerald-600 mb-4">
-                      {locale === 'en' ? 'Billed annually' : 'Оплата ежегодно'}
+                      Billed annually
                     </p>
                   )}
                   <ul className="space-y-3 mb-8">
@@ -722,35 +703,35 @@ function CTASection({ onStartClick }: { onStartClick: () => void }) {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-medium mb-6">
             <Gift className="w-4 h-4" />
-            <span>Ограниченное предложение</span>
+            <span>Limited time offer</span>
           </div>
 
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Начните путь к здоровью сегодня
+            Start your health journey today
           </h2>
 
           <p className="text-lg text-gray-600 mb-8">
-            Первые 100 пользователей получают персональную программу и 7 дней Премиум бесплатно
+            First 100 users get a personal program and 7 days Premium FREE
           </p>
 
           <div className="bg-gray-50 rounded-2xl p-6 mb-8 text-left">
-            <h3 className="font-bold text-gray-900 mb-4">Включено в бесплатный старт:</h3>
+            <h3 className="font-bold text-gray-900 mb-4">Free start includes:</h3>
             <ul className="space-y-3">
               <li className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                <span>Доступ к 1 модулю здоровья</span>
+                <span>Access to 1 health module</span>
               </li>
               <li className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                <span>Базовая статистика и трекинг</span>
+                <span>Basic statistics and tracking</span>
               </li>
               <li className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                <span>AI-чат для консультаций</span>
+                <span>AI chat for consultations</span>
               </li>
               <li className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                <span>Персональная программа на неделю</span>
+                <span>Personal weekly program</span>
               </li>
             </ul>
           </div>
@@ -760,12 +741,12 @@ function CTASection({ onStartClick }: { onStartClick: () => void }) {
             onClick={onStartClick}
             className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-12 py-6 text-lg rounded-xl shadow-lg shadow-emerald-500/25"
           >
-            Начать бесплатно
+            Start Free
             <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
 
           <div className="mt-6">
-            <p className="text-sm text-gray-500 mb-2">Осталось бонусных мест:</p>
+            <p className="text-sm text-gray-500 mb-2">Bonus spots remaining:</p>
             <div className="w-full max-w-xs mx-auto bg-gray-200 rounded-full h-2 overflow-hidden">
               <div
                 className="bg-amber-500 h-2 rounded-full transition-all"
@@ -773,7 +754,7 @@ function CTASection({ onStartClick }: { onStartClick: () => void }) {
               />
             </div>
             <p className="text-sm font-bold text-gray-900 mt-2">
-              {bonusesLeft} из 100
+              {bonusesLeft} of 100
             </p>
           </div>
         </motion.div>
@@ -782,7 +763,7 @@ function CTASection({ onStartClick }: { onStartClick: () => void }) {
   );
 }
 
-// Footer - используем новый компонент
+// Footer
 function Footer() {
   return <NewFooter />;
 }
@@ -818,9 +799,9 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
   const MoodStep = () => (
     <div className="text-center">
       <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-        Как вы себя чувствуете сегодня?
+        How are you feeling today?
       </h2>
-      <p className="text-gray-600 mb-8">Это поможет нам понять вашу текущую форму</p>
+      <p className="text-gray-600 mb-8">This helps us understand your current state</p>
 
       <div className="flex justify-center gap-3 sm:gap-4 flex-wrap">
         {[1, 2, 3, 4, 5].map((mood) => (
@@ -844,8 +825,8 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
       </div>
 
       <div className="flex justify-between text-sm text-gray-500 mt-4 px-4">
-        <span>Ужасно</span>
-        <span>Отлично</span>
+        <span>Terrible</span>
+        <span>Excellent</span>
       </div>
     </div>
   );
@@ -853,20 +834,20 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
   // Step 2: Goals
   const GoalsStep = () => {
     const goals = [
-      { id: 'weight', label: 'Вес', icon: '⚖️' },
-      { id: 'energy', label: 'Энергия', icon: '⚡' },
-      { id: 'sleep', label: 'Сон', icon: '😴' },
-      { id: 'stress', label: 'Стресс', icon: '🧘' },
-      { id: 'fitness', label: 'Фитнес', icon: '💪' },
-      { id: 'nutrition', label: 'Питание', icon: '🥗' },
+      { id: 'weight', label: 'Weight', icon: '⚖️' },
+      { id: 'energy', label: 'Energy', icon: '⚡' },
+      { id: 'sleep', label: 'Sleep', icon: '😴' },
+      { id: 'stress', label: 'Stress', icon: '🧘' },
+      { id: 'fitness', label: 'Fitness', icon: '💪' },
+      { id: 'nutrition', label: 'Nutrition', icon: '🥗' },
     ];
 
     return (
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-          Какие цели для вас приоритетны?
+          What goals are priorities for you?
         </h2>
-        <p className="text-gray-600 mb-8">Выберите 1-3 цели</p>
+        <p className="text-gray-600 mb-8">Choose 1-3 goals</p>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-md mx-auto">
           {goals.map((goal) => (
@@ -895,7 +876,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
           disabled={data.goals.length === 0}
           className="mt-8 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50"
         >
-          Далее
+          Next
           <ChevronRight className="w-4 h-4 ml-2" />
         </Button>
       </div>
@@ -905,18 +886,18 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
   // Step 3: Activity Level
   const ActivityStep = () => {
     const activities = [
-      { id: 'sedentary', label: 'Сидячий', desc: 'Мало движения', icon: '🪑' },
-      { id: 'light', label: 'Легкий', desc: 'Прогулки 1-2 раза в неделю', icon: '🚶' },
-      { id: 'moderate', label: 'Умеренный', desc: 'Тренировки 3-4 раза в неделю', icon: '🏃' },
-      { id: 'active', label: 'Активный', desc: 'Спорт 5+ раз в неделю', icon: '💪' },
+      { id: 'sedentary', label: 'Sedentary', desc: 'Little movement', icon: '🪑' },
+      { id: 'light', label: 'Light', desc: 'Walks 1-2 times a week', icon: '🚶' },
+      { id: 'moderate', label: 'Moderate', desc: 'Exercise 3-4 times a week', icon: '🏃' },
+      { id: 'active', label: 'Active', desc: 'Sports 5+ times a week', icon: '💪' },
     ];
 
     return (
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-          Ваш уровень активности?
+          What is your activity level?
         </h2>
-        <p className="text-gray-600 mb-8">Честно — это поможет создать реалистичный план</p>
+        <p className="text-gray-600 mb-8">Be honest — this helps create a realistic plan</p>
 
         <div className="space-y-3 max-w-md mx-auto">
           {activities.map((activity) => (
@@ -947,18 +928,18 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
   // Step 4: Sleep
   const SleepStep = () => {
     const sleepOptions = [
-      { id: 'less-5', label: '< 5 часов', hours: '< 5' },
-      { id: '5-6', label: '5-6 часов', hours: '5-6' },
-      { id: '7-8', label: '7-8 часов', hours: '7-8' },
-      { id: 'more-8', label: '8+ часов', hours: '8+' },
+      { id: 'less-5', label: '< 5 hours', hours: '< 5' },
+      { id: '5-6', label: '5-6 hours', hours: '5-6' },
+      { id: '7-8', label: '7-8 hours', hours: '7-8' },
+      { id: 'more-8', label: '8+ hours', hours: '8+' },
     ];
 
     return (
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-          Сколько вы спите?
+          How much do you sleep?
         </h2>
-        <p className="text-gray-600 mb-8">Сон — основа здоровья</p>
+        <p className="text-gray-600 mb-8">Sleep is the foundation of health</p>
 
         <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
           {sleepOptions.map((option) => (
@@ -998,31 +979,31 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
       </motion.div>
 
       <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-        Ваша персональная программа готова!
+        Your personal program is ready!
       </h2>
-      <p className="text-gray-600 mb-8">Мы создали план на основе ваших ответов</p>
+      <p className="text-gray-600 mb-8">We created a plan based on your answers</p>
 
       <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 max-w-md mx-auto text-left mb-8">
-        <h3 className="font-bold text-gray-900 mb-4">Что вас ждет:</h3>
+        <h3 className="font-bold text-gray-900 mb-4">What awaits you:</h3>
         <ul className="space-y-3">
           <li className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-            <span className="text-gray-700">Персональные рекомендации по питанию</span>
+            <span className="text-gray-700">Personalized nutrition recommendations</span>
           </li>
           <li className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-            <span className="text-gray-700">План тренировок под ваш уровень</span>
+            <span className="text-gray-700">Workout plan for your level</span>
           </li>
           <li className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-            <span className="text-gray-700">Программа улучшения сна</span>
+            <span className="text-gray-700">Sleep improvement program</span>
           </li>
         </ul>
 
         <div className="mt-6 pt-6 border-t border-emerald-200">
-          <p className="text-sm text-gray-600 mb-2">💡 AI-совет:</p>
+          <p className="text-sm text-gray-600 mb-2">💡 AI Tip:</p>
           <p className="text-emerald-800 font-medium">
-            Начните с малого — первые 7 дней фокусируемся на {data.goals[0] || 'целях'}
+            Start small — first 7 days we focus on {data.goals[0] || 'your goals'}
           </p>
         </div>
       </div>
@@ -1032,12 +1013,12 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
         onClick={handleNext}
         className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-6 text-lg rounded-xl shadow-lg shadow-emerald-500/25 w-full sm:w-auto"
       >
-        Активировать программу
+        Activate Program
         <ArrowRight className="w-5 h-5 ml-2" />
       </Button>
 
       <p className="text-sm text-gray-500 mt-4">
-        Это займет 2 минуты
+        This takes 2 minutes
       </p>
     </div>
   );
@@ -1056,7 +1037,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
         {/* Progress */}
         <div className="mb-8">
           <div className="flex justify-between text-sm text-gray-500 mb-2">
-            <span>Шаг {step + 1} из {totalSteps}</span>
+            <span>Step {step + 1} of {totalSteps}</span>
             <span>{Math.round(((step + 1) / totalSteps) * 100)}%</span>
           </div>
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -1088,7 +1069,7 @@ function OnboardingFlow({ onComplete }: { onComplete: () => void }) {
             className="mt-6 text-gray-500 hover:text-gray-700 flex items-center gap-2 mx-auto"
           >
             <ChevronLeft className="w-4 h-4" />
-            Назад
+            Back
           </button>
         )}
       </div>

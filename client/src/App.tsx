@@ -30,16 +30,9 @@ import Nutrition from "./pages/Nutrition";
 import Movement from "./pages/Movement";
 import Psychology from "./pages/Psychology";
 import Sleep from "./pages/Sleep";
-import MovementHealth from "./pages/health/MovementHealth";
-import NutritionHealth from "./pages/health/NutritionHealth";
-import SleepHealth from "./pages/health/SleepHealth";
-import PsychologyHealth from "./pages/health/PsychologyHealth";
-import MedicineHealth from "./pages/health/MedicineHealth";
-import RelationshipsHealth from "./pages/health/RelationshipsHealth";
-import HabitsHealth from "./pages/health/HabitsHealth";
 import HealthModules from "./pages/HealthModules";
 
-// New Health Hub Modules
+// Health Hub Modules (v2)
 import HealthDashboard from "./pages/health/HealthDashboard";
 import NutritionModule from "./pages/health/NutritionModule";
 import MovementModule from "./pages/health/MovementModule";
@@ -175,22 +168,15 @@ function Router() {
       <Route path={"/integrations"} component={Integrations} />
       <Route path={"/researchers"} component={Researchers} />
       
-      {/* Модули здоровья - открытые */}
+      {/* Модули здоровья - новые v2 */}
       <Route path={"/health"} component={HealthDashboard} />
-      <Route path={"/health/movement"} component={MovementHealth} />
-      <Route path={"/health/nutrition"} component={NutritionHealth} />
-      <Route path={"/health/sleep"} component={SleepHealth} />
-      <Route path={"/health/psychology"} component={PsychologyHealth} />
-      <Route path={"/health/medicine"} component={MedicineHealth} />
-      <Route path={"/health/relationships"} component={RelationshipsHealth} />
-      <Route path={"/health/habits"} component={HabitsHealth} />
-      <Route path={"/health/nutrition/v2"} component={NutritionModule} />
-      <Route path={"/health/movement/v2"} component={MovementModule} />
-      <Route path={"/health/sleep/v2"} component={SleepModule} />
-      <Route path={"/health/psychology/v2"} component={PsychologyModule} />
-      <Route path={"/health/medicine/v2"} component={MedicineModule} />
-      <Route path={"/health/relationships/v2"} component={RelationshipsModule} />
-      <Route path={"/health/habits/v2"} component={HabitsModule} />
+      <Route path={"/health/movement"} component={MovementModule} />
+      <Route path={"/health/nutrition"} component={NutritionModule} />
+      <Route path={"/health/sleep"} component={SleepModule} />
+      <Route path={"/health/psychology"} component={PsychologyModule} />
+      <Route path={"/health/medicine"} component={MedicineModule} />
+      <Route path={"/health/relationships"} component={RelationshipsModule} />
+      <Route path={"/health/habits"} component={HabitsModule} />
       <Route path={"/health/:moduleId"} component={HealthModules} />
       
       {/* Социальные функции - открытые */}

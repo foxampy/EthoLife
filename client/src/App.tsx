@@ -108,6 +108,7 @@ import DailyAssistant from "./pages/DailyAssistant";
 import CertificationVerification from "./pages/CertificationVerification";
 import SubscriptionsCertificates from "./pages/SubscriptionsCertificates";
 import ProjectStatus from "./pages/ProjectStatus";
+import ProjectHub from "./pages/ProjectHub";
 
 function Router() {
   return (
@@ -140,6 +141,7 @@ function Router() {
       <Route path={"/certification"} component={CertificationVerification} />
       <Route path={"/subscriptions"} component={SubscriptionsCertificates} />
       <Route path={"/project-status"} component={ProjectStatus} />
+      <Route path={"/project-hub"} component={ProjectHub} />
       
       <Route path={"/login"} component={Login} />
       <Route path={"/register"} component={Register} />
@@ -149,200 +151,86 @@ function Router() {
       {/* Onboarding */}
       <Route path={"/onboarding"} component={DeepOnboarding} />
       
-      {/* Защищённые маршруты - Пользователь */}
-      <Route path={"/dashboard"}>
-        <ProtectedRoute><DashboardV2 /></ProtectedRoute>
-      </Route>
-      <Route path={"/dashboard-v1"}>
-        <ProtectedRoute><Dashboard /></ProtectedRoute>
-      </Route>
-      <Route path={"/health-center"}>
-        <ProtectedRoute><HealthCenter /></ProtectedRoute>
-      </Route>
-      <Route path={"/dashboard/maria"}>
-        <ProtectedRoute><MariaDashboard /></ProtectedRoute>
-      </Route>
-      <Route path={"/profile"}>
-        <ProtectedRoute><Profile /></ProtectedRoute>
-      </Route>
-      <Route path={"/account"}>
-        <ProtectedRoute><Account /></ProtectedRoute>
-      </Route>
-      <Route path={"/settings"}>
-        <ProtectedRoute><Account /></ProtectedRoute>
-      </Route>
-      <Route path={"/calendar"}>
-        <ProtectedRoute><Calendar /></ProtectedRoute>
-      </Route>
-      <Route path={"/habits"}>
-        <ProtectedRoute><Habits /></ProtectedRoute>
-      </Route>
-      <Route path={"/journal"}>
-        <ProtectedRoute><Journal /></ProtectedRoute>
-      </Route>
-      <Route path={"/ai-chat"}>
-        <ProtectedRoute><AIChat /></ProtectedRoute>
-      </Route>
-      <Route path={"/wallet"}>
-        <ProtectedRoute><Wallet /></ProtectedRoute>
-      </Route>
-      <Route path={"/documents"}>
-        <ProtectedRoute><Documents /></ProtectedRoute>
-      </Route>
-      <Route path={"/shop"}>
-        <ProtectedRoute><Shop /></ProtectedRoute>
-      </Route>
-      <Route path={"/map"}>
-        <ProtectedRoute><Map /></ProtectedRoute>
-      </Route>
-      <Route path={"/news"}>
-        <ProtectedRoute><News /></ProtectedRoute>
-      </Route>
-      <Route path={"/create-post"}>
-        <ProtectedRoute><CreatePost /></ProtectedRoute>
-      </Route>
-      <Route path={"/create-story"}>
-        <ProtectedRoute><CreateStory /></ProtectedRoute>
-      </Route>
-      <Route path={"/library"}>
-        <ProtectedRoute><Library /></ProtectedRoute>
-      </Route>
-      <Route path={"/posture"}>
-        <ProtectedRoute><Posture /></ProtectedRoute>
-      </Route>
-      <Route path={"/integrations"}>
-        <ProtectedRoute><Integrations /></ProtectedRoute>
-      </Route>
-      <Route path={"/researchers"}>
-        <ProtectedRoute><Researchers /></ProtectedRoute>
-      </Route>
+      {/* Открытые маршруты - все страницы доступны без регистрации */}
+      <Route path={"/dashboard"} component={DashboardV2} />
+      <Route path={"/dashboard-v1"} component={Dashboard} />
+      <Route path={"/health-center"} component={HealthCenter} />
+      <Route path={"/dashboard/maria"} component={MariaDashboard} />
+      <Route path={"/profile"} component={Profile} />
+      <Route path={"/account"} component={Account} />
+      <Route path={"/settings"} component={Account} />
+      <Route path={"/calendar"} component={Calendar} />
+      <Route path={"/habits"} component={Habits} />
+      <Route path={"/journal"} component={Journal} />
+      <Route path={"/ai-chat"} component={AIChat} />
+      <Route path={"/wallet"} component={Wallet} />
+      <Route path={"/documents"} component={Documents} />
+      <Route path={"/shop"} component={Shop} />
+      <Route path={"/map"} component={Map} />
+      <Route path={"/news"} component={News} />
+      <Route path={"/create-post"} component={CreatePost} />
+      <Route path={"/create-story"} component={CreateStory} />
+      <Route path={"/library"} component={Library} />
+      <Route path={"/posture"} component={Posture} />
+      <Route path={"/integrations"} component={Integrations} />
+      <Route path={"/researchers"} component={Researchers} />
       
-      {/* Модули здоровья */}
-      <Route path={"/health"}>
-        <ProtectedRoute><HealthDashboard /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/movement"}>
-        <ProtectedRoute><MovementHealth /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/nutrition"}>
-        <ProtectedRoute><NutritionHealth /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/sleep"}>
-        <ProtectedRoute><SleepHealth /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/psychology"}>
-        <ProtectedRoute><PsychologyHealth /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/medicine"}>
-        <ProtectedRoute><MedicineHealth /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/relationships"}>
-        <ProtectedRoute><RelationshipsHealth /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/habits"}>
-        <ProtectedRoute><HabitsHealth /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/nutrition/v2"}>
-        <ProtectedRoute><NutritionModule /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/movement/v2"}>
-        <ProtectedRoute><MovementModule /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/sleep/v2"}>
-        <ProtectedRoute><SleepModule /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/psychology/v2"}>
-        <ProtectedRoute><PsychologyModule /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/medicine/v2"}>
-        <ProtectedRoute><MedicineModule /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/relationships/v2"}>
-        <ProtectedRoute><RelationshipsModule /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/habits/v2"}>
-        <ProtectedRoute><HabitsModule /></ProtectedRoute>
-      </Route>
-      <Route path={"/health/:moduleId"}>
-        <ProtectedRoute><HealthModules /></ProtectedRoute>
-      </Route>
+      {/* Модули здоровья - открытые */}
+      <Route path={"/health"} component={HealthDashboard} />
+      <Route path={"/health/movement"} component={MovementHealth} />
+      <Route path={"/health/nutrition"} component={NutritionHealth} />
+      <Route path={"/health/sleep"} component={SleepHealth} />
+      <Route path={"/health/psychology"} component={PsychologyHealth} />
+      <Route path={"/health/medicine"} component={MedicineHealth} />
+      <Route path={"/health/relationships"} component={RelationshipsHealth} />
+      <Route path={"/health/habits"} component={HabitsHealth} />
+      <Route path={"/health/nutrition/v2"} component={NutritionModule} />
+      <Route path={"/health/movement/v2"} component={MovementModule} />
+      <Route path={"/health/sleep/v2"} component={SleepModule} />
+      <Route path={"/health/psychology/v2"} component={PsychologyModule} />
+      <Route path={"/health/medicine/v2"} component={MedicineModule} />
+      <Route path={"/health/relationships/v2"} component={RelationshipsModule} />
+      <Route path={"/health/habits/v2"} component={HabitsModule} />
+      <Route path={"/health/:moduleId"} component={HealthModules} />
       
-      {/* Социальные функции */}
-      <Route path={"/social/friends"}>
-        <ProtectedRoute><Friends /></ProtectedRoute>
-      </Route>
-      <Route path={"/social/messages"}>
-        <ProtectedRoute><Messages /></ProtectedRoute>
-      </Route>
-      <Route path={"/u/:username"}>
-        <ProtectedRoute><UserProfile /></ProtectedRoute>
-      </Route>
+      {/* Социальные функции - открытые */}
+      <Route path={"/social/friends"} component={Friends} />
+      <Route path={"/social/messages"} component={Messages} />
+      <Route path={"/u/:username"} component={UserProfile} />
       
       {/* Специалисты - публичные */}
       <Route path={"/specialists"} component={SpecialistsCatalog} />
       <Route path={"/specialist/:username"} component={SpecialistProfile} />
-      <Route path={"/specialist/:username/book"}>
-        <ProtectedRoute><Booking /></ProtectedRoute>
-      </Route>
+      <Route path={"/specialist/:username/book"} component={Booking} />
       <Route path={"/specialists-old"} component={Specialists} />
       
-      {/* Стать специалистом/партнером - защищено */}
-      <Route path={"/specialist-offer"}>
-        <ProtectedRoute><SpecialistOffer /></ProtectedRoute>
-      </Route>
-      <Route path={"/center-offer"}>
-        <ProtectedRoute><CenterOffer /></ProtectedRoute>
-      </Route>
+      {/* Стать специалистом/партнером - открытые */}
+      <Route path={"/specialist-offer"} component={SpecialistOffer} />
+      <Route path={"/center-offer"} component={CenterOffer} />
       <Route path={"/center/crm"}>
         <ProtectedRoute allowedRoles={['center_admin', 'admin']}><CenterCRM /></ProtectedRoute>
       </Route>
       
-      {/* Старые модули (для совместимости) */}
-      <Route path={"/medicine"}>
-        <ProtectedRoute><Medicine /></ProtectedRoute>
-      </Route>
-      <Route path={"/nutrition"}>
-        <ProtectedRoute><Nutrition /></ProtectedRoute>
-      </Route>
-      <Route path={"/movement"}>
-        <ProtectedRoute><Movement /></ProtectedRoute>
-      </Route>
-      <Route path={"/psychology"}>
-        <ProtectedRoute><Psychology /></ProtectedRoute>
-      </Route>
-      <Route path={"/sleep"}>
-        <ProtectedRoute><Sleep /></ProtectedRoute>
-      </Route>
-      <Route path={"/relationships"}>
-        <ProtectedRoute><Relationships /></ProtectedRoute>
-      </Route>
-      <Route path={"/spirituality"}>
-        <ProtectedRoute><Spirituality /></ProtectedRoute>
-      </Route>
-      <Route path={"/systematization"}>
-        <ProtectedRoute><Systematization /></ProtectedRoute>
-      </Route>
-      <Route path={"/ai-planner"}>
-        <ProtectedRoute><AiPlanner /></ProtectedRoute>
-      </Route>
+      {/* Старые модули (для совместимости) - открытые */}
+      <Route path={"/medicine"} component={Medicine} />
+      <Route path={"/nutrition"} component={Nutrition} />
+      <Route path={"/movement"} component={Movement} />
+      <Route path={"/psychology"} component={Psychology} />
+      <Route path={"/sleep"} component={Sleep} />
+      <Route path={"/relationships"} component={Relationships} />
+      <Route path={"/spirituality"} component={Spirituality} />
+      <Route path={"/systematization"} component={Systematization} />
+      <Route path={"/ai-planner"} component={AiPlanner} />
       
-      {/* Платежи */}
-      <Route path={"/checkout"}>
-        <ProtectedRoute><Checkout /></ProtectedRoute>
-      </Route>
-      <Route path={"/payment/crypto/:planId"}>
-        <ProtectedRoute><CryptoPayment /></ProtectedRoute>
-      </Route>
+      {/* Платежи - открытые */}
+      <Route path={"/checkout"} component={Checkout} />
+      <Route path={"/payment/crypto/:planId"} component={CryptoPayment} />
       
-      {/* Centers */}
-      <Route path={"/centers"}>
-        <ProtectedRoute><Centers /></ProtectedRoute>
-      </Route>
+      {/* Centers - открытые */}
+      <Route path={"/centers"} component={Centers} />
       
-      {/* Разное */}
-      <Route path={"/home"}>
-        <ProtectedRoute><Home /></ProtectedRoute>
-      </Route>
+      {/* Разное - открытые */}
+      <Route path={"/home"} component={Home} />
       <Route path={"/environment"} component={() => <div className="p-8">Environment (coming soon)</div>} />
       <Route path={"/full"} component={FullPageList} />
       

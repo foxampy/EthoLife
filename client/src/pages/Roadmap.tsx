@@ -17,22 +17,23 @@ import {
   ArrowRight,
   ChevronDown,
   ChevronUp,
-  Download
+  Download,
+  Star
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { useI18n } from '@/i18n';
 
 interface RoadmapPhase {
   id: string;
   period: string;
   title: string;
+  subtitle: string;
   status: 'completed' | 'active' | 'upcoming';
   icon: React.ElementType;
   color: string;
-  budget?: string;
+  budget: string;
   description: string;
   milestones: {
     title: string;
@@ -40,226 +41,116 @@ interface RoadmapPhase {
     value?: string;
     details?: string;
   }[];
-  tokenomics?: {
+  metrics?: {
     label: string;
     value: string;
-    change?: string;
   }[];
 }
 
 const roadmapData: RoadmapPhase[] = [
   {
-    id: 'foundation',
-    period: 'Q1 2024 - Q4 2025',
-    title: 'Foundation & Development',
+    id: 'pre-seed-closed',
+    period: 'Pre-Seed (Closed)',
+    title: 'Foundation',
+    subtitle: 'Self-funded Development',
     status: 'completed',
     icon: Code2,
     color: 'from-emerald-500 to-teal-600',
-    budget: '$141,000',
-    description: 'Core platform development, database architecture, and MVP launch',
+    budget: '$140,000',
+    description: 'Core platform development, Health-as-a-Habit concept, 7 modules architecture',
     milestones: [
-      { 
-        title: 'Development Hours', 
-        completed: true, 
-        value: '2,450 hrs',
-        details: 'Architecture, backend, frontend, mobile optimization'
-      },
-      { 
-        title: 'Database Tables', 
-        completed: true, 
-        value: '47 tables',
-        details: 'Profiles, health modules, payments, tokenomics, social features'
-      },
-      { 
-        title: 'Health Modules', 
-        completed: true, 
-        value: '7 modules',
-        details: 'Medicine, Movement, Nutrition, Psychology, Sleep, Relationships, Habits'
-      },
-      { 
-        title: 'AI Integration', 
-        completed: true, 
-        value: '3 providers',
-        details: 'Groq, Gemini, Qwen with unified interface'
-      },
-      { 
-        title: 'Payment Systems', 
-        completed: true, 
-        value: 'Multi-currency',
-        details: 'Crypto (NOWPayments), UNITY tokens, Stripe ready'
-      },
+      { title: 'Architecture Core', completed: true, details: '245 components, 84 pages created' },
+      { title: 'Health Modules', completed: true, value: '85% ready', details: 'All 7 modules in development' },
+      { title: 'Expert Council', completed: true, details: 'Medicine, biomedicine, psychology experts' },
+      { title: 'Initial LLM', completed: true, details: 'Primary AI integration' },
     ],
-    tokenomics: [
-      { label: 'Token Standard', value: 'ERC-20 (Planned)' },
-      { label: 'Exchange Rate', value: '1 USD = 8.5 UNITY' },
-      { label: 'Token Bonus', value: '15% on payments' },
+    metrics: [
+      { label: 'MVP Readiness', value: '82%' },
+      { label: 'Components', value: '245' },
+      { label: 'Pages', value: '84' },
     ]
   },
   {
-    id: 'presale',
-    period: 'Q1 2026',
-    title: 'Pre-Seed & Token Launch',
+    id: 'seed',
+    period: 'Seed (Current)',
+    title: 'Product Launch',
+    subtitle: 'March 10, 2026',
     status: 'active',
     icon: Rocket,
     color: 'from-blue-500 to-indigo-600',
-    budget: 'Target: $500K - $1M',
-    description: 'Initial funding round, token smart contract deployment, community building',
+    budget: '$350K - $650K',
+    description: 'Transforming technological protocol into mass product. Mobile ecosystem launch.',
     milestones: [
-      { 
-        title: 'Valuation', 
-        completed: true, 
-        value: '$2.5-3M',
-        details: 'Based on 2,450 dev hours at $60-120/hr market rate'
-      },
-      { 
-        title: 'Smart Contract', 
-        completed: false, 
-        value: 'In Progress',
-        details: 'UNITY token ERC-20, vesting, staking mechanics'
-      },
-      { 
-        title: 'Whitepaper', 
-        completed: true, 
-        value: 'Published',
-        details: 'Complete tokenomics, use cases, technical specs'
-      },
-      { 
-        title: 'Community', 
-        completed: false, 
-        value: '0 → 10K',
-        details: 'Telegram, Discord, Twitter growth campaign'
-      },
-      { 
-        title: 'Beta Users', 
-        completed: false, 
-        value: 'Target: 1,000',
-        details: 'Onboarding with referral rewards in UNITY'
-      },
+      { title: 'Mobile Release', completed: false, details: 'iOS & Android full ecosystem' },
+      { title: 'All Modules Launch', completed: false, details: 'From Biochemistry to Society' },
+      { title: 'B2B Partnerships', completed: false, details: 'Fitness networks, clinics, retail' },
+      { title: 'Smart Referral', completed: false, details: 'Referral system in UNITY' },
+      { title: 'DAO Launch', completed: false, details: 'Knowledge Hub & governance' },
+      { title: 'Deep LLM Training', completed: false, details: 'Digital twin creation' },
     ],
-    tokenomics: [
-      { label: 'Pre-seed Price', value: '$0.02 / UNITY', change: '80% discount' },
-      { label: 'Allocation', value: '15% of supply' },
-      { label: 'Vesting', value: '12 months cliff + 24 mo' },
+    metrics: [
+      { label: 'Token Price', value: '$0.05' },
+      { label: 'Target Users', value: '100K' },
+      { label: 'Target MRR', value: '$50K' },
     ]
   },
   {
-    id: 'growth',
-    period: 'Q2-Q3 2026',
-    title: 'Growth & Marketing',
-    status: 'upcoming',
-    icon: Megaphone,
-    color: 'from-orange-500 to-amber-600',
-    budget: '$800K allocated',
-    description: 'Marketing campaigns, partnerships, specialist onboarding',
-    milestones: [
-      { 
-        title: 'Marketing Campaign', 
-        completed: false, 
-        value: '$400K',
-        details: 'Influencers, health bloggers, paid ads (Google, Meta)'
-      },
-      { 
-        title: 'Specialist Network', 
-        completed: false, 
-        value: '500+',
-        details: 'Doctors, trainers, nutritionists onboarded'
-      },
-      { 
-        title: 'Health Centers', 
-        completed: false, 
-        value: '50+',
-        details: 'Partner clinics and wellness centers'
-      },
-      { 
-        title: 'Mobile Apps', 
-        completed: false, 
-        value: 'iOS & Android',
-        details: 'React Native apps with full feature parity'
-      },
-      { 
-        title: 'Wearables', 
-        completed: false, 
-        value: '10+ devices',
-        details: 'Apple Watch, Fitbit, Garmin integration'
-      },
-    ],
-    tokenomics: [
-      { label: 'Rewards Pool', value: '25% of supply', change: 'For users & referrals' },
-      { label: 'Burn Mechanism', value: '5% of revenue', change: 'Deflationary' },
-      { label: 'Staking APY', value: '15-25%', change: 'Based on lock period' },
-    ]
-  },
-  {
-    id: 'scale',
-    period: 'Q4 2026 - 2027',
-    title: 'Scale & Global Expansion',
+    id: 'series-a',
+    period: 'Series A',
+    title: 'Global Expansion',
+    subtitle: 'Q4 2026 - 2027',
     status: 'upcoming',
     icon: Globe,
     color: 'from-purple-500 to-violet-600',
-    budget: 'Seed Round: $5-10M',
-    description: 'Series A preparation, international markets, enterprise solutions',
+    budget: '$1.5M - $2.5M',
+    description: 'International market capture and infrastructure creation.',
     milestones: [
-      { 
-        title: 'Active Users', 
-        completed: false, 
-        value: '100,000+',
-        details: 'Global user base across 20+ countries'
-      },
-      { 
-        title: 'Enterprise', 
-        completed: false, 
-        value: 'B2B Launch',
-        details: 'Corporate wellness programs, insurance integration'
-      },
-      { 
-        title: 'Telemedicine', 
-        completed: false, 
-        value: 'Full Platform',
-        details: 'Video consultations, prescriptions, insurance claims'
-      },
-      { 
-        title: 'Market Cap', 
-        completed: false, 
-        value: '$50M+',
-        details: 'UNITY token fully liquid on DEXs and CEXs'
-      },
-      { 
-        title: 'Series A', 
-        completed: false, 
-        value: '$20-30M',
-        details: 'VC funding for global scaling'
-      },
+      { title: 'Global Scaling', completed: false, details: 'MENA, EU, USA regions' },
+      { title: 'Hardware Integration', completed: false, details: 'Wearables & home bio-sensors' },
+      { title: 'Knowledge Mining', completed: false, details: 'Largest decentralized health DB' },
+      { title: 'Compliance', completed: false, details: 'GDPR/HIPAA localization' },
     ],
-    tokenomics: [
-      { label: 'Public Sale', value: '$0.10 / UNITY', change: 'From $0.02' },
-      { label: 'Market Cap', value: '$50M+ target' },
-      { label: 'Daily Volume', value: '$1M+ target' },
+    metrics: [
+      { label: 'Target Users', value: '1M' },
+      { label: 'Target MRR', value: '$200K' },
+      { label: 'Countries', value: '20+' },
+    ]
+  },
+  {
+    id: 'series-b',
+    period: 'Series B+',
+    title: 'Ecosystem Dominance',
+    subtitle: '2028+',
+    status: 'upcoming',
+    icon: Star,
+    color: 'from-amber-500 to-orange-600',
+    budget: '$10M+',
+    description: 'Health-Metaverse creation and market dominance.',
+    milestones: [
+      { title: 'Institutional Integration', completed: false, details: 'Insurance & government systems' },
+      { title: 'M&A Strategy', completed: false, details: 'Acquisition of health-tech players' },
+      { title: 'Project Hub', completed: false, details: 'Launchpad for developers' },
+      { title: 'Planetary Impact', completed: false, details: 'Population health management' },
+    ],
+    metrics: [
+      { label: 'Target Users', value: '50M' },
+      { label: 'IPO Ready', value: 'Yes' },
+      { label: 'Valuation', value: '$500M+' },
     ]
   },
 ];
 
 const investmentBreakdown = [
-  { category: 'Development', amount: 85000, percent: 60, icon: Code2, details: '2,450 hours @ avg $35/hr' },
-  { category: 'Design & UX', amount: 15000, percent: 11, icon: Target, details: 'UI/UX, prototyping, branding' },
-  { category: 'Infrastructure', amount: 12000, percent: 8, icon: Zap, details: 'Servers, DB, APIs, domains' },
-  { category: 'Legal & Compliance', amount: 8000, percent: 6, icon: Wallet, details: 'GDPR, HIPAA consultation' },
-  { category: 'Marketing Prep', amount: 6000, percent: 4, icon: Megaphone, details: 'Whitepaper, website, content' },
-  { category: 'Reserve', amount: 15000, percent: 11, icon: Coins, details: 'Operations, unexpected costs' },
-];
-
-const tokenDistribution = [
-  { label: 'Community Rewards', value: 25, color: 'bg-emerald-500' },
-  { label: 'Pre-seed / Seed', value: 20, color: 'bg-blue-500' },
-  { label: 'Team & Advisors', value: 20, color: 'bg-purple-500' },
-  { label: 'Marketing', value: 15, color: 'bg-orange-500' },
-  { label: 'Liquidity Pool', value: 15, color: 'bg-cyan-500' },
-  { label: 'Reserve', value: 5, color: 'bg-gray-500' },
+  { category: 'Product Development', amount: 200000, percent: 40, icon: Code2, details: 'AI, Mobile apps, Integrations' },
+  { category: 'Marketing', amount: 150000, percent: 30, icon: Megaphone, details: 'Influencers, Content, Ads' },
+  { category: 'Team', amount: 75000, percent: 15, icon: Users, details: 'Developers, Marketing manager' },
+  { category: 'Legal & Compliance', amount: 50000, percent: 10, icon: Target, details: 'Token legal opinion, SAFT' },
+  { category: 'Reserve', amount: 25000, percent: 5, icon: Wallet, details: 'Emergency fund' },
 ];
 
 export default function Roadmap() {
-  const [expandedPhase, setExpandedPhase] = useState<string | null>('presale');
-  const [activeTab, setActiveTab] = useState<'roadmap' | 'financials' | 'tokenomics'>('roadmap');
-  const { t } = useI18n();
+  const [expandedPhase, setExpandedPhase] = useState<string | null>('seed');
+  const [activeTab, setActiveTab] = useState<'roadmap' | 'financials'>('roadmap');
 
   const totalInvested = investmentBreakdown.reduce((acc, item) => acc + item.amount, 0);
 
@@ -276,26 +167,26 @@ export default function Roadmap() {
             <Badge className="bg-white/20 text-white mb-4">Live Tracking</Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">EthosLife Roadmap</h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              From concept to global health ecosystem. Track our journey, investments, and tokenomics.
+              From concept to global health ecosystem. 4 stages to transform human health.
             </p>
             
             {/* Key Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 max-w-4xl mx-auto">
               <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-                <div className="text-3xl font-bold">$141K</div>
-                <div className="text-sm text-white/80">Invested</div>
+                <div className="text-3xl font-bold">$140K</div>
+                <div className="text-sm text-white/80">Self-funded</div>
               </div>
               <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-                <div className="text-3xl font-bold">2,450</div>
-                <div className="text-sm text-white/80">Dev Hours</div>
+                <div className="text-3xl font-bold">82%</div>
+                <div className="text-sm text-white/80">MVP Ready</div>
               </div>
               <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-                <div className="text-3xl font-bold">$2.5-3M</div>
-                <div className="text-sm text-white/80">Valuation</div>
+                <div className="text-3xl font-bold">245</div>
+                <div className="text-sm text-white/80">Components</div>
               </div>
               <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-                <div className="text-3xl font-bold">47</div>
-                <div className="text-sm text-white/80">DB Tables</div>
+                <div className="text-3xl font-bold">7</div>
+                <div className="text-sm text-white/80">Health Modules</div>
               </div>
             </div>
           </motion.div>
@@ -308,8 +199,7 @@ export default function Roadmap() {
           <div className="flex gap-1">
             {[
               { id: 'roadmap', label: 'Roadmap', icon: Rocket },
-              { id: 'financials', label: 'Financials', icon: Wallet },
-              { id: 'tokenomics', label: 'Tokenomics', icon: Coins },
+              { id: 'financials', label: 'Seed Round', icon: Wallet },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -378,19 +268,30 @@ export default function Roadmap() {
                                 {phase.period}
                               </Badge>
                               <CardTitle className="text-lg">{phase.title}</CardTitle>
+                              <p className="text-sm text-white/80">{phase.subtitle}</p>
                             </div>
                           </div>
                           
-                          {phase.budget && (
-                            <div className={`mt-3 flex items-center gap-2 text-sm ${isEven ? 'md:justify-end' : ''}`}>
-                              <Wallet className="w-4 h-4" />
-                              <span className="font-semibold">{phase.budget}</span>
-                            </div>
-                          )}
+                          <div className={`mt-3 flex items-center gap-2 text-sm ${isEven ? 'md:justify-end' : ''}`}>
+                            <Wallet className="w-4 h-4" />
+                            <span className="font-semibold">{phase.budget}</span>
+                          </div>
                         </CardHeader>
                         
                         <CardContent className="p-4">
                           <p className="text-gray-600 text-sm mb-4">{phase.description}</p>
+                          
+                          {/* Metrics */}
+                          {phase.metrics && (
+                            <div className="grid grid-cols-3 gap-2 mb-4">
+                              {phase.metrics.map((metric, mIdx) => (
+                                <div key={mIdx} className="text-center p-2 bg-gray-50 rounded-lg">
+                                  <div className="font-bold text-emerald-600">{metric.value}</div>
+                                  <div className="text-xs text-gray-500">{metric.label}</div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                           
                           {/* Status Badge */}
                           <div className={`flex items-center gap-2 mb-4 ${isEven ? 'md:justify-end' : ''}`}>
@@ -461,18 +362,75 @@ export default function Roadmap() {
         {/* FINANCIALS TAB */}
         {activeTab === 'financials' && (
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Investment Breakdown */}
+            {/* Seed Round Details */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Rocket className="w-5 h-5 text-emerald-500" />
+                  Seed Round Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="p-4 bg-emerald-50 rounded-xl">
+                    <div className="text-xs text-emerald-700 mb-1">Hard Cap</div>
+                    <div className="text-2xl font-bold text-emerald-900">$350K-$650K</div>
+                  </div>
+                  <div className="p-4 bg-blue-50 rounded-xl">
+                    <div className="text-xs text-blue-700 mb-1">Token Price</div>
+                    <div className="text-2xl font-bold text-blue-900">$0.05</div>
+                  </div>
+                  <div className="p-4 bg-purple-50 rounded-xl">
+                    <div className="text-xs text-purple-700 mb-1">Tokens for Sale</div>
+                    <div className="text-2xl font-bold text-purple-900">7-13M UNITY</div>
+                  </div>
+                  <div className="p-4 bg-amber-50 rounded-xl">
+                    <div className="text-xs text-amber-700 mb-1">Vesting</div>
+                    <div className="text-2xl font-bold text-amber-900">6mo / 18mo</div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-gray-50 rounded-xl">
+                  <h4 className="font-bold text-gray-900 mb-3">Expected Returns (5 Years)</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center p-2 bg-white rounded">
+                      <span className="text-gray-600">Conservative</span>
+                      <div className="text-right">
+                        <span className="font-bold text-emerald-600">5x</span>
+                        <span className="text-sm text-gray-500 ml-2">$0.25</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-white rounded">
+                      <span className="text-gray-600">Base Case</span>
+                      <div className="text-right">
+                        <span className="font-bold text-blue-600">15x</span>
+                        <span className="text-sm text-gray-500 ml-2">$0.75</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-white rounded">
+                      <span className="text-gray-600">Optimistic</span>
+                      <div className="text-right">
+                        <span className="font-bold text-purple-600">50x</span>
+                        <span className="text-sm text-gray-500 ml-2">$2.50</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Use of Funds */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Wallet className="w-5 h-5 text-emerald-500" />
-                  Investment Breakdown
+                  Use of Funds
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <div className="text-3xl font-bold text-gray-900">${totalInvested.toLocaleString()}</div>
-                  <div className="text-gray-500">Total invested in development</div>
+                  <div className="text-3xl font-bold text-gray-900">${(totalInvested / 1000).toFixed(0)}K</div>
+                  <div className="text-gray-500">Total allocation</div>
                 </div>
                 
                 <div className="space-y-4">
@@ -484,7 +442,7 @@ export default function Roadmap() {
                           <span className="font-medium text-sm">{item.category}</span>
                         </div>
                         <div className="text-right">
-                          <div className="font-semibold">${item.amount.toLocaleString()}</div>
+                          <div className="font-semibold">${(item.amount / 1000).toFixed(0)}K</div>
                           <div className="text-xs text-gray-500">{item.percent}%</div>
                         </div>
                       </div>
@@ -496,255 +454,25 @@ export default function Roadmap() {
               </CardContent>
             </Card>
 
-            {/* Development ROI */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-blue-500" />
-                  Development ROI
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="p-4 bg-emerald-50 rounded-xl">
-                  <div className="text-sm text-emerald-700 mb-1">Current Valuation</div>
-                  <div className="text-3xl font-bold text-emerald-900">$2.5 - 3.0 Million</div>
-                  <div className="text-sm text-emerald-600 mt-2">
-                    <TrendingUp className="w-4 h-4 inline mr-1" />
-                    {Math.round((2500000 / totalInvested - 1) * 100)}% ROI from invested capital
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-gray-50 rounded-xl">
-                    <div className="text-2xl font-bold">2,450</div>
-                    <div className="text-sm text-gray-600">Development Hours</div>
-                    <div className="text-xs text-gray-400 mt-1">~$58/hr avg cost</div>
-                  </div>
-                  <div className="p-4 bg-gray-50 rounded-xl">
-                    <div className="text-2xl font-bold">47</div>
-                    <div className="text-sm text-gray-600">Database Tables</div>
-                    <div className="text-xs text-gray-400 mt-1">Enterprise scale</div>
-                  </div>
-                </div>
-
-                <div className="p-4 border rounded-xl">
-                  <h4 className="font-semibold mb-3">Market Comparison</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Similar health apps valuation</span>
-                      <span className="font-medium">$2-5M seed</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Dev cost market rate</span>
-                      <span className="font-medium">$80-150/hr</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Our effective rate</span>
-                      <span className="font-medium text-emerald-600">~$58/hr</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Future Funding */}
+            {/* Comparables */}
             <Card className="md:col-span-2">
               <CardHeader>
-                <CardTitle>Future Funding Rounds</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="p-4 bg-blue-50 rounded-xl">
-                    <Badge className="bg-blue-100 text-blue-700 mb-2">Q1 2026</Badge>
-                    <h4 className="font-bold text-lg">Pre-Seed</h4>
-                    <div className="text-2xl font-bold text-blue-900">$500K - $1M</div>
-                    <ul className="text-sm text-gray-600 mt-2 space-y-1">
-                      <li>• Token smart contract</li>
-                      <li>• Marketing campaign</li>
-                      <li>• 10K community members</li>
-                    </ul>
-                    <div className="mt-3 text-xs text-blue-600">
-                      Valuation: $2.5-3M
-                    </div>
-                  </div>
-
-                  <div className="p-4 bg-purple-50 rounded-xl">
-                    <Badge className="bg-purple-100 text-purple-700 mb-2">Q3-Q4 2026</Badge>
-                    <h4 className="font-bold text-lg">Seed Round</h4>
-                    <div className="text-2xl font-bold text-purple-900">$5M - $10M</div>
-                    <ul className="text-sm text-gray-600 mt-2 space-y-1">
-                      <li>• Global expansion</li>
-                      <li>• Mobile apps launch</li>
-                      <li>• 100K+ active users</li>
-                    </ul>
-                    <div className="mt-3 text-xs text-purple-600">
-                      Target valuation: $25-40M
-                    </div>
-                  </div>
-
-                  <div className="p-4 bg-emerald-50 rounded-xl">
-                    <Badge className="bg-emerald-100 text-emerald-700 mb-2">2027</Badge>
-                    <h4 className="font-bold text-lg">Series A</h4>
-                    <div className="text-2xl font-bold text-emerald-900">$20M - $30M</div>
-                    <ul className="text-sm text-gray-600 mt-2 space-y-1">
-                      <li>• Enterprise solutions</li>
-                      <li>• Insurance integrations</li>
-                      <li>• 1M+ users target</li>
-                    </ul>
-                    <div className="mt-3 text-xs text-emerald-600">
-                      Target valuation: $100M+
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-
-        {/* TOKENOMICS TAB */}
-        {activeTab === 'tokenomics' && (
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Token Distribution */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Coins className="w-5 h-5 text-amber-500" />
-                  UNITY Token Distribution
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {tokenDistribution.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-3">
-                      <div className={`w-4 h-4 rounded ${item.color}`} />
-                      <div className="flex-1">
-                        <div className="flex justify-between">
-                          <span className="font-medium text-sm">{item.label}</span>
-                          <span className="font-bold">{item.value}%</span>
-                        </div>
-                        <Progress value={item.value} className="h-1.5 mt-1" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 p-4 bg-amber-50 rounded-xl">
-                  <h4 className="font-semibold text-amber-900 mb-2">Token Utility</h4>
-                  <ul className="text-sm text-amber-800 space-y-1">
-                    <li>• 15% discount on subscription payments</li>
-                    <li>• Staking rewards: 15-25% APY</li>
-                    <li>• Rewards for health achievements</li>
-                    <li>• Referral program payouts</li>
-                    <li>• Specialist service payments</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Token Metrics */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-emerald-500" />
-                  Token Metrics
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <div className="text-xs text-gray-500">Current Rate</div>
-                    <div className="text-lg font-bold">1 USD = 8.5 UNITY</div>
-                  </div>
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <div className="text-xs text-gray-500">Payment Bonus</div>
-                    <div className="text-lg font-bold text-emerald-600">+15%</div>
-                  </div>
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <div className="text-xs text-gray-500">Pre-seed Price</div>
-                    <div className="text-lg font-bold">$0.02</div>
-                  </div>
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <div className="text-xs text-gray-500">Public Sale Target</div>
-                    <div className="text-lg font-bold">$0.10</div>
-                  </div>
-                </div>
-
-                <div className="p-4 border rounded-xl">
-                  <h4 className="font-semibold mb-3">Deflationary Mechanisms</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                      <span>5% of platform revenue used for buyback & burn</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                      <span>50% of specialist fees burned</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                      <span>Quarterly token burns based on growth</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-4 bg-emerald-50 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Zap className="w-5 h-5 text-emerald-600" />
-                    <span className="font-semibold text-emerald-900">Earning Opportunities</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 text-sm text-emerald-800">
-                    <div>• Daily health goals: 5-50 UNITY</div>
-                    <div>• Referrals: 100 UNITY</div>
-                    <div>• Achievements: 10-500 UNITY</div>
-                    <div>• Content creation: 50-200 UNITY</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Token Vesting Schedule */}
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>Vesting Schedule</CardTitle>
+                <CardTitle>Market Comparables</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-4 gap-4">
-                  <div className="p-4 border rounded-xl">
-                    <div className="font-semibold text-blue-600 mb-2">Pre-seed</div>
-                    <div className="text-sm text-gray-600 mb-2">15% allocation</div>
-                    <div className="text-xs space-y-1">
-                      <div>• 12 months cliff</div>
-                      <div>• 24 months vesting</div>
-                      <div>• Price: $0.02</div>
+                  {[
+                    { company: 'Calm', exit: '$2B', multiple: '20x revenue' },
+                    { company: 'Headspace', exit: '$3B', multiple: '15x revenue' },
+                    { company: 'Noom', exit: '$3.7B', multiple: '12x revenue' },
+                    { company: 'Whoop', exit: '$3.6B', multiple: '18x revenue' },
+                  ].map((comp, idx) => (
+                    <div key={idx} className="p-4 border rounded-xl text-center">
+                      <div className="font-bold text-gray-900">{comp.company}</div>
+                      <div className="text-2xl font-bold text-emerald-600">{comp.exit}</div>
+                      <div className="text-xs text-gray-500">{comp.multiple}</div>
                     </div>
-                  </div>
-                  <div className="p-4 border rounded-xl">
-                    <div className="font-semibold text-purple-600 mb-2">Seed</div>
-                    <div className="text-sm text-gray-600 mb-2">5% allocation</div>
-                    <div className="text-xs space-y-1">
-                      <div>• 6 months cliff</div>
-                      <div>• 18 months vesting</div>
-                      <div>• Price: $0.05</div>
-                    </div>
-                  </div>
-                  <div className="p-4 border rounded-xl">
-                    <div className="font-semibold text-emerald-600 mb-2">Team</div>
-                    <div className="text-sm text-gray-600 mb-2">20% allocation</div>
-                    <div className="text-xs space-y-1">
-                      <div>• 18 months cliff</div>
-                      <div>• 36 months vesting</div>
-                      <div>• Long-term alignment</div>
-                    </div>
-                  </div>
-                  <div className="p-4 border rounded-xl">
-                    <div className="font-semibold text-orange-600 mb-2">Community</div>
-                    <div className="text-sm text-gray-600 mb-2">25% allocation</div>
-                    <div className="text-xs space-y-1">
-                      <div>• No cliff</div>
-                      <div>• Linear release over 48 months</div>
-                      <div>• Rewards & incentives</div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -759,12 +487,12 @@ export default function Roadmap() {
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div>
                 <h3 className="text-2xl font-bold mb-2">Ready to join the journey?</h3>
-                <p className="text-white/90">Invest in the future of health technology. Pre-seed round open now.</p>
+                <p className="text-white/90">Seed round opens March 10, 2026. Be part of the Health OS revolution.</p>
               </div>
               <div className="flex gap-4">
                 <Button variant="secondary" size="lg">
                   <Download className="w-4 h-4 mr-2" />
-                  Download Pitch Deck
+                  Download Whitepaper
                 </Button>
                 <Button variant="outline" className="border-white text-white hover:bg-white/10" size="lg">
                   Contact Us

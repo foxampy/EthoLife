@@ -22,8 +22,10 @@ import {
   MapPin,
   Search,
   Heart,
+  Globe,
 } from 'lucide-react';
 import SketchIcon from './SketchIcon';
+import { useI18n } from '@/i18n';
 
 interface BurgerMenuProps {
   isOpen: boolean;
@@ -32,6 +34,7 @@ interface BurgerMenuProps {
 
 export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
   const [location] = useLocation();
+  const { locale, setLocale } = useI18n();
 
   // Close on escape key
   useEffect(() => {
@@ -57,40 +60,41 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
   }, [isOpen]);
 
   const mainNavItems = [
-    { path: '/', icon: Home, label: 'Главная' },
-    { path: '/health-center', icon: LayoutDashboard, label: 'Единый центр' },
-    { path: '/dashboard', icon: LayoutDashboard, label: 'Дашборд' },
-    { path: '/calendar', icon: Calendar, label: 'Календарь' },
-    { path: '/profile', icon: User, label: 'Профиль' },
-    { path: '/settings', icon: Settings, label: 'Настройки' },
+    { path: '/', icon: Home, label: 'Home' },
+    { path: '/health-center', icon: LayoutDashboard, label: 'Health Center' },
+    { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: '/calendar', icon: Calendar, label: 'Calendar' },
+    { path: '/profile', icon: User, label: 'Profile' },
+    { path: '/settings', icon: Settings, label: 'Settings' },
   ];
 
   const socialPages = [
-    { path: '/social/friends', icon: Users, label: 'Друзья' },
-    { path: '/social/messages', icon: MessageSquare, label: 'Сообщения' },
-    { path: '/social/specialists', icon: User, label: 'Специалисты' },
+    { path: '/social/friends', icon: Users, label: 'Friends' },
+    { path: '/social/messages', icon: MessageSquare, label: 'Messages' },
+    { path: '/social/specialists', icon: User, label: 'Specialists' },
   ];
 
   const healthPages = [
-    { path: '/health-center', icon: LayoutDashboard, label: 'Единый центр' },
-    { path: '/health/movement', icon: Activity, label: 'Движение' },
-    { path: '/health/nutrition', icon: Apple, label: 'Питание' },
-    { path: '/health/sleep', icon: Moon, label: 'Сон' },
-    { path: '/health/psychology', icon: Brain, label: 'Психология' },
-    { path: '/health/medicine', icon: Heart, label: 'Медицина' },
+    { path: '/health-center', icon: LayoutDashboard, label: 'Health Center' },
+    { path: '/health/movement', icon: Activity, label: 'Movement' },
+    { path: '/health/nutrition', icon: Apple, label: 'Nutrition' },
+    { path: '/health/sleep', icon: Moon, label: 'Sleep' },
+    { path: '/health/psychology', icon: Brain, label: 'Psychology' },
+    { path: '/health/medicine', icon: Heart, label: 'Medicine' },
   ];
 
       const otherPages = [
-        { path: '/landing', icon: Presentation, label: 'Лендинг' },
-        { path: '/v2', icon: Presentation, label: 'Лендинг V2' },
-        { path: '/newstyle', icon: Presentation, label: 'Лендинг NewStyle' },
-        { path: '/presentation', icon: Presentation, label: 'Презентация' },
-        { path: '/tokenomics', icon: FileText, label: 'Токеномика' },
+        { path: '/landing', icon: Presentation, label: 'Landing' },
+        { path: '/v2', icon: Presentation, label: 'Landing V2' },
+        { path: '/newstyle', icon: Presentation, label: 'Landing NewStyle' },
+        { path: '/presentation', icon: Presentation, label: 'Presentation' },
+        { path: '/tokenomics', icon: FileText, label: 'Tokenomics' },
         { path: '/whitepaper', icon: FileText, label: 'Whitepaper' },
-        { path: '/documents', icon: FileText, label: 'Документы' },
-        { path: '/journal', icon: FileText, label: 'Ежедневник' },
-        { path: '/ai-chat', icon: MessageSquare, label: 'ИИ+ Чат' },
-        { path: '/interactive-demo', icon: FileText, label: 'Интерактивные элементы' },
+        { path: '/documents', icon: FileText, label: 'Documents' },
+        { path: '/journal', icon: FileText, label: 'Journal' },
+        { path: '/ai-chat', icon: MessageSquare, label: 'AI Chat' },
+        { path: '/interactive-demo', icon: FileText, label: 'Interactive Demo' },
+        { path: '/project-hub', icon: Globe, label: 'Project HUB' },
       ];
 
   const handleLinkClick = () => {
@@ -219,7 +223,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
               {/* Main Navigation */}
               <div>
                 <h3 className="text-xs font-semibold text-foreground/60 uppercase tracking-wider mb-3 px-3">
-                  Основное
+                  Main
                 </h3>
                 {mainNavItems.map((item) => {
                   const isActive = location === item.path;
@@ -248,7 +252,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
               {/* Social Network */}
               <div>
                 <h3 className="text-xs font-semibold text-foreground/60 uppercase tracking-wider mb-3 px-3">
-                  Социальная сеть
+                  Social Network
                 </h3>
                 {socialPages.map((item) => {
                   const isActive = location.startsWith(item.path);
@@ -277,7 +281,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
               {/* Shop */}
               <div>
                 <h3 className="text-xs font-semibold text-foreground/60 uppercase tracking-wider mb-3 px-3">
-                  Магазин
+                  Shop
                 </h3>
                 <Link href="/shop">
                   <motion.div
@@ -291,7 +295,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
                     }`}
                   >
                     <ShoppingBag className="w-5 h-5" />
-                    <span className="font-medium">Магазин</span>
+                    <span className="font-medium">Shop</span>
                   </motion.div>
                 </Link>
               </div>
@@ -299,7 +303,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
               {/* Centers */}
               <div>
                 <h3 className="text-xs font-semibold text-foreground/60 uppercase tracking-wider mb-3 px-3">
-                  Центры
+                  Centers
                 </h3>
                 <Link href="/centers">
                   <motion.div
@@ -313,7 +317,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
                     }`}
                   >
                     <Building2 className="w-5 h-5" />
-                    <span className="font-medium">Центры</span>
+                    <span className="font-medium">Centers</span>
                   </motion.div>
                 </Link>
               </div>
@@ -321,7 +325,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
               {/* Map */}
               <div>
                 <h3 className="text-xs font-semibold text-foreground/60 uppercase tracking-wider mb-3 px-3">
-                  Карта
+                  Map
                 </h3>
                 <Link href="/map">
                   <motion.div
@@ -335,7 +339,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
                     }`}
                   >
                     <MapPin className="w-5 h-5" />
-                    <span className="font-medium">Карта</span>
+                    <span className="font-medium">Map</span>
                   </motion.div>
                 </Link>
               </div>
@@ -343,7 +347,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
               {/* Other Pages */}
               <div>
                 <h3 className="text-xs font-semibold text-foreground/60 uppercase tracking-wider mb-3 px-3">
-                  Дополнительно
+                  Additional
                 </h3>
                 {otherPages.map((item) => {
                   const isActive = location.startsWith(item.path);
@@ -367,6 +371,35 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
                     </Link>
                   );
                 })}
+              </div>
+
+              {/* Language Switcher - at the bottom */}
+              <div className="pt-4 mt-4 border-t border-border">
+                <h3 className="text-xs font-semibold text-foreground/60 uppercase tracking-wider mb-3 px-3">
+                  Language
+                </h3>
+                <div className="flex items-center gap-2 px-3">
+                  <button
+                    onClick={() => setLocale('en')}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      locale === 'en'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted hover:bg-muted/80 text-foreground/70'
+                    }`}
+                  >
+                    English
+                  </button>
+                  <button
+                    onClick={() => setLocale('ru')}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      locale === 'ru'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted hover:bg-muted/80 text-foreground/70'
+                    }`}
+                  >
+                    Русский
+                  </button>
+                </div>
               </div>
             </nav>
           </motion.div>
